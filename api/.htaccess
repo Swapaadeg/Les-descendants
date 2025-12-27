@@ -1,0 +1,25 @@
+# Protection du fichier de configuration
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Protection du fichier database.sql
+<Files "database.sql">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Activer la réécriture d'URL
+RewriteEngine On
+
+# Autoriser l'accès aux fichiers PHP de l'API
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Headers de sécurité
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
