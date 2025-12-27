@@ -1,0 +1,117 @@
+// ===========================
+// BREAKPOINTS
+// ===========================
+
+// Mobile-first breakpoints
+$breakpoint-xs: 375px;   // Petits mobiles
+$breakpoint-sm: 576px;   // Mobiles
+$breakpoint-md: 768px;   // Tablettes
+$breakpoint-lg: 1024px;  // Desktop
+$breakpoint-xl: 1280px;  // Large desktop
+$breakpoint-2xl: 1536px; // Extra large desktop
+
+// ===========================
+// MIXINS RESPONSIVE
+// ===========================
+
+// Min-width (mobile-first)
+@mixin xs {
+  @media (min-width: #{$breakpoint-xs}) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (min-width: #{$breakpoint-sm}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: #{$breakpoint-xl}) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media (min-width: #{$breakpoint-2xl}) {
+    @content;
+  }
+}
+
+// Max-width (pour cas spécifiques)
+@mixin max-xs {
+  @media (max-width: #{$breakpoint-xs - 1px}) {
+    @content;
+  }
+}
+
+@mixin max-sm {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+@mixin max-md {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin max-lg {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin max-xl {
+  @media (max-width: #{$breakpoint-xl - 1px}) {
+    @content;
+  }
+}
+
+// Between (pour ranges spécifiques)
+@mixin between($min, $max) {
+  @media (min-width: #{$min}) and (max-width: #{$max - 1px}) {
+    @content;
+  }
+}
+
+// Orientation
+@mixin landscape {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin portrait {
+  @media (orientation: portrait) {
+    @content;
+  }
+}
+
+// Touch devices
+@mixin touch {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// Hover capable devices
+@mixin hover-capable {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}

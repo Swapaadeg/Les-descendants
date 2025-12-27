@@ -1,0 +1,106 @@
+// ===========================
+// COULEURS
+// ===========================
+
+// Couleurs de base
+$color-dark: #0a0a0f;
+$color-light: #e8e8f0;
+
+// Couleurs néon (5 couleurs principales)
+$neon-cyan: #00f0ff;
+$neon-purple: #b842ff;
+$neon-pink: #ff2a6d;
+$neon-green: #39ff14;
+$neon-orange: #ff6b35;
+
+// Opacités pour variations
+$neon-opacity-low: 0.3;
+$neon-opacity-medium: 0.6;
+$neon-opacity-high: 0.9;
+
+// ===========================
+// TYPOGRAPHIE
+// ===========================
+
+// Famille de polices
+$font-primary: 'Orbitron', 'Rajdhani', 'Exo 2', sans-serif;
+$font-secondary: 'Rajdhani', sans-serif;
+
+// Tailles de police (mobile-first)
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.25rem;    // 20px
+$font-size-xl: 1.5rem;     // 24px
+$font-size-2xl: 2rem;      // 32px
+$font-size-3xl: 2.5rem;    // 40px
+$font-size-4xl: 3rem;      // 48px
+
+// Poids de police
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$font-weight-black: 900;
+
+// ===========================
+// ESPACEMENTS
+// ===========================
+
+$spacing-xs: 0.25rem;   // 4px
+$spacing-sm: 0.5rem;    // 8px
+$spacing-md: 1rem;      // 16px
+$spacing-lg: 1.5rem;    // 24px
+$spacing-xl: 2rem;      // 32px
+$spacing-2xl: 3rem;     // 48px
+$spacing-3xl: 4rem;     // 64px
+
+// ===========================
+// BORDURES & RADIUS
+// ===========================
+
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 1rem;
+$border-radius-full: 9999px;
+
+$border-width: 2px;
+
+// ===========================
+// OMBRES NÉON
+// ===========================
+
+@mixin neon-shadow($color, $intensity: medium) {
+  $blur: if($intensity == low, 10px, if($intensity == high, 30px, 20px));
+  $spread: if($intensity == low, 2px, if($intensity == high, 6px, 4px));
+
+  box-shadow:
+    0 0 $blur rgba($color, 0.5),
+    0 0 $spread rgba($color, 0.8),
+    inset 0 0 $blur rgba($color, 0.2);
+}
+
+@mixin neon-text-shadow($color, $intensity: medium) {
+  $blur1: if($intensity == low, 5px, if($intensity == high, 15px, 10px));
+  $blur2: if($intensity == low, 10px, if($intensity == high, 25px, 20px));
+
+  text-shadow:
+    0 0 $blur1 rgba($color, 0.8),
+    0 0 $blur2 rgba($color, 0.5);
+}
+
+// ===========================
+// TRANSITIONS
+// ===========================
+
+$transition-fast: 0.2s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// ===========================
+// Z-INDEX
+// ===========================
+
+$z-index-dropdown: 1000;
+$z-index-modal: 2000;
+$z-index-tooltip: 3000;

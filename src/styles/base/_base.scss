@@ -1,0 +1,125 @@
+@import './variables';
+@import './responsive';
+
+// ===========================
+// STYLES DE BASE
+// ===========================
+
+body {
+  font-family: $font-secondary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: 1.6;
+  color: $color-light;
+  background-color: $color-dark;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba($neon-purple, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba($neon-cyan, 0.1) 0%, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+// ===========================
+// TYPOGRAPHIE
+// ===========================
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-primary;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+}
+
+h1 {
+  font-size: $font-size-2xl;
+
+  @include md {
+    font-size: $font-size-3xl;
+  }
+
+  @include lg {
+    font-size: $font-size-4xl;
+  }
+}
+
+h2 {
+  font-size: $font-size-xl;
+
+  @include md {
+    font-size: $font-size-2xl;
+  }
+
+  @include lg {
+    font-size: $font-size-3xl;
+  }
+}
+
+h3 {
+  font-size: $font-size-lg;
+
+  @include md {
+    font-size: $font-size-xl;
+  }
+
+  @include lg {
+    font-size: $font-size-2xl;
+  }
+}
+
+// ===========================
+// CONTENEUR
+// ===========================
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+
+  @include sm {
+    padding: 0 $spacing-lg;
+  }
+
+  @include md {
+    padding: 0 $spacing-xl;
+  }
+
+  @include lg {
+    padding: 0 $spacing-2xl;
+  }
+}
+
+// ===========================
+// UTILITAIRES
+// ===========================
+
+.text-center {
+  text-align: center;
+}
+
+.text-neon {
+  &-cyan {
+    color: $neon-cyan;
+    @include neon-text-shadow($neon-cyan);
+  }
+
+  &-purple {
+    color: $neon-purple;
+    @include neon-text-shadow($neon-purple);
+  }
+
+  &-pink {
+    color: $neon-pink;
+    @include neon-text-shadow($neon-pink);
+  }
+
+  &-green {
+    color: $neon-green;
+    @include neon-text-shadow($neon-green);
+  }
+
+  &-orange {
+    color: $neon-orange;
+    @include neon-text-shadow($neon-orange);
+  }
+}

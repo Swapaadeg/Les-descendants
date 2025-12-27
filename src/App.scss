@@ -1,0 +1,122 @@
+@import './styles/base/variables';
+@import './styles/base/responsive';
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__main {
+    flex: 1;
+    padding: $spacing-2xl 0;
+
+    @include md {
+      padding: $spacing-3xl 0;
+    }
+  }
+
+  &__actions {
+    margin-bottom: $spacing-2xl;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg $spacing-2xl;
+    background: linear-gradient(135deg, $neon-cyan 0%, $neon-purple 100%);
+    border: 2px solid $neon-cyan;
+    border-radius: $border-radius-full;
+    color: $color-light;
+    font-family: $font-primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all $transition-base;
+    @include neon-shadow($neon-cyan);
+
+    @include md {
+      font-size: $font-size-lg;
+      padding: $spacing-xl $spacing-3xl;
+    }
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      @include neon-shadow($neon-cyan, high);
+    }
+
+    &--active {
+      background: linear-gradient(135deg, $neon-pink 0%, $neon-orange 100%);
+      border-color: $neon-pink;
+      @include neon-shadow($neon-pink);
+
+      &:hover {
+        @include neon-shadow($neon-pink, high);
+      }
+    }
+  }
+
+  &__toggle-icon {
+    font-size: $font-size-xl;
+    transition: transform $transition-base;
+
+    .app__toggle-btn:hover & {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__form-container {
+    margin-bottom: $spacing-3xl;
+    animation: slideDown 0.4s ease-out;
+  }
+
+  &__list-container {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  &__footer {
+    padding: $spacing-xl 0;
+    background: linear-gradient(
+      180deg,
+      rgba($color-dark, 0.8) 0%,
+      rgba($color-dark, 0.95) 100%
+    );
+    border-top: 2px solid $neon-purple;
+    @include neon-shadow($neon-purple, low);
+  }
+
+  &__footer-text {
+    text-align: center;
+    font-size: $font-size-sm;
+    color: rgba($color-light, 0.6);
+    margin: 0;
+
+    @include md {
+      font-size: $font-size-base;
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

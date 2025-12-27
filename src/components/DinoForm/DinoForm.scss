@@ -1,0 +1,381 @@
+@import '../../styles/base/variables';
+@import '../../styles/base/responsive';
+
+.dino-form {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  background: rgba($color-dark, 0.8);
+  border: 2px solid $neon-purple;
+  border-radius: $border-radius-lg;
+  @include neon-shadow($neon-purple, low);
+  backdrop-filter: blur(10px);
+
+  @include md {
+    padding: $spacing-2xl;
+  }
+
+  &__section {
+    margin-bottom: $spacing-2xl;
+    padding: $spacing-lg;
+    background: rgba($color-dark, 0.5);
+    border-radius: $border-radius-md;
+    border: 1px solid rgba($neon-cyan, 0.2);
+    transition: all $transition-base;
+
+    &:hover {
+      border-color: rgba($neon-cyan, 0.4);
+      @include neon-shadow($neon-cyan, low);
+    }
+
+    &--mutated {
+      border-color: rgba($neon-pink, 0.3);
+      background: linear-gradient(
+        135deg,
+        rgba($color-dark, 0.5) 0%,
+        rgba($neon-pink, 0.05) 100%
+      );
+
+      &:hover {
+        border-color: rgba($neon-pink, 0.5);
+        @include neon-shadow($neon-pink, low);
+      }
+    }
+
+    @include md {
+      padding: $spacing-xl;
+    }
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $neon-cyan;
+    @include neon-text-shadow($neon-cyan);
+    margin-bottom: $spacing-xl;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    @include md {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__subtitle {
+    font-family: $font-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $neon-purple;
+    @include neon-text-shadow($neon-purple, low);
+    margin-bottom: $spacing-lg;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__field {
+    margin-bottom: $spacing-lg;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-light;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__count {
+    font-size: $font-size-xs;
+    color: rgba($neon-cyan, 0.7);
+    font-weight: $font-weight-regular;
+    margin-left: $spacing-sm;
+  }
+
+  &__no-species {
+    padding: $spacing-xl;
+    background: linear-gradient(
+      135deg,
+      rgba($neon-green, 0.1) 0%,
+      rgba($neon-cyan, 0.1) 100%
+    );
+    border: 2px solid $neon-green;
+    border-radius: $border-radius-md;
+    color: $neon-green;
+    @include neon-text-shadow($neon-green, low);
+    text-align: center;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+  }
+
+  &__stat-icon {
+    font-size: $font-size-lg;
+  }
+
+  &__input,
+  &__select {
+    width: 100%;
+    padding: $spacing-md;
+    background: rgba($color-dark, 0.8);
+    border: 2px solid rgba($neon-cyan, 0.3);
+    border-radius: $border-radius-sm;
+    color: $color-light;
+    font-size: $font-size-base;
+    transition: all $transition-base;
+
+    &:focus {
+      outline: none;
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, low);
+    }
+
+    &::placeholder {
+      color: rgba($color-light, 0.4);
+    }
+
+    @include md {
+      padding: $spacing-lg;
+    }
+  }
+
+  &__select {
+    cursor: pointer;
+  }
+
+  &__types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-sm;
+
+    @include sm {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include md {
+      grid-template-columns: repeat(5, 1fr);
+      gap: $spacing-md;
+    }
+  }
+
+  &__type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-md;
+    background: rgba($color-dark, 0.6);
+    border: 2px solid rgba($color-light, 0.2);
+    border-radius: $border-radius-sm;
+    color: $color-light;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all $transition-base;
+    cursor: pointer;
+
+    @include md {
+      font-size: $font-size-sm;
+      padding: $spacing-lg;
+    }
+
+    &:hover {
+      border-color: var(--type-color);
+      transform: translateY(-2px);
+    }
+
+    &--active {
+      background: rgba(var(--type-color), 0.2);
+      border-color: var(--type-color);
+      color: var(--type-color);
+      box-shadow: 0 0 20px rgba(var(--type-color), 0.3);
+    }
+  }
+
+  &__type-icon {
+    font-size: $font-size-xl;
+  }
+
+  &__photo-upload {
+    position: relative;
+  }
+
+  &__file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  &__file-label {
+    display: block;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  &__photo-preview {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid $neon-cyan;
+    border-radius: $border-radius-md;
+    @include neon-shadow($neon-cyan, low);
+  }
+
+  &__photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    background: rgba($color-dark, 0.6);
+    border: 2px dashed rgba($neon-cyan, 0.5);
+    border-radius: $border-radius-md;
+    color: $neon-cyan;
+    font-size: $font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all $transition-base;
+
+    span:first-child {
+      font-size: 3rem;
+    }
+
+    &:hover {
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, low);
+    }
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &__checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid $neon-pink;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    appearance: none;
+    background: rgba($color-dark, 0.6);
+    position: relative;
+    transition: all $transition-base;
+
+    &:checked {
+      background: $neon-pink;
+      @include neon-shadow($neon-pink, low);
+
+      &::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: $color-dark;
+        font-weight: $font-weight-bold;
+        font-size: $font-size-sm;
+      }
+    }
+
+    &:hover {
+      border-color: lighten($neon-pink, 10%);
+    }
+  }
+
+  &__checkbox-text {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $neon-pink;
+    @include neon-text-shadow($neon-pink, low);
+  }
+
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+
+    @include sm {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include md {
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-lg;
+    }
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    padding: $spacing-lg $spacing-xl;
+    margin-top: $spacing-xl;
+    background: linear-gradient(135deg, $neon-purple 0%, $neon-pink 100%);
+    border: 2px solid $neon-cyan;
+    border-radius: $border-radius-md;
+    color: $color-light;
+    font-family: $font-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all $transition-base;
+    @include neon-shadow($neon-pink);
+
+    &:hover {
+      transform: translateY(-3px);
+      @include neon-shadow($neon-cyan, high);
+      background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
+    }
+
+    &:active {
+      transform: translateY(-1px);
+    }
+
+    span:first-child {
+      font-size: $font-size-xl;
+      animation: spin 2s linear infinite;
+    }
+
+    @include md {
+      font-size: $font-size-xl;
+      padding: $spacing-xl $spacing-2xl;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

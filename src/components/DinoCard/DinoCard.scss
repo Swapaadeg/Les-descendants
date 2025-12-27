@@ -1,0 +1,542 @@
+@import '../../styles/base/variables';
+@import '../../styles/base/responsive';
+
+.dino-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba($color-dark, 0.95) 0%,
+    rgba($color-dark, 0.85) 100%
+  );
+  border: 2px solid rgba($neon-cyan, 0.3);
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  transition: all $transition-base;
+  overflow: hidden;
+
+  @include md {
+    padding: $spacing-xl;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 10% 20%, rgba($neon-purple, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba($neon-cyan, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+
+  &:hover {
+    border-color: $neon-cyan;
+    transform: translateY(-5px);
+    @include neon-shadow($neon-cyan, medium);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &__delete-btn {
+    position: absolute;
+    top: $spacing-md;
+    left: $spacing-md;
+    width: 40px;
+    height: 40px;
+    padding: $spacing-sm;
+    background: rgba($neon-pink, 0.2);
+    border: 2px solid rgba($neon-pink, 0.5);
+    border-radius: $border-radius-full;
+    font-size: $font-size-lg;
+    cursor: pointer;
+    transition: all $transition-base;
+    z-index: 10;
+
+    &:hover {
+      background: $neon-pink;
+      border-color: $neon-pink;
+      transform: scale(1.1) rotate(10deg);
+      @include neon-shadow($neon-pink, medium);
+    }
+
+    @include md {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  &__mutated-badge {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
+    border-radius: $border-radius-full;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    color: $color-light;
+    letter-spacing: 0.1em;
+    @include neon-shadow($neon-pink);
+    animation: pulse-badge 2s ease-in-out infinite;
+    z-index: 10;
+
+    @include md {
+      font-size: $font-size-sm;
+      padding: $spacing-sm $spacing-lg;
+    }
+  }
+
+  &__photo {
+    width: 100%;
+    height: 200px;
+    margin-bottom: $spacing-lg;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    border: 2px solid $neon-cyan;
+    @include neon-shadow($neon-cyan, low);
+
+    @include md {
+      height: 250px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform $transition-slow;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
+  }
+
+  &__header {
+    margin-bottom: $spacing-lg;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $neon-cyan;
+    @include neon-text-shadow($neon-cyan, low);
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @include md {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__level {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-lg;
+
+    @include md {
+      flex-direction: row;
+      gap: $spacing-md;
+    }
+  }
+
+  &__level-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    background: linear-gradient(
+      135deg,
+      rgba($neon-cyan, 0.1) 0%,
+      rgba($neon-purple, 0.05) 100%
+    );
+    border: 2px solid rgba($neon-cyan, 0.5);
+    border-radius: $border-radius-md;
+    @include neon-shadow($neon-cyan, low);
+    transition: all $transition-base;
+
+    &:hover {
+      transform: translateY(-2px);
+      @include neon-shadow($neon-cyan, medium);
+    }
+
+    &--mutated {
+      background: linear-gradient(
+        135deg,
+        rgba($neon-pink, 0.1) 0%,
+        rgba($neon-purple, 0.05) 100%
+      );
+      border-color: rgba($neon-pink, 0.5);
+      @include neon-shadow($neon-pink, low);
+
+      &:hover {
+        @include neon-shadow($neon-pink, medium);
+      }
+    }
+
+    @include md {
+      padding: $spacing-lg;
+    }
+  }
+
+  &__level-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: rgba($color-light, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    line-height: 1.2;
+
+    @include md {
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__level-value {
+    font-family: $font-primary;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-black;
+    @include neon-text-shadow($neon-cyan, medium);
+    text-align: right;
+    line-height: 1;
+
+    &--base {
+      color: $neon-cyan;
+    }
+
+    &--mutated {
+      color: $neon-pink;
+      @include neon-text-shadow($neon-pink, medium);
+    }
+
+    @include md {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__type {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-xs $spacing-md;
+    background: rgba(var(--type-color), 0.1);
+    border: 1px solid var(--type-color);
+    border-radius: $border-radius-full;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: var(--type-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 10px rgba(var(--type-color), 0.2);
+
+    @include md {
+      font-size: $font-size-sm;
+      padding: $spacing-sm $spacing-md;
+    }
+  }
+
+  &__stats {
+    position: relative;
+    z-index: 1;
+    margin-bottom: $spacing-lg;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &--mutated {
+      padding: $spacing-md;
+      background: linear-gradient(
+        135deg,
+        rgba($neon-pink, 0.05) 0%,
+        rgba($neon-purple, 0.05) 100%
+      );
+      border-radius: $border-radius-md;
+      border: 1px solid rgba($neon-pink, 0.3);
+
+      @include md {
+        padding: $spacing-lg;
+      }
+    }
+  }
+
+  &__stats-title {
+    font-family: $font-primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $neon-purple;
+    @include neon-text-shadow($neon-purple, low);
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @include md {
+      font-size: $font-size-lg;
+    }
+  }
+
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+
+    @include lg {
+      gap: $spacing-lg;
+    }
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    background: rgba($color-dark, 0.6);
+    border: 2px solid rgba(var(--stat-color), 0.3);
+    border-radius: $border-radius-sm;
+    transition: all $transition-base;
+    min-height: 140px;
+
+    @include md {
+      min-height: 160px;
+      padding: $spacing-lg;
+    }
+
+    &:hover {
+      border-color: var(--stat-color);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(var(--stat-color), 0.3);
+    }
+
+    &--has-mutation {
+      min-height: 180px;
+
+      @include md {
+        min-height: 200px;
+      }
+    }
+  }
+
+  &__stat-row {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    width: 100%;
+    justify-content: center;
+
+    &--mutated {
+      margin-top: $spacing-xs;
+      padding-top: $spacing-xs;
+      border-top: 1px solid rgba($neon-pink, 0.3);
+    }
+  }
+
+  &__stat-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: rgba($color-light, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 45px;
+
+    @include md {
+      font-size: $font-size-sm;
+      min-width: 50px;
+    }
+  }
+
+  &__stat-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-xs;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__stat-icon {
+    font-size: $font-size-xl;
+    line-height: 1;
+    margin-bottom: $spacing-xs;
+
+    @include md {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__stat-name {
+    font-size: 0.6rem;
+    font-weight: $font-weight-medium;
+    color: rgba($color-light, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    width: 100%;
+    word-wrap: break-word;
+    hyphens: auto;
+    padding: 0 $spacing-xs;
+    margin-bottom: $spacing-xs;
+
+    @include md {
+      font-size: 0.65rem;
+      letter-spacing: 0.03em;
+    }
+
+    @include lg {
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  &__stat-value {
+    font-family: $font-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: var(--stat-color);
+    @include neon-text-shadow(var(--stat-color), low);
+    cursor: pointer;
+    position: relative;
+    transition: all $transition-base;
+
+    &:hover {
+      transform: scale(1.05);
+
+      .dino-card__stat-edit-icon {
+        opacity: 1;
+      }
+    }
+
+    &--mutated {
+      color: $neon-pink;
+      @include neon-text-shadow($neon-pink, medium);
+    }
+
+    @include md {
+      font-size: $font-size-xl;
+    }
+
+    @include lg {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__stat-edit-icon {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: $font-size-xs;
+    opacity: 0;
+    transition: opacity $transition-base;
+    color: $neon-cyan;
+  }
+
+  &__stat--editing {
+    border-color: $neon-cyan !important;
+    @include neon-shadow($neon-cyan, medium);
+  }
+
+  &__stat-edit {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__stat-input {
+    width: 100%;
+    padding: $spacing-sm;
+    background: rgba($color-dark, 0.9);
+    border: 2px solid $neon-cyan;
+    border-radius: $border-radius-sm;
+    color: $neon-cyan;
+    font-family: $font-primary;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    @include neon-text-shadow($neon-cyan, low);
+
+    &:focus {
+      outline: none;
+      @include neon-shadow($neon-cyan, high);
+    }
+
+    @include md {
+      font-size: $font-size-xl;
+      padding: $spacing-md;
+    }
+  }
+
+  &__stat-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__stat-btn {
+    flex: 1;
+    padding: $spacing-sm;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &--save {
+      background: $neon-green;
+      border: 2px solid $neon-green;
+      color: $color-dark;
+
+      &:hover {
+        transform: scale(1.05);
+        @include neon-shadow($neon-green, medium);
+      }
+    }
+
+    &--cancel {
+      background: rgba($neon-pink, 0.2);
+      border: 2px solid $neon-pink;
+      color: $neon-pink;
+
+      &:hover {
+        background: $neon-pink;
+        color: $color-dark;
+        transform: scale(1.05);
+      }
+    }
+
+    @include md {
+      padding: $spacing-md;
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}

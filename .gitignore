@@ -1,0 +1,28 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# API - Ne jamais commiter les fichiers de config avec mots de passe!
+# Le dossier api/ n'est PAS dans ce repo, il est dans C:\wamp64\www\api\
+# On ne commit PAS l'API dans ce repo React
