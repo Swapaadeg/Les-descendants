@@ -7,15 +7,17 @@ const DinoList = ({ dinos, onUpdateDino, onDeleteDino }) => {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
 
-  // Filtrer les dinosaures
-  const filteredDinos = dinos.filter(dino => {
-    const matchesSearch = dino.species.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === 'all' ||
-      (filter === 'mutated' && dino.isMutated) ||
-      (filter !== 'mutated' && filter !== 'all' && dino.typeIds.includes(parseInt(filter)));
+  // Filtrer et trier les dinosaures par ordre alphabétique
+  const filteredDinos = dinos
+    .filter(dino => {
+      const matchesSearch = dino.species.toLowerCase().includes(search.toLowerCase());
+      const matchesFilter = filter === 'all' ||
+        (filter === 'mutated' && dino.isMutated) ||
+        (filter !== 'mutated' && filter !== 'all' && dino.typeIds.includes(parseInt(filter)));
 
-    return matchesSearch && matchesFilter;
-  });
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => a.species.localeCompare(b.species));
 
   if (dinos.length === 0) {
     return (
