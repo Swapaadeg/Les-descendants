@@ -2,10 +2,10 @@
 // IMPORTS DE BASE
 // ===========================
 
-@import './base/reset';
-@import './base/variables';
-@import './base/responsive';
-@import './base/base';
+@use './base/reset' as *;
+@use './base/variables' as *;
+@use './base/responsive' as *;
+@use './base/base' as *;
 
 // ===========================
 // GOOGLE FONTS

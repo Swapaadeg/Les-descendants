@@ -1,5 +1,5 @@
-@import '../../styles/base/variables';
-@import '../../styles/base/responsive';
+@use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
 
 .dino-list {
   width: 100%;

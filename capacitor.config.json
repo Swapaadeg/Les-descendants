@@ -1,0 +1,12 @@
+{
+  "appId": "com.descendants.arktracker",
+  "appName": "ARK Tracker",
+  "webDir": "dist",
+  "server": {
+    "url": "https://les-descendants.sc5jewe1253.universe.wf",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

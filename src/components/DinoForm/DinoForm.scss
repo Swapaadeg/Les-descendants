@@ -1,5 +1,6 @@
-@import '../../styles/base/variables';
-@import '../../styles/base/responsive';
+@use "sass:color";
+@use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
 
 .dino-form {
   max-width: 900px;
@@ -297,7 +298,7 @@
     }
 
     &:hover {
-      border-color: lighten($neon-pink, 10%);
+      border-color: color.adjust($neon-pink, $lightness: 10%);
     }
   }
 

@@ -71,8 +71,16 @@ $border-width: 2px;
 // ===========================
 
 @mixin neon-shadow($color, $intensity: medium) {
-  $blur: if($intensity == low, 10px, if($intensity == high, 30px, 20px));
-  $spread: if($intensity == low, 2px, if($intensity == high, 6px, 4px));
+  $blur: 20px;
+  $spread: 4px;
+
+  @if $intensity == low {
+    $blur: 10px;
+    $spread: 2px;
+  } @else if $intensity == high {
+    $blur: 30px;
+    $spread: 6px;
+  }
 
   box-shadow:
     0 0 $blur rgba($color, 0.5),
@@ -81,8 +89,16 @@ $border-width: 2px;
 }
 
 @mixin neon-text-shadow($color, $intensity: medium) {
-  $blur1: if($intensity == low, 5px, if($intensity == high, 15px, 10px));
-  $blur2: if($intensity == low, 10px, if($intensity == high, 25px, 20px));
+  $blur1: 10px;
+  $blur2: 20px;
+
+  @if $intensity == low {
+    $blur1: 5px;
+    $blur2: 10px;
+  } @else if $intensity == high {
+    $blur1: 15px;
+    $blur2: 25px;
+  }
 
   text-shadow:
     0 0 $blur1 rgba($color, 0.8),

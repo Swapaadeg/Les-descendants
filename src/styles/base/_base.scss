@@ -1,5 +1,5 @@
-@import './variables';
-@import './responsive';
+@use './variables' as *;
+@use './responsive' as *;
 
 // ===========================
 // STYLES DE BASE

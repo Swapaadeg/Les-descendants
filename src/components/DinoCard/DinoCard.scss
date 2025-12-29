@@ -1,5 +1,5 @@
-@import '../../styles/base/variables';
-@import '../../styles/base/responsive';
+@use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
 
 .dino-card {
   position: relative;
@@ -13,6 +13,12 @@
   padding: $spacing-lg;
   transition: all $transition-base;
   overflow: hidden;
+
+  // Empêcher tout débordement horizontal lié au padding/border
+  box-sizing: border-box;
+  * {
+    box-sizing: inherit;
+  }
 
   @include md {
     padding: $spacing-xl;
@@ -152,6 +158,7 @@
 
   &__level-item {
     flex: 1;
+    min-width: 0; // Permet au flex de bien fonctionner
     display: flex;
     flex-direction: column;
     gap: $spacing-sm;
@@ -172,6 +179,9 @@
     }
 
     &--mutated {
+      flex: 1;
+      min-width: 0;
+      padding: $spacing-md; // Même padding que la version non-mutée
       background: linear-gradient(
         135deg,
         rgba($neon-pink, 0.1) 0%,
@@ -182,6 +192,10 @@
 
       &:hover {
         @include neon-shadow($neon-pink, medium);
+      }
+
+      @include md {
+        padding: $spacing-lg; // Même padding sur écrans moyens
       }
     }
 
@@ -265,14 +279,18 @@
     }
 
     &--mutated {
+      // S'assurer que le bloc muté respecte le padding de la card
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
       padding: $spacing-md;
+      border: 1px solid rgba($neon-pink, 0.3);
+      border-radius: $border-radius-md;
       background: linear-gradient(
         135deg,
         rgba($neon-pink, 0.05) 0%,
         rgba($neon-purple, 0.05) 100%
       );
-      border-radius: $border-radius-md;
-      border: 1px solid rgba($neon-pink, 0.3);
 
       @include md {
         padding: $spacing-lg;
@@ -299,6 +317,10 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: $spacing-md;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-inline-size: 0; // éviter l'élargissement dû au contenu
 
     @include lg {
       gap: $spacing-lg;
@@ -316,6 +338,7 @@
     border: 2px solid rgba(var(--stat-color), 0.3);
     border-radius: $border-radius-sm;
     transition: all $transition-base;
+    min-width: 0; // autoriser la compression dans la grid
     min-height: 140px;
 
     @include md {
