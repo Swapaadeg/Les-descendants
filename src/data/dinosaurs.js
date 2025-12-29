@@ -6,8 +6,8 @@ export const arkDinosaurs = [
   { name: 'Acrocanthosaurus', types: [1] },
   { name: 'Allosaurus', types: [1] },
   { name: 'Baryonyx', types: [1, 3] },
-  { name: 'Carnotaurus', types: [1] },
   { name: 'Carcharodontosaurus', types: [1] },
+  { name: 'Carnotaurus', types: [1] },
   { name: 'Ceratosuchops', types: [1, 3] },
   { name: 'Compy', types: [1, 5] },
   { name: 'Cryolophosaurus', types: [1] },
@@ -112,14 +112,12 @@ export const arkDinosaurs = [
   { name: 'Basilosaurus', types: [1, 3] },
   { name: 'Beelzebufo', types: [1, 3] },
   { name: 'Castoroides', types: [2, 3] },
-  { name: 'Cnidaria', types: [1, 3] },
   { name: 'Diplocaulus', types: [2, 3] },
   { name: 'Dunkleosteus', types: [1, 3] },
   { name: 'Electrophorus', types: [1, 3] },
   { name: 'Helicoprion', types: [1, 3] },
   { name: 'Ichthyosaurus', types: [1, 3] },
   { name: 'Karkinos', types: [1, 3] },
-  { name: 'Leedsichthys', types: [2, 3] },
   { name: 'Manta', types: [2, 3] },
   { name: 'Megalodon', types: [1, 3] },
   { name: 'Mosasaurus', types: [1, 3] },
@@ -147,7 +145,6 @@ export const arkDinosaurs = [
   { name: 'Bloodstalker', types: [1] },
   { name: 'Colossuscorpius', types: [1] },
   { name: 'Daeodon', types: [1] },
-  { name: 'Deathworm', types: [1] },
   { name: 'Dimetrodon', types: [1] },
   { name: 'Dinopithecus', types: [1] },
   { name: 'Enforcer', types: [1] },
@@ -163,7 +160,6 @@ export const arkDinosaurs = [
   { name: 'Mek', types: [1] },
   { name: 'Megalania', types: [1] },
   { name: 'Morellatops', types: [2] },
-  { name: 'Oasisaur', types: [2] },
   { name: 'Ossidon', types: [1] },
   { name: 'Pulmonoscorpius', types: [1] },
   { name: 'Purlovia', types: [1] },
@@ -180,15 +176,8 @@ export const arkDinosaurs = [
   { name: 'Velonasaur', types: [1] },
 
   // ===== FJORDUR FANTASTIC TAMES =====
-  { name: 'Beyla (Bee Queen)', types: [2, 4] },
   { name: 'Hati and Skoll', types: [1] },
   { name: 'Steinbjorn (Rock Bear)', types: [1] },
-
-  // ===== ARK: SURVIVAL ASCENDED - THE ISLAND =====
-  { name: 'Bob', types: [2] },
-  { name: 'Apex Carno', types: [1] },
-  { name: 'Apex Raptor', types: [1] },
-  { name: 'Apex Rex', types: [1] },
 
   // ===== ARK: SURVIVAL ASCENDED - SCORCHED EARTH =====
   { name: 'Fasolasuchus', types: [1] },
@@ -200,13 +189,10 @@ export const arkDinosaurs = [
   { name: 'Aureliax', types: [1, 4] },
   { name: 'Yi Ling', types: [1, 4] },
   { name: 'Glowtail Prime', types: [2, 5] },
-  { name: 'Nerva', types: [1, 3] },
 
   // ===== ARK: SURVIVAL ASCENDED - THE CENTER =====
   { name: 'Drakeling', types: [1, 4, 5] },
-  { name: 'Aegis Drake', types: [1, 4] },
   { name: 'Aethermane', types: [2] },
-  { name: 'Carchar', types: [1] },
 
   // ===== VARIANTES ABERRANT =====
   { name: 'Aberrant Anglerfish', types: [1, 3] },
