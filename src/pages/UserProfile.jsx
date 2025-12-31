@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import { useAuth } from '../contexts/AuthContext';
+import { userAPI } from '../services/api';
 import '../styles/pages/user-profile.scss';
 
 const UserProfile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const [emailData, setEmailData] = useState({
@@ -107,11 +108,16 @@ const UserProfile = () => {
     setLoading(true);
 
     try {
-      // TODO: Implémenter l'API call pour uploader l'avatar
-      console.log('Upload avatar:', avatarFile);
-      setSuccess('Photo de profil mise à jour !');
+      // Upload de l'avatar
+      const response = await userAPI.uploadAvatar(avatarFile);
+
+      // Rafraîchir les données utilisateur depuis le serveur
+      await refreshUser();
+
+      setSuccess(response.message || 'Photo de profil mise à jour !');
+      setAvatarFile(null);
     } catch (err) {
-      setError(err.message || 'Erreur lors de l\'upload de la photo');
+      setError(err.response?.data?.error || err.message || 'Erreur lors de l\'upload de la photo');
     } finally {
       setLoading(false);
     }

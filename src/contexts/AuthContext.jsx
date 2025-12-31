@@ -3,7 +3,7 @@
  * Gère l'état global de l'utilisateur connecté
  */
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -210,6 +210,21 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify({ ...user, ...newUserData }));
   };
 
+  /**
+   * Rafraîchir les données utilisateur depuis le serveur
+   */
+  const refreshUser = async () => {
+    try {
+      const userData = await authAPI.me();
+      setUser(userData.user);
+      localStorage.setItem('user', JSON.stringify(userData.user));
+      return userData.user;
+    } catch (err) {
+      console.error('Erreur de rafraîchissement utilisateur:', err);
+      throw err;
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -223,6 +238,7 @@ export const AuthProvider = ({ children }) => {
     requestPasswordReset,
     resetPassword,
     updateUser,
+    refreshUser,
     clearError: () => setError(null),
   };
 

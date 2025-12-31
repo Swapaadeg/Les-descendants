@@ -140,21 +140,14 @@ export const authAPI = {
 
 export const userAPI = {
   /**
-   * Mettre à jour le profil utilisateur
+   * Upload de la photo de profil (avatar)
    */
-  updateProfile: async (profileData) => {
-    const response = await api.put('/user/update-profile.php', profileData);
-    return response.data;
-  },
-
-  /**
-   * Upload de la photo de profil
-   */
-  uploadPhoto: async (photoFile) => {
+  uploadAvatar: async (avatarFile) => {
     const formData = new FormData();
-    formData.append('photo', photoFile);
+    formData.append('avatar', avatarFile);
+    formData.append('action', 'upload_avatar');
 
-    const response = await api.post('/user/upload-photo.php', formData, {
+    const response = await api.post('/auth/profile.php', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -166,8 +159,9 @@ export const userAPI = {
    * Changer l'adresse email
    */
   changeEmail: async (newEmail, password) => {
-    const response = await api.post('/user/change-email.php', {
-      new_email: newEmail,
+    const response = await api.put('/auth/profile.php', {
+      action: 'update_email',
+      newEmail,
       password,
     });
     return response.data;
@@ -176,11 +170,11 @@ export const userAPI = {
   /**
    * Changer le mot de passe
    */
-  changePassword: async (currentPassword, newPassword, confirmPassword) => {
-    const response = await api.post('/user/change-password.php', {
-      current_password: currentPassword,
-      new_password: newPassword,
-      confirm_password: confirmPassword,
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await api.put('/auth/profile.php', {
+      action: 'update_password',
+      currentPassword,
+      newPassword,
     });
     return response.data;
   },
