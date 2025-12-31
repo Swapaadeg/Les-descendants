@@ -47,7 +47,7 @@ try {
 
     $stmt = $pdo->prepare("
         SELECT id, email, username, is_admin, email_verified, is_banned,
-               created_at, last_login
+               created_at, last_login, photo_profil
         FROM users
         WHERE id = ?
     ");
@@ -88,6 +88,7 @@ try {
             'is_banned' => (bool)$userComplete['is_banned'],
             'created_at' => $userComplete['created_at'],
             'last_login' => $userComplete['last_login'],
+            'photo_profil' => $userComplete['photo_profil'],
             'tribes' => array_map(function($tribe) {
                 return [
                     'id' => (int)$tribe['id'],

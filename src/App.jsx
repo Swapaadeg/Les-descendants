@@ -7,6 +7,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import Dashboard from './pages/Dashboard';
 import TribePage from './pages/TribePage/TribePage';
 import TribeCustomization from './pages/TribeCustomization/TribeCustomization';
+import UserProfile from './pages/UserProfile';
 import './styles/main.scss';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tribe" element={<TribePage />} />
           <Route path="/tribe/customize" element={<TribeCustomization />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Router>
     </AuthProvider>
