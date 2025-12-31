@@ -26,6 +26,23 @@ const Home = () => {
         <div className="home__banner-overlay"></div>
       </div>
 
+      {/* Avatar utilisateur en haut à droite */}
+      {isAuthenticated && user && (
+        <Link to="/profile" className="home__user-avatar">
+          {user.photo_profil ? (
+            <img
+              src={user.photo_profil}
+              alt={user.username}
+              className="home__user-avatar-img"
+            />
+          ) : (
+            <div className="home__user-avatar-placeholder">
+              {user.username?.charAt(0).toUpperCase() || '👤'}
+            </div>
+          )}
+        </Link>
+      )}
+
       {/* Contenu principal */}
       <div className="home__content">
         {/* Logo cliquable */}
