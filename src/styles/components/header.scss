@@ -30,6 +30,43 @@
     z-index: 1;
   }
 
+  &__logo-link {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.5));
+    }
+
+    &:active {
+      transform: translate(-50%, -50%) scale(0.98);
+    }
+  }
+
+  &__logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+    transition: all $transition-base;
+
+    @include md {
+      width: 160px;
+      height: 160px;
+    }
+
+    @include sm {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
   &__banner {
     position: relative;
     z-index: 2;

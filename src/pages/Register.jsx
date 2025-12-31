@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../components/Header/Header';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/pages/auth.scss';
 
@@ -106,8 +107,10 @@ const Register = () => {
 
   if (success) {
     return (
-      <div className="auth">
-        <div className="auth__container">
+      <>
+        <Header />
+        <div className="auth">
+          <div className="auth__container">
           <div className="auth__card">
             <h1 className="auth__title">Compte créé ! 🎉</h1>
             <p className="auth__subtitle">Bienvenue dans Arki'Family !</p>
@@ -134,14 +137,17 @@ const Register = () => {
               ← Retour à l'accueil
             </Link>
           </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="auth">
-      <div className="auth__container">
+    <>
+      <Header />
+      <div className="auth">
+        <div className="auth__container">
         <div className="auth__card">
           <h1 className="auth__title">Créer un compte</h1>
           <p className="auth__subtitle">Rejoins l'aventure Arki'Family ! 🦖</p>
@@ -295,8 +301,9 @@ const Register = () => {
             ← Retour à l'accueil
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

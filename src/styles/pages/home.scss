@@ -200,10 +200,30 @@
         box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
       }
     }
+
+    &--accent {
+      background: linear-gradient(135deg, $neon-purple 0%, $neon-pink 100%);
+      color: #fff;
+      box-shadow: 0 5px 25px rgba($neon-purple, 0.4);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 35px rgba($neon-purple, 0.6);
+      }
+    }
   }
 
   &__btn-icon {
     font-size: 1.3rem;
+  }
+
+  &__btn-tribe-logo {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   // ===========================

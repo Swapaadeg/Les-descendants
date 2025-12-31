@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTribe } from '../hooks/useTribe';
 import '../styles/pages/home.scss';
 
 const Home = () => {
   const { isAuthenticated, logout, user } = useAuth();
+  const { tribe } = useTribe();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -56,6 +58,20 @@ const Home = () => {
                 <span className="home__btn-icon">🦖</span>
                 Mes dinosaures
               </Link>
+              {tribe && (
+                <Link to="/tribe" className="home__btn home__btn--accent">
+                  {tribe.logo_url ? (
+                    <img
+                      src={tribe.logo_url}
+                      alt={tribe.name}
+                      className="home__btn-tribe-logo"
+                    />
+                  ) : (
+                    <span className="home__btn-icon">🏛️</span>
+                  )}
+                  <span>{tribe.name}</span>
+                </Link>
+              )}
               <button onClick={handleLogout} className="home__btn home__btn--secondary">
                 <span className="home__btn-icon">🚪</span>
                 Déconnexion
@@ -102,10 +118,10 @@ const Home = () => {
           </div>
 
           <div className="home__feature">
-            <div className="home__feature-icon">🏆</div>
-            <h3 className="home__feature-title">Classements</h3>
+            <div className="home__feature-icon">🎉</div>
+            <h3 className="home__feature-title">Evénements</h3>
             <p className="home__feature-desc">
-              Affiche ton meilleur dino du mois et partage tes succès
+              Remémore-toi les événements du serveur
             </p>
           </div>
         </div>
@@ -113,7 +129,7 @@ const Home = () => {
         {/* Footer */}
         <div className="home__footer">
           <p className="home__footer-text">
-            Une plateforme communautaire pour les éleveurs ARK
+            Une plateforme communautaire pour les éleveurs d'Arki'Family
           </p>
           <div className="home__footer-season">
             <span className="home__footer-season-icon">❄️</span>

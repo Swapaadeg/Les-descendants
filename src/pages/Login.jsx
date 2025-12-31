@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Header from '../components/Header/Header';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/pages/auth.scss';
 
@@ -40,8 +41,10 @@ const Login = () => {
   };
 
   return (
-    <div className="auth">
-      <div className="auth__container">
+    <>
+      <Header />
+      <div className="auth">
+        <div className="auth__container">
         <div className="auth__card">
           <h1 className="auth__title">Connexion</h1>
           <p className="auth__subtitle">Content de te revoir ! 🦖</p>
@@ -123,8 +126,9 @@ const Login = () => {
             ← Retour à l'accueil
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

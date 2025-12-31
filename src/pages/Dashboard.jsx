@@ -146,7 +146,15 @@ function Dashboard() {
               '--tribe-secondary': tribe.secondary_color || '#b842ff'
             }}
           >
-            <span className="dashboard__tribe-icon">🏛️</span>
+            {tribe.logo_url ? (
+              <img
+                src={tribe.logo_url}
+                alt={tribe.name}
+                className="dashboard__tribe-logo"
+              />
+            ) : (
+              <span className="dashboard__tribe-icon">🏛️</span>
+            )}
             <span className="dashboard__tribe-name">{tribe.name}</span>
           </Link>
         </div>

@@ -68,6 +68,20 @@
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   }
 
+  &__tribe-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.6);
+
+    @include md {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
   &__tribe-name {
     @include neon-text-shadow(var(--tribe-primary, $neon-cyan), low);
   }

@@ -119,6 +119,15 @@ const TribePage = () => {
     <div className="tribe-page" style={pageStyle}>
       <div className="tribe-page__overlay" />
 
+      {/* Logo Arki'Family centré */}
+      <Link to="/" className="tribe-page__home-logo-link">
+        <img
+          src="/assets/seasonal/winter/logo-hiver.png"
+          alt="Arki'Family"
+          className="tribe-page__home-logo"
+        />
+      </Link>
+
       {/* Header avec titre */}
       <div className="tribe-page__header">
         <div className="tribe-page__header-content">

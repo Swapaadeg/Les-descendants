@@ -27,6 +27,44 @@
     z-index: 1;
   }
 
+  // Logo Arki'Family centré en haut
+  &__home-logo-link {
+    position: absolute;
+    top: $spacing-xl;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &:hover {
+      transform: translateX(-50%) scale(1.05) translateY(-5px);
+      filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.5));
+    }
+
+    &:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+  }
+
+  &__home-logo {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+    transition: all $transition-base;
+
+    @include md {
+      width: 150px;
+      height: 150px;
+    }
+
+    @include sm {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
   // Header avec titre
   &__header {
     width: 100%;
@@ -35,12 +73,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: -100px; // Overlap pour le logo
+    margin-bottom: -90px; // Overlap réduit pour logo plus petit
+    padding-top: 240px; // Espace pour le logo Arki'Family
     z-index: 2;
+
+    @include md {
+      padding-top: 200px;
+      margin-bottom: -75px;
+    }
 
     @include sm {
       min-height: 35vh;
-      margin-bottom: -75px;
+      margin-bottom: -60px;
+      padding-top: 160px;
     }
   }
 
@@ -61,10 +106,10 @@
   }
 
   &__logo {
-    width: 300px;
-    height: 300px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
-    border: 6px solid var(--tribe-primary, $neon-cyan);
+    border: 5px solid var(--tribe-primary, $neon-cyan);
     box-shadow:
       0 0 30px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.5),
       0 0 60px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.3);
@@ -72,27 +117,36 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    transform: scale(1.05);
 
-    @include sm {
+    @include md {
       width: 150px;
       height: 150px;
       border: 4px solid var(--tribe-primary, $neon-cyan);
+    }
+
+    @include sm {
+      width: 120px;
+      height: 120px;
+      border: 3px solid var(--tribe-primary, $neon-cyan);
     }
 
     &--placeholder {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 150px;
+      font-size: 90px;
       background: linear-gradient(
         135deg,
         rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.2),
         rgba(var(--tribe-secondary-rgb, 184, 66, 255), 0.2)
       );
 
-      @include sm {
+      @include md {
         font-size: 75px;
+      }
+
+      @include sm {
+        font-size: 60px;
       }
     }
   }
@@ -259,6 +313,51 @@
 
     @include xl {
       grid-template-columns: repeat(3, 1fr);
+    }
+
+    // Appliquer les couleurs de la tribu aux cartes de dinosaures
+    .dino-card {
+      border-color: rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.3);
+
+      &::before {
+        background:
+          radial-gradient(circle at 10% 20%, rgba(var(--tribe-secondary-rgb, 184, 66, 255), 0.05) 0%, transparent 50%),
+          radial-gradient(circle at 90% 80%, rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.05) 0%, transparent 50%);
+      }
+
+      &:hover {
+        border-color: var(--tribe-primary, $neon-cyan);
+        box-shadow: 0 10px 30px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.4);
+      }
+
+      // Nom de l'espèce (titre)
+      .dino-card__title {
+        color: var(--tribe-primary, $neon-cyan);
+        text-shadow: 0 0 10px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.5);
+      }
+
+      // Fond et bordure du niveau
+      .dino-card__level-item {
+        background: linear-gradient(
+          135deg,
+          rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.1) 0%,
+          rgba(var(--tribe-secondary-rgb, 184, 66, 255), 0.05) 100%
+        );
+        border-color: rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.5);
+        box-shadow: 0 4px 12px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.2);
+      }
+
+      // Texte du niveau (base)
+      .dino-card__level-value--base {
+        color: var(--tribe-primary, $neon-cyan);
+        text-shadow: 0 0 15px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.6);
+      }
+
+      // Photo du dino (bordure)
+      .dino-card__photo {
+        border-color: var(--tribe-primary, $neon-cyan);
+        box-shadow: 0 4px 12px rgba(var(--tribe-primary-rgb, 0, 240, 255), 0.3);
+      }
     }
   }
 

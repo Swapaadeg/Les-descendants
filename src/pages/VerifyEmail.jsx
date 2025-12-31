@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import Header from '../components/Header/Header';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/pages/auth.scss';
 
@@ -39,8 +40,10 @@ const VerifyEmail = () => {
   }, [searchParams, verifyEmail, navigate]);
 
   return (
-    <div className="auth">
-      <div className="auth__container">
+    <>
+      <Header />
+      <div className="auth">
+        <div className="auth__container">
         <div className="auth__card">
           {status === 'loading' && (
             <>
@@ -121,6 +124,7 @@ const VerifyEmail = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
