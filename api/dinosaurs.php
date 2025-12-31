@@ -5,6 +5,7 @@
  */
 
 require_once 'config.php';
+require_once 'middleware/auth.php';
 
 // Récupérer la méthode HTTP
 $method = $_SERVER['REQUEST_METHOD'];
@@ -12,19 +13,25 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Récupérer la connexion à la base de données
 $pdo = getDbConnection();
 
+// Vérifier l'authentification
+$user = requireAuth($pdo);
+if (!$user) {
+    exit;
+}
+
 // Router selon la méthode HTTP
 switch ($method) {
     case 'GET':
-        handleGet($pdo);
+        handleGet($pdo, $user);
         break;
     case 'POST':
-        handlePost($pdo);
+        handlePost($pdo, $user);
         break;
     case 'PUT':
-        handlePut($pdo);
+        handlePut($pdo, $user);
         break;
     case 'DELETE':
-        handleDelete($pdo);
+        handleDelete($pdo, $user);
         break;
     default:
         sendJsonError('Méthode non autorisée', 405);
@@ -33,10 +40,18 @@ switch ($method) {
 /**
  * GET - Récupérer tous les dinosaures
  */
-function handleGet($pdo) {
+function handleGet($pdo, $user) {
     try {
-        $stmt = $pdo->query('SELECT * FROM dinosaurs ORDER BY created_at DESC');
-        $dinosaurs = $stmt->fetchAll();
+        // Si ?recent est présent, retourner les 3 derniers modifiés
+        if (isset($_GET['recent']) && isset($_GET['tribe_id'])) {
+            $tribeId = (int)$_GET['tribe_id'];
+            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? ORDER BY updated_at DESC LIMIT 3');
+            $stmt->execute([$tribeId]);
+            $dinosaurs = $stmt->fetchAll();
+        } else {
+            $stmt = $pdo->query('SELECT * FROM dinosaurs ORDER BY created_at DESC');
+            $dinosaurs = $stmt->fetchAll();
+        }
 
         // Transformer les données pour le format attendu par React
         $result = array_map(function($dino) {
@@ -77,8 +92,26 @@ function handleGet($pdo) {
 /**
  * POST - Ajouter un nouveau dinosaure
  */
-function handlePost($pdo) {
+function handlePost($pdo, $user) {
     try {
+        // Récupérer la tribu de l'utilisateur
+        $stmt = $pdo->prepare("
+            SELECT t.id
+            FROM tribes t
+            JOIN tribe_members tm ON t.id = tm.tribe_id
+            WHERE tm.user_id = ? AND tm.is_validated = 1
+            LIMIT 1
+        ");
+        $stmt->execute([$user['id']]);
+        $tribe = $stmt->fetch();
+
+        if (!$tribe) {
+            sendJsonError('Vous devez être membre d\'une tribu pour ajouter un dinosaure', 403);
+            return;
+        }
+
+        $tribeId = $tribe['id'];
+
         // Gérer l'upload de fichier
         $photoUrl = null;
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -96,12 +129,12 @@ function handlePost($pdo) {
 
         // Préparer la requête d'insertion
         $sql = "INSERT INTO dinosaurs (
-            species, type_ids, is_mutated, photo_url,
+            tribe_id, species, type_ids, is_mutated, photo_url, created_by,
             stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_damage, stat_crafting,
             mutated_stat_health, mutated_stat_stamina, mutated_stat_oxygen, mutated_stat_food,
             mutated_stat_weight, mutated_stat_damage, mutated_stat_crafting
         ) VALUES (
-            :species, :type_ids, :is_mutated, :photo_url,
+            :tribe_id, :species, :type_ids, :is_mutated, :photo_url, :created_by,
             :stat_health, :stat_stamina, :stat_oxygen, :stat_food, :stat_weight, :stat_damage, :stat_crafting,
             :mutated_stat_health, :mutated_stat_stamina, :mutated_stat_oxygen, :mutated_stat_food,
             :mutated_stat_weight, :mutated_stat_damage, :mutated_stat_crafting
@@ -109,10 +142,12 @@ function handlePost($pdo) {
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
+            ':tribe_id' => $tribeId,
             ':species' => $species,
             ':type_ids' => $typeIds,
             ':is_mutated' => $isMutated,
             ':photo_url' => $photoUrl,
+            ':created_by' => $user['id'],
             ':stat_health' => $stats['health'] ?? 0,
             ':stat_stamina' => $stats['stamina'] ?? 0,
             ':stat_oxygen' => $stats['oxygen'] ?? 0,
@@ -153,7 +188,7 @@ function handlePost($pdo) {
 /**
  * PUT - Mettre à jour un dinosaure
  */
-function handlePut($pdo) {
+function handlePut($pdo, $user) {
     try {
         // Récupérer les données JSON
         $input = json_decode(file_get_contents('php://input'), true);
@@ -201,7 +236,7 @@ function handlePut($pdo) {
 /**
  * DELETE - Supprimer un dinosaure
  */
-function handleDelete($pdo) {
+function handleDelete($pdo, $user) {
     try {
         // Récupérer l'ID depuis les paramètres GET
         $id = $_GET['id'] ?? null;

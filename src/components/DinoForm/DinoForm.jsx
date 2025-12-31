@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import arkDinosaurs from '../../data/dinosaurs';
 import dinoTypes from '../../data/types';
 import { baseStats, hasSpecialStat, shouldIgnoreOxygen } from '../../data/stats';
-import './DinoForm.scss';
+import '../../styles/components/dino-form.scss';
 
 const DinoForm = ({ onAddDino, existingDinos = [] }) => {
   const [formData, setFormData] = useState({

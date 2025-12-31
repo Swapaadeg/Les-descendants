@@ -25,5 +25,7 @@ dist-ssr
 
 # API - Fichiers sensibles
 api/config.php
+api/config.local.php
+api/migrate_to_arki_family.php
 api/uploads/*
 !api/uploads/.gitkeep

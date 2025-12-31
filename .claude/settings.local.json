@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(move banner-hiver.png public/assets/seasonal/winter/)",
+      "Bash(move logo-hiver.png public/assets/seasonal/winter/)",
+      "Bash(grep:*)",
+      "Bash(php run_migrations.php:*)",
+      "Bash(php -r:*)",
+      "Bash(php check_and_fix.php:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

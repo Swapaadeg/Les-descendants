@@ -1,11 +1,13 @@
 # Autoriser l'accès aux images
 <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    Order Allow,Deny
-    Allow from all
+    <RequireAll>
+        Require all granted
+    </RequireAll>
 </FilesMatch>
 
 # Bloquer l'accès aux fichiers PHP
 <FilesMatch "\.php$">
-    Order Deny,Allow
-    Deny from all
+    <RequireAll>
+        Require all denied
+    </RequireAll>
 </FilesMatch>

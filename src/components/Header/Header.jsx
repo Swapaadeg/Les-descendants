@@ -1,18 +1,14 @@
 import React from 'react';
-import './Header.scss';
+import '../../styles/components/header.scss';
 
 const Header = () => {
   return (
     <header className="header">
-      <div className="container">
-        <div className="header__content">
-          <h1 className="header__logo">
-            <span className="header__logo-text">LES</span>
-            <span className="header__logo-text header__logo-text--highlight">DESCENDANTS</span>
-          </h1>
-          <p className="header__subtitle">ARK Dinosaur Stats Tracker</p>
-        </div>
-      </div>
+      <img
+        src="/assets/seasonal/winter/banner-hiver.png"
+        alt="Arki-Family Hiver"
+        className="header__banner"
+      />
     </header>
   );
 };

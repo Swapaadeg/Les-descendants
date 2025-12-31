@@ -6,14 +6,20 @@
 $color-dark: #0a0a0f;
 $color-light: #e8e8f0;
 
-// Couleurs néon (5 couleurs principales)
+// Couleurs de texte
+$text-primary: #ffffff;
+$text-secondary: rgba(255, 255, 255, 0.8);
+$text-muted: rgba(255, 255, 255, 0.6);
+
+// Couleurs néon
 $neon-cyan: #00f0ff;
+$neon-blue: #00d4ff;
 $neon-purple: #b842ff;
 $neon-pink: #ff2a6d;
 $neon-green: #39ff14;
 $neon-orange: #ff6b35;
 
-// Opacités pour variations
+// Opacités
 $neon-opacity-low: 0.3;
 $neon-opacity-medium: 0.6;
 $neon-opacity-high: 0.9;
@@ -22,11 +28,12 @@ $neon-opacity-high: 0.9;
 // TYPOGRAPHIE
 // ===========================
 
-// Famille de polices
+// Familles de polices
 $font-primary: 'Orbitron', 'Rajdhani', 'Exo 2', sans-serif;
 $font-secondary: 'Rajdhani', sans-serif;
+$font-display: 'Orbitron', sans-serif;
 
-// Tailles de police (mobile-first)
+// Tailles de police
 $font-size-xs: 0.75rem;    // 12px
 $font-size-sm: 0.875rem;   // 14px
 $font-size-base: 1rem;     // 16px
@@ -62,12 +69,29 @@ $spacing-3xl: 4rem;     // 64px
 $border-radius-sm: 0.25rem;
 $border-radius-md: 0.5rem;
 $border-radius-lg: 1rem;
+$border-radius-xl: 1.5rem;
 $border-radius-full: 9999px;
 
 $border-width: 2px;
 
 // ===========================
-// OMBRES NÉON
+// TRANSITIONS
+// ===========================
+
+$transition-fast: 0.2s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// ===========================
+// Z-INDEX
+// ===========================
+
+$z-index-dropdown: 1000;
+$z-index-modal: 2000;
+$z-index-tooltip: 3000;
+
+// ===========================
+// OMBRES NÉON (Mixins)
 // ===========================
 
 @mixin neon-shadow($color, $intensity: medium) {
@@ -104,19 +128,3 @@ $border-width: 2px;
     0 0 $blur1 rgba($color, 0.8),
     0 0 $blur2 rgba($color, 0.5);
 }
-
-// ===========================
-// TRANSITIONS
-// ===========================
-
-$transition-fast: 0.2s ease;
-$transition-base: 0.3s ease;
-$transition-slow: 0.5s ease;
-
-// ===========================
-// Z-INDEX
-// ===========================
-
-$z-index-dropdown: 1000;
-$z-index-modal: 2000;
-$z-index-tooltip: 3000;

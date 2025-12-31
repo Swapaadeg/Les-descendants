@@ -1,0 +1,28 @@
+// Palettes de thèmes prédéfinies pour les tribus
+// Format: (couleur primaire, couleur secondaire)
+
+$theme-palettes: (
+  'cyber-default': (#00f0ff, #b842ff),
+  'sunset-blaze': (#ff2a6d, #ff6b35),
+  'toxic-glow': (#39ff14, #00d4ff),
+  'royal-neon': (#b842ff, #ff2a6d),
+  'fire-ice': (#ff6b35, #00f0ff),
+  'deep-ocean': (#00d4ff, #0a0a0f)
+);
+
+// Fonction pour obtenir une palette
+@function get-palette($name) {
+  @return map-get($theme-palettes, $name);
+}
+
+// Fonction pour obtenir la couleur primaire d'une palette
+@function get-palette-primary($name) {
+  $palette: get-palette($name);
+  @return nth($palette, 1);
+}
+
+// Fonction pour obtenir la couleur secondaire d'une palette
+@function get-palette-secondary($name) {
+  $palette: get-palette($name);
+  @return nth($palette, 2);
+}

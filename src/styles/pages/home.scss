@@ -1,0 +1,343 @@
+@use "sass:color";
+@use '../base/variables' as *;
+@use '../abstracts/mixins' as *;
+@use '../base/responsive' as *;
+
+// ===========================
+// PAGE D'ACCUEIL ARKI'FAMILY
+// ===========================
+
+.home {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // ===========================
+  // BANNER EN ARRIÈRE-PLAN
+  // ===========================
+
+  &__banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  &__banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(26, 26, 46, 0.7) 0%,
+      rgba(26, 26, 46, 0.85) 50%,
+      rgba(26, 26, 46, 0.95) 100%
+    );
+    backdrop-filter: blur(2px);
+  }
+
+  // ===========================
+  // CONTENU PRINCIPAL
+  // ===========================
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    width: 100%;
+    padding: $spacing-2xl;
+    text-align: center;
+
+    @include max-md {
+      padding: $spacing-lg;
+    }
+  }
+
+  // ===========================
+  // LOGO
+  // ===========================
+
+  &__logo-link {
+    display: inline-block;
+    margin-bottom: $spacing-xl;
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05) translateY(-5px);
+      filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.5));
+    }
+  }
+
+  &__logo {
+    max-width: 300px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+
+    @include max-md {
+      max-width: 200px;
+    }
+  }
+
+  // ===========================
+  // TITRES
+  // ===========================
+
+  &__title {
+    font-family: $font-display;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: $spacing-md;
+    color: $text-primary;
+    text-shadow: 0 2px 20px rgba(0, 212, 255, 0.3);
+    letter-spacing: 1px;
+  }
+
+  &__title-highlight {
+    background: linear-gradient(135deg, $neon-blue 0%, $neon-purple 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5));
+  }
+
+  &__subtitle {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: $spacing-2xl;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  // ===========================
+  // BOUTONS D'ACTION
+  // ===========================
+
+  &__actions {
+    display: flex;
+    gap: $spacing-lg;
+    justify-content: center;
+    margin-bottom: $spacing-3xl;
+    flex-wrap: wrap;
+
+    @include max-md {
+      flex-direction: column;
+      gap: $spacing-md;
+    }
+  }
+
+  &__btn {
+    padding: $spacing-md $spacing-2xl;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    justify-content: center;
+
+    @include max-md {
+      width: 100%;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    &:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    &--primary {
+      background: linear-gradient(135deg, $neon-blue 0%, $neon-purple 100%);
+      color: #fff;
+      box-shadow: 0 5px 25px rgba(0, 212, 255, 0.4);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 35px rgba(0, 212, 255, 0.6);
+      }
+    }
+
+    &--secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: $neon-blue;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+      }
+    }
+  }
+
+  &__btn-icon {
+    font-size: 1.3rem;
+  }
+
+  // ===========================
+  // CARACTÉRISTIQUES
+  // ===========================
+
+  &__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-xl;
+    margin-bottom: $spacing-3xl;
+
+    @include max-md {
+      grid-template-columns: 1fr;
+      gap: $spacing-lg;
+    }
+  }
+
+  &__feature {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: $neon-blue;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    }
+  }
+
+  &__feature-icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-md;
+    filter: drop-shadow(0 2px 10px rgba(0, 212, 255, 0.3));
+  }
+
+  &__feature-title {
+    font-family: $font-display;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: $spacing-sm;
+    color: $neon-blue;
+  }
+
+  &__feature-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  // ===========================
+  // FOOTER
+  // ===========================
+
+  &__footer {
+    margin-top: $spacing-2xl;
+    padding-top: $spacing-xl;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__footer-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-bottom: $spacing-md;
+  }
+
+  &__footer-season {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-lg;
+    background: linear-gradient(135deg, rgba(135, 206, 250, 0.15) 0%, rgba(147, 112, 219, 0.15) 100%);
+    border: 1px solid rgba(135, 206, 250, 0.3);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    backdrop-filter: blur(10px);
+  }
+
+  &__footer-season-icon {
+    font-size: 1.1rem;
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+// ===========================
+// ANIMATIONS
+// ===========================
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Animation d'apparition au chargement
+.home__content > * {
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.home__logo-link {
+  animation-delay: 0.1s;
+}
+
+.home__title {
+  animation-delay: 0.2s;
+}
+
+.home__subtitle {
+  animation-delay: 0.3s;
+}
+
+.home__actions {
+  animation-delay: 0.4s;
+}
+
+.home__features {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

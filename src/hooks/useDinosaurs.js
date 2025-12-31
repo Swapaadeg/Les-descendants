@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { API_ENDPOINTS } from '../config/api';
+import { dinoAPI } from '../services/api';
 
 export const useDinosaurs = () => {
   const [dinos, setDinos] = useState([]);
@@ -10,13 +10,7 @@ export const useDinosaurs = () => {
   const fetchDinosaurs = async () => {
     try {
       setLoading(true);
-      const response = await fetch(API_ENDPOINTS.dinosaurs);
-
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await dinoAPI.getAll();
       setDinos(data);
       setError(null);
     } catch (error) {
@@ -35,30 +29,7 @@ export const useDinosaurs = () => {
   // Ajouter un dinosaure
   const addDinosaur = async (dinoData) => {
     try {
-      // Créer un FormData pour l'upload de fichier
-      const formData = new FormData();
-      formData.append('species', dinoData.species);
-      formData.append('typeIds', JSON.stringify(dinoData.typeIds));
-      formData.append('isMutated', dinoData.isMutated ? '1' : '0');
-      formData.append('stats', JSON.stringify(dinoData.stats));
-      formData.append('mutatedStats', JSON.stringify(dinoData.mutatedStats || {}));
-
-      // Ajouter la photo si présente
-      if (dinoData.photo) {
-        formData.append('photo', dinoData.photo);
-      }
-
-      const response = await fetch(API_ENDPOINTS.dinosaurs, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erreur lors de l\'ajout');
-      }
-
-      const result = await response.json();
+      const result = await dinoAPI.create(dinoData);
 
       // Rafraîchir la liste
       await fetchDinosaurs();
@@ -74,23 +45,7 @@ export const useDinosaurs = () => {
   // Mettre à jour un dinosaure
   const updateDinosaur = async (dinoId, updatedData) => {
     try {
-      const payload = {
-        id: dinoId,
-        ...updatedData
-      };
-
-      const response = await fetch(API_ENDPOINTS.dinosaurs, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erreur lors de la mise à jour');
-      }
+      await dinoAPI.update(dinoId, updatedData);
 
       // Rafraîchir la liste
       await fetchDinosaurs();
@@ -104,14 +59,7 @@ export const useDinosaurs = () => {
   // Supprimer un dinosaure
   const deleteDinosaur = async (dinoId) => {
     try {
-      const response = await fetch(`${API_ENDPOINTS.dinosaurs}?id=${dinoId}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erreur lors de la suppression');
-      }
+      await dinoAPI.delete(dinoId);
 
       // Rafraîchir la liste
       await fetchDinosaurs();

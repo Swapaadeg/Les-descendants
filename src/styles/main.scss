@@ -1,24 +1,51 @@
 // ===========================
-// IMPORTS DE BASE
+// BASE (Reset, Typography, Variables)
 // ===========================
 
 @use './base/reset' as *;
 @use './base/variables' as *;
-@use './base/responsive' as *;
 @use './base/base' as *;
+@use './base/typography' as *;
+@use './base/responsive' as *;
 
 // ===========================
-// GOOGLE FONTS
+// ABSTRACTS (Mixins, Thèmes)
+// ===========================
+
+@use './abstracts/mixins' as *;
+@use './abstracts/theme-palettes' as *;
+@use './abstracts/dynamic-theme' as *;
+
+// ===========================
+// LAYOUT
+// ===========================
+
+@use './layout/app';
+
+// ===========================
+// COMPONENTS
+// ===========================
+
+@use './components/header';
+@use './components/dino-card';
+@use './components/dino-form';
+@use './components/dino-list';
+@use './components/skeleton';
+@use './components/tribe-selector';
+@use './components/tribe-members-modal';
+
+// ===========================
+// PAGES
+// ===========================
+
+@use './pages/home';
+@use './pages/auth';
+@use './pages/dashboard';
+@use './pages/tribe-page';
+@use './pages/tribe-customization';
+
+// ===========================
+// GOOGLE FONTS (à la fin)
 // ===========================
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;700&display=swap');
-
-// ===========================
-// COMPOSANTS
-// (À importer au fur et à mesure)
-// ===========================
-
-// @import './components/header';
-// @import './components/button';
-// @import './components/form';
-// @import './components/card';

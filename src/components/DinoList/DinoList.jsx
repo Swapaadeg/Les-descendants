@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DinoCard from '../DinoCard';
 import dinoTypes from '../../data/types';
-import './DinoList.scss';
+import '../../styles/components/dino-list.scss';
 
 const DinoList = ({ dinos, onUpdateDino, onDeleteDino }) => {
   const [filter, setFilter] = useState('all');

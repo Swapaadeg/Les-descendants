@@ -1,0 +1,54 @@
+// Mixins pour appliquer des couleurs de thème dynamiques
+
+@mixin apply-tribe-theme($primary, $secondary) {
+  // Définir les variables CSS custom properties
+  --tribe-primary: #{$primary};
+  --tribe-secondary: #{$secondary};
+
+  // Variantes RGB pour utilisation avec opacity
+  --tribe-primary-rgb: #{red($primary)}, #{green($primary)}, #{blue($primary)};
+  --tribe-secondary-rgb: #{red($secondary)}, #{green($secondary)}, #{blue($secondary)};
+
+  // Variantes pour bordures et backgrounds
+  --tribe-primary-light: #{rgba($primary, 0.3)};
+  --tribe-primary-medium: #{rgba($primary, 0.6)};
+  --tribe-secondary-light: #{rgba($secondary, 0.3)};
+  --tribe-secondary-medium: #{rgba($secondary, 0.6)};
+}
+
+// Mixin pour appliquer un gradient avec les couleurs de la tribu
+@mixin tribe-gradient($direction: 135deg, $alpha1: 0.9, $alpha2: 0.7) {
+  background: linear-gradient(
+    $direction,
+    rgba(var(--tribe-primary-rgb), $alpha1),
+    rgba(var(--tribe-secondary-rgb), $alpha2)
+  );
+}
+
+// Mixin pour border néon avec couleur de tribu
+@mixin tribe-neon-border($intensity: 'medium') {
+  @if $intensity == 'low' {
+    border-color: var(--tribe-primary-light);
+    box-shadow: 0 0 10px rgba(var(--tribe-primary-rgb), 0.2);
+  } @else if $intensity == 'medium' {
+    border-color: var(--tribe-primary-medium);
+    box-shadow: 0 0 20px rgba(var(--tribe-primary-rgb), 0.3);
+  } @else if $intensity == 'high' {
+    border-color: var(--tribe-primary);
+    box-shadow: 0 0 30px rgba(var(--tribe-primary-rgb), 0.5);
+  }
+}
+
+// Mixin pour text shadow néon avec couleur de tribu
+@mixin tribe-neon-text($intensity: 'medium') {
+  @if $intensity == 'low' {
+    text-shadow: 0 0 10px rgba(var(--tribe-primary-rgb), 0.4);
+  } @else if $intensity == 'medium' {
+    text-shadow: 0 0 20px rgba(var(--tribe-primary-rgb), 0.6);
+  } @else if $intensity == 'high' {
+    text-shadow:
+      0 0 10px rgba(var(--tribe-primary-rgb), 0.8),
+      0 0 20px rgba(var(--tribe-primary-rgb), 0.6),
+      0 0 30px rgba(var(--tribe-primary-rgb), 0.4);
+  }
+}

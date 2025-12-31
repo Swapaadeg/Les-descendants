@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
-import './DinoCard.scss';
+import '../../styles/components/dino-card.scss';
 
 const DinoCard = ({ dino, onUpdate, onDelete }) => {
   const [editingStats, setEditingStats] = useState({});

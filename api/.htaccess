@@ -1,13 +1,15 @@
 # Protection du fichier de configuration
 <Files "config.php">
-    Order Allow,Deny
-    Deny from all
+    <RequireAll>
+        Require all denied
+    </RequireAll>
 </Files>
 
 # Protection du fichier database.sql
 <Files "database.sql">
-    Order Allow,Deny
-    Deny from all
+    <RequireAll>
+        Require all denied
+    </RequireAll>
 </Files>
 
 # Activer la réécriture d'URL
@@ -17,8 +19,22 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Headers de sécurité
+# CORS Headers
 <IfModule mod_headers.c>
+    # Gérer les origines autorisées
+    SetEnvIf Origin "^http://localhost:5173$" CORS_ALLOW_ORIGIN=true
+    SetEnvIf Origin "^http://localhost:3000$" CORS_ALLOW_ORIGIN=true
+    SetEnvIf Origin "^http://localhost:8000$" CORS_ALLOW_ORIGIN=true
+    SetEnvIf Origin "^http://127.0.0.1:5173$" CORS_ALLOW_ORIGIN=true
+    SetEnvIf Origin "^http://127.0.0.1:3000$" CORS_ALLOW_ORIGIN=true
+
+    # Ajouter les headers si l'origine est autorisée
+    Header set Access-Control-Allow-Origin "%{HTTP_ORIGIN}e" env=CORS_ALLOW_ORIGIN
+    Header set Access-Control-Allow-Credentials "true" env=CORS_ALLOW_ORIGIN
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" env=CORS_ALLOW_ORIGIN
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With" env=CORS_ALLOW_ORIGIN
+
+    # Headers de sécurité
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"

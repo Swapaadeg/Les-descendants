@@ -8,24 +8,49 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Autoriser les requêtes cross-origin (CORS)
-header('Access-Control-Allow-Origin: *');
+// ===== CORS HEADERS - DOIT ÊTRE EN TOUT PREMIER =====
+// Déterminer l'origine
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowed_origins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3000',
+];
+
+// Envoyer les headers CORS
+if (in_array($origin, $allowed_origins)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Access-Control-Allow-Credentials: true');
+} else {
+    // Pour le développement local, autoriser tous les origins
+    header('Access-Control-Allow-Origin: *');
+}
+
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 header('Content-Type: application/json; charset=utf-8');
 
 // Gérer les requêtes OPTIONS (preflight CORS)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Configuration de la base de données
-// IMPORTANT: Remplacez ces valeurs par vos identifiants o2switch
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'votre_nom_de_base');
-define('DB_USER', 'votre_utilisateur');
-define('DB_PASS', 'votre_mot_de_passe');
+// ===== FIN CORS HEADERS =====
+
+// Charger la configuration locale si elle existe
+if (file_exists(__DIR__ . '/config.local.php')) {
+    require_once __DIR__ . '/config.local.php';
+} else {
+    // Configuration par défaut (production o2switch)
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'votre_nom_de_base');
+    define('DB_USER', 'votre_utilisateur');
+    define('DB_PASS', 'votre_mot_de_passe');
+}
 
 // Connexion à la base de données
 function getDbConnection() {
@@ -56,8 +81,12 @@ function sendJsonResponse($data, $statusCode = 200) {
 }
 
 // Fonction utilitaire pour envoyer une erreur JSON
-function sendJsonError($message, $statusCode = 400) {
+function sendJsonError($message, $statusCode = 400, $details = null) {
     http_response_code($statusCode);
-    echo json_encode(['error' => $message], JSON_UNESCAPED_UNICODE);
+    $response = ['error' => $message];
+    if ($details !== null) {
+        $response['details'] = $details;
+    }
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit();
 }
