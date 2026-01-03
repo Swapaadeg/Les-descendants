@@ -173,10 +173,10 @@ function handlePost($user) {
             return;
         }
 
-        // Créer la tribu
+        // Créer la tribu (nécessite validation admin)
         $stmt = $pdo->prepare("
-            INSERT INTO tribes (name, slug, description, owner_id, is_public, is_validated, validated_at)
-            VALUES (?, ?, ?, ?, ?, 1, NOW())
+            INSERT INTO tribes (name, slug, description, owner_id, is_public, is_validated)
+            VALUES (?, ?, ?, ?, ?, 0)
         ");
         $stmt->execute([$name, $slug, $description, $user['id'], $is_public]);
         $tribeId = $pdo->lastInsertId();
@@ -188,11 +188,27 @@ function handlePost($user) {
         ");
         $stmt->execute([$tribeId, $user['id']]);
 
+        // Logger la création de la tribu
+        require_once __DIR__ . '/utils/admin-logger.php';
+        logAdminActivity([
+            'admin_id' => null, // Pas un admin, c'est l'utilisateur
+            'action_type' => 'tribe_created',
+            'entity_type' => 'tribe',
+            'entity_id' => $tribeId,
+            'details' => [
+                'tribe_name' => $name,
+                'user_id' => $user['id'],
+                'username' => $user['username'],
+                'status' => 'pending_validation'
+            ]
+        ]);
+
         sendJsonResponse([
             'id' => (int)$tribeId,
             'name' => $name,
             'slug' => $slug,
-            'message' => 'Tribu créée avec succès !'
+            'status' => 'pending_validation',
+            'message' => 'Tribu créée avec succès ! Elle sera visible après validation par un administrateur.'
         ], 201);
 
     } catch (PDOException $e) {

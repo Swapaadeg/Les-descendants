@@ -86,6 +86,62 @@
     }
   }
 
+  &__admin-link {
+    position: absolute;
+    top: $spacing-md;
+    right: 90px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, rgba(#ff6b35, 0.2), rgba(#ff0080, 0.2));
+    border: 2px solid rgba(#ff6b35, 0.6);
+    border-radius: 8px;
+    color: #ff6b35;
+    font-weight: $font-weight-bold;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all $transition-base;
+    @include neon-shadow(#ff6b35, low);
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(#ff6b35, 0.3), rgba(#ff0080, 0.3));
+      border-color: #ff6b35;
+      transform: translateY(-2px);
+      @include neon-shadow(#ff6b35, medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include md {
+      right: 100px;
+      padding: 0.65rem 1.1rem;
+    }
+
+    @include sm {
+      right: 70px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  &__admin-icon {
+    font-size: 1.3rem;
+
+    @include sm {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__admin-text {
+    @include sm {
+      display: none;
+    }
+  }
+
   &__user-avatar {
     position: absolute;
     top: $spacing-md;
@@ -121,6 +177,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
   }
 
   &__user-avatar-placeholder {

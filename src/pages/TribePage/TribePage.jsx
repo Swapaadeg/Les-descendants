@@ -4,11 +4,13 @@ import DinoCard from '../../components/DinoCard/DinoCard';
 import { TribeSkeleton } from '../../components/Skeleton/Skeleton';
 import TribeMembersModal from '../../components/TribeMembersModal/TribeMembersModal';
 import { useTribe } from '../../hooks/useTribe';
+import { useAuth } from '../../contexts/AuthContext';
 import { tribeAPI } from '../../services/api';
 import '../../styles/pages/tribe-page.scss';
 
 const TribePage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { tribe, loading: tribeLoading, refreshTribe } = useTribe();
   const [recentDinos, setRecentDinos] = useState([]);
   const [dinosLoading, setDinosLoading] = useState(true);
@@ -127,6 +129,31 @@ const TribePage = () => {
           className="tribe-page__home-logo"
         />
       </Link>
+
+      {/* Bouton Admin */}
+      {user?.is_admin && (
+        <Link to="/admin" className="tribe-page__admin-link">
+          <span className="tribe-page__admin-icon">⚙️</span>
+          <span className="tribe-page__admin-text">Admin</span>
+        </Link>
+      )}
+
+      {/* Avatar utilisateur */}
+      {user && (
+        <Link to="/profile" className="tribe-page__user-avatar">
+          {user.photo_profil ? (
+            <img
+              src={user.photo_profil}
+              alt={user.username}
+              className="tribe-page__user-avatar-img"
+            />
+          ) : (
+            <div className="tribe-page__user-avatar-placeholder">
+              {user.username?.charAt(0).toUpperCase() || '👤'}
+            </div>
+          )}
+        </Link>
+      )}
 
       {/* Header avec titre */}
       <div className="tribe-page__header">

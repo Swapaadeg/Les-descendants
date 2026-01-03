@@ -1,0 +1,484 @@
+@use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
+@use '../../styles/abstracts/mixins' as *;
+
+.edit-event {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    rgba($color-dark, 0.98) 0%,
+    rgba(#0a0e27, 0.98) 100%
+  );
+  padding: $spacing-2xl $spacing-lg;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba($neon-purple, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba($neon-cyan, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  &__container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__header {
+    margin-bottom: $spacing-2xl;
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    color: $neon-cyan;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-base;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-lg;
+    font-family: $font-primary;
+
+    &:hover {
+      color: $neon-purple;
+      transform: translateX(-5px);
+    }
+  }
+
+  &__title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-black;
+    color: $neon-cyan;
+    @include neon-text-shadow($neon-cyan, medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    @include md {
+      font-size: $font-size-4xl;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-lg;
+    padding: $spacing-3xl;
+    text-align: center;
+
+    &-spinner {
+      font-size: 4rem;
+      animation: spin 2s linear infinite;
+    }
+
+    p {
+      color: $neon-cyan;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  &__error {
+    background: rgba($neon-pink, 0.1);
+    border: 2px solid $neon-pink;
+    border-radius: $border-radius-md;
+    padding: $spacing-md $spacing-lg;
+    margin-bottom: $spacing-xl;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    color: $neon-pink;
+    font-weight: $font-weight-medium;
+
+    span {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__form {
+    background: linear-gradient(
+      135deg,
+      rgba($color-dark, 0.95) 0%,
+      rgba($color-dark, 0.85) 100%
+    );
+    border: 2px solid rgba($neon-cyan, 0.3);
+    border-radius: $border-radius-lg;
+    padding: $spacing-2xl;
+
+    @include sm {
+      padding: $spacing-lg;
+    }
+  }
+
+  &__field {
+    margin-bottom: $spacing-xl;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-bold;
+      color: rgba($color-light, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: $spacing-sm;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: $spacing-md $spacing-lg;
+      background: rgba($color-dark, 0.6);
+      border: 2px solid rgba($neon-cyan, 0.3);
+      border-radius: $border-radius-md;
+      color: $color-light;
+      font-size: $font-size-base;
+      font-family: $font-primary;
+      transition: all $transition-base;
+
+      &:focus {
+        outline: none;
+        border-color: $neon-cyan;
+        @include neon-shadow($neon-cyan, low);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: rgba($color-light, 0.4);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+      line-height: 1.6;
+    }
+  }
+
+  &__required {
+    color: $neon-pink;
+  }
+
+  &__hint {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: $font-size-xs;
+    color: rgba($color-light, 0.6);
+
+    &-inline {
+      margin-left: $spacing-xs;
+      font-size: $font-size-xs;
+      color: rgba($color-light, 0.6);
+      text-transform: none;
+    }
+  }
+
+  &__file-input {
+    display: none;
+  }
+
+  &__file-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    padding: $spacing-xl;
+    background: linear-gradient(135deg, rgba($neon-purple, 0.1), rgba($neon-cyan, 0.1));
+    border: 2px dashed rgba($neon-cyan, 0.5);
+    border-radius: $border-radius-md;
+    color: $color-light;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover:not(&--disabled) {
+      background: linear-gradient(135deg, rgba($neon-purple, 0.2), rgba($neon-cyan, 0.2));
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, low);
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: rgba($color-light, 0.3);
+    }
+  }
+
+  &__file-icon {
+    font-size: 2rem;
+  }
+
+  &__preview-hint {
+    color: rgba($color-light, 0.7);
+    font-size: $font-size-sm;
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    background: rgba($neon-purple, 0.1);
+    border-radius: $border-radius-sm;
+    border-left: 3px solid $neon-purple;
+  }
+
+  // Images existantes
+  &__existing-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+  }
+
+  &__existing-image {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    border: 2px solid rgba($neon-cyan, 0.3);
+    cursor: grab;
+    transition: all $transition-base;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, low);
+
+      .edit-event__delete-image {
+        opacity: 1;
+      }
+    }
+
+    &--dragging {
+      opacity: 0.5;
+      @include neon-shadow($neon-purple, medium);
+      border-color: $neon-purple;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+  }
+
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: $spacing-xs;
+    background: linear-gradient(to bottom, rgba($color-dark, 0.3), transparent);
+  }
+
+  &__image-number {
+    background: rgba($color-dark, 0.9);
+    border: 1px solid $neon-cyan;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $neon-cyan;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    @include neon-shadow($neon-cyan, low);
+  }
+
+  &__image-badge-main {
+    position: absolute;
+    bottom: $spacing-xs;
+    left: $spacing-xs;
+    background: linear-gradient(135deg, $neon-purple, $neon-cyan);
+    color: $color-dark;
+    padding: 2px 8px;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    @include neon-shadow($neon-cyan, medium);
+  }
+
+  &__delete-image {
+    position: absolute;
+    top: $spacing-xs;
+    left: $spacing-xs;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba($neon-pink, 0.9);
+    border: none;
+    color: white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: all $transition-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    @include neon-shadow($neon-pink, low);
+
+    &:hover:not(:disabled) {
+      background: $neon-pink;
+      @include neon-shadow($neon-pink, medium);
+      transform: scale(1.1);
+      @include neon-shadow($neon-pink, medium);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__image-number {
+    position: absolute;
+    bottom: $spacing-xs;
+    left: $spacing-xs;
+    background: rgba($color-dark, 0.9);
+    border: 1px solid $neon-cyan;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $neon-cyan;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    @include neon-shadow($neon-cyan, low);
+  }
+
+  // Nouvelles images à ajouter
+  &__new-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+  }
+
+  &__new-image {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    border: 2px solid rgba($neon-purple, 0.5);
+    transition: all $transition-base;
+
+    &:hover {
+      border-color: rgba($neon-purple, 0.8);
+      @include neon-shadow($neon-purple, low);
+
+      .edit-event__delete-image {
+        opacity: 1;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+  }
+
+  &__image-badge {
+    position: absolute;
+    bottom: $spacing-xs;
+    left: $spacing-xs;
+    background: rgba($color-dark, 0.9);
+    border: 1px solid $neon-purple;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    color: $neon-purple;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    @include neon-shadow($neon-purple, low);
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-lg;
+    margin-top: $spacing-2xl;
+    padding-top: $spacing-xl;
+    border-top: 1px solid rgba($neon-cyan, 0.2);
+
+    @include sm {
+      flex-direction: column-reverse;
+    }
+  }
+
+  &__btn {
+    flex: 1;
+    padding: $spacing-md $spacing-xl;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    font-family: $font-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--primary {
+      background: linear-gradient(135deg, $neon-cyan, $neon-purple);
+      color: $color-dark;
+      @include neon-shadow($neon-cyan, medium);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        @include neon-shadow($neon-cyan, high);
+      }
+    }
+
+    &--secondary {
+      background: linear-gradient(135deg, rgba($neon-purple, 0.2), rgba($neon-cyan, 0.2));
+      border: 2px solid $neon-purple;
+      color: $color-light;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba($neon-purple, 0.3), rgba($neon-cyan, 0.3));
+        border-color: $neon-cyan;
+        @include neon-shadow($neon-cyan, medium);
+      }
+    }
+  }
+}

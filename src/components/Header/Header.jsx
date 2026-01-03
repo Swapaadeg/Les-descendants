@@ -19,6 +19,12 @@ const Header = () => {
         alt="Arki-Family Hiver"
         className="header__banner"
       />
+      {user?.is_admin && (
+        <Link to="/admin" className="header__admin-link">
+          <span className="header__admin-icon">⚙️</span>
+          <span className="header__admin-text">Admin</span>
+        </Link>
+      )}
       {user && (
         <Link to="/profile" className="header__user-avatar">
           {user.photo_profil ? (
@@ -39,3 +45,4 @@ const Header = () => {
 };
 
 export default Header;
+ 

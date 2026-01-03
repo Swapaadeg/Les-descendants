@@ -1,0 +1,112 @@
+@use '../../../styles/base/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.stats-card {
+  background: linear-gradient(
+    135deg,
+    rgba($color-dark, 0.95) 0%,
+    rgba($color-dark, 0.85) 100%
+  );
+  border: 2px solid rgba($neon-cyan, 0.3);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: rgba($neon-cyan, 0.6);
+    transform: translateY(-3px);
+    @include neon-shadow($neon-cyan, low);
+  }
+
+  &__link {
+    text-decoration: none;
+    display: block;
+
+    &:hover .stats-card {
+      cursor: pointer;
+    }
+  }
+
+  &__icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 10px rgba($neon-cyan, 0.4));
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: rgba($color-light, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__value {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-black;
+    color: $neon-cyan;
+    @include neon-text-shadow($neon-cyan, low);
+    margin: 0;
+  }
+
+  &--warning {
+    border-color: rgba($neon-pink, 0.3);
+
+    &:hover {
+      border-color: rgba($neon-pink, 0.6);
+      @include neon-shadow($neon-pink, low);
+    }
+
+    .stats-card__icon {
+      filter: drop-shadow(0 0 10px rgba($neon-pink, 0.4));
+    }
+
+    .stats-card__value {
+      color: $neon-pink;
+      @include neon-text-shadow($neon-pink, low);
+    }
+  }
+
+  &--success {
+    border-color: rgba(#00ff88, 0.3);
+
+    &:hover {
+      border-color: rgba(#00ff88, 0.6);
+      box-shadow: 0 0 20px rgba(#00ff88, 0.2);
+    }
+
+    .stats-card__icon {
+      filter: drop-shadow(0 0 10px rgba(#00ff88, 0.4));
+    }
+
+    .stats-card__value {
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(#00ff88, 0.3);
+    }
+  }
+
+  &--info {
+    border-color: rgba($neon-purple, 0.3);
+
+    &:hover {
+      border-color: rgba($neon-purple, 0.6);
+      @include neon-shadow($neon-purple, low);
+    }
+
+    .stats-card__icon {
+      filter: drop-shadow(0 0 10px rgba($neon-purple, 0.4));
+    }
+
+    .stats-card__value {
+      color: $neon-purple;
+      @include neon-text-shadow($neon-purple, low);
+    }
+  }
+}

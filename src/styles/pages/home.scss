@@ -51,6 +51,66 @@
   }
 
   // ===========================
+  // BOUTON ADMIN
+  // ===========================
+
+  &__admin-link {
+    position: absolute;
+    top: $spacing-md;
+    right: 90px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, rgba(#ff6b35, 0.2), rgba(#ff0080, 0.2));
+    border: 2px solid rgba(#ff6b35, 0.6);
+    border-radius: 8px;
+    color: #ff6b35;
+    font-weight: $font-weight-bold;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all $transition-base;
+    @include neon-shadow(#ff6b35, low);
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(#ff6b35, 0.3), rgba(#ff0080, 0.3));
+      border-color: #ff6b35;
+      transform: translateY(-2px);
+      @include neon-shadow(#ff6b35, medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include md {
+      right: 100px;
+      padding: 0.65rem 1.1rem;
+    }
+
+    @include sm {
+      right: 70px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  &__admin-icon {
+    font-size: 1.3rem;
+
+    @include sm {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__admin-text {
+    @include sm {
+      display: none;
+    }
+  }
+
+  // ===========================
   // AVATAR UTILISATEUR
   // ===========================
 
@@ -89,6 +149,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
   }
 
   &__user-avatar-placeholder {
@@ -297,18 +359,100 @@
   }
 
   &__feature {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: $border-radius-lg;
     padding: $spacing-xl;
     transition: all 0.3s ease;
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: $neon-blue;
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    // Cartes informatives (non-cliquables) - style subtil
+    &-icon {
+      opacity: 0.7;
+    }
+
+    &-title {
+      color: rgba($neon-blue, 0.8);
+    }
+
+    &-desc {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    // Carte cliquable - style accentué comme un bouton
+    &--clickable {
+      text-decoration: none;
+      cursor: pointer;
+      display: block;
+      background: linear-gradient(135deg, rgba($neon-purple, 0.15), rgba($neon-blue, 0.15));
+      border: 2px solid rgba($neon-purple, 0.4);
+      box-shadow: 0 5px 20px rgba($neon-purple, 0.2);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba($neon-purple, 0.25), rgba($neon-blue, 0.25));
+        border-color: $neon-purple;
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 40px rgba($neon-purple, 0.4);
+
+        &::before {
+          left: 100%;
+        }
+
+        .home__feature-icon {
+          transform: scale(1.15);
+          filter: drop-shadow(0 5px 20px rgba($neon-purple, 0.6));
+        }
+
+        .home__feature-title {
+          color: $neon-purple;
+        }
+      }
+
+      .home__feature-icon {
+        font-size: 3.5rem;
+        opacity: 1;
+        transition: all 0.3s ease;
+      }
+
+      .home__feature-title {
+        color: $neon-blue;
+        font-size: 1.4rem;
+      }
+
+      .home__feature-desc {
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+      }
+
+      // Badge "Cliquez ici"
+      &::after {
+        content: '→';
+        position: absolute;
+        bottom: $spacing-md;
+        right: $spacing-md;
+        font-size: 1.5rem;
+        color: $neon-purple;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+      }
+
+      &:hover::after {
+        opacity: 1;
+        transform: translateX(5px);
+      }
     }
   }
 

@@ -8,6 +8,12 @@ import Dashboard from './pages/Dashboard';
 import TribePage from './pages/TribePage/TribePage';
 import TribeCustomization from './pages/TribeCustomization/TribeCustomization';
 import UserProfile from './pages/UserProfile';
+import EventsList from './pages/Events/EventsList';
+import EventDetail from './pages/Events/EventDetail';
+import CreateEvent from './pages/Events/CreateEvent';
+import EditEvent from './pages/Events/EditEvent';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import TribesManagement from './pages/Admin/TribesManagement';
 import './styles/main.scss';
 
 function App() {
@@ -23,6 +29,12 @@ function App() {
           <Route path="/tribe" element={<TribePage />} />
           <Route path="/tribe/customize" element={<TribeCustomization />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/events" element={<EventsList />} />
+          <Route path="/events/create" element={<CreateEvent />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="/events/:id/edit" element={<EditEvent />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/tribes" element={<TribesManagement />} />
         </Routes>
       </Router>
     </AuthProvider>

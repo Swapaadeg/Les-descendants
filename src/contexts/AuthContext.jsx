@@ -58,37 +58,29 @@ export const AuthProvider = ({ children }) => {
       // Il doit d'abord confirmer son email
       return response;
     } catch (err) {
-      console.log('Erreur brute d\'API:', err);
-      console.log('err.response:', err.response);
-      console.log('err.response?.data:', err.response?.data);
-      
       let errorData = err.response?.data;
-      
+
       // Si la réponse est une chaîne, essayer d'extraire le JSON
       if (typeof errorData === 'string') {
-        console.log('La réponse est une chaîne, tentative d\'extraction du JSON...');
         const jsonMatch = errorData.match(/\{.*\}$/);
         if (jsonMatch) {
           try {
             errorData = JSON.parse(jsonMatch[0]);
-            console.log('JSON extrait:', errorData);
           } catch (e) {
             console.error('Impossible de parser le JSON:', e);
           }
         }
       }
-      
+
       const errorMessage = errorData?.error || 'Erreur lors de l\'inscription';
       setError(errorMessage);
-      
+
       // Passer l'erreur avec les détails
       const error = new Error(errorMessage);
       // Ajouter les détails directement sur l'erreur
       if (errorData?.details) {
-        console.log('Ajout des détails à l\'erreur:', errorData.details);
         error.details = errorData.details;
       }
-      console.log('Erreur lancée avec details:', error.details);
       throw error;
     }
   };

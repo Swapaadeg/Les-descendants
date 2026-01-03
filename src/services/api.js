@@ -5,15 +5,12 @@
 
 import axios from 'axios';
 
-// URL de base de l'API (développement local avec PHP built-in server)
-const API_BASE_URL = 'http://localhost:8000';
+// URL de base de l'API (PHP built-in server)
+const API_BASE_URL = 'http://localhost:8000/api';
 
 // Instance axios configurée
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
   withCredentials: true, // Pour envoyer les cookies
 });
 
@@ -147,11 +144,7 @@ export const userAPI = {
     formData.append('avatar', avatarFile);
     formData.append('action', 'upload_avatar');
 
-    const response = await api.post('/auth/profile.php', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/auth/profile.php', formData);
     return response.data;
   },
 
@@ -219,11 +212,7 @@ export const dinoAPI = {
       formData.append('photo', dinoData.photo);
     }
 
-    const response = await api.post('/dinosaurs.php', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/dinosaurs.php', formData);
     return response.data;
   },
 
@@ -347,9 +336,7 @@ export const tribeAPI = {
     const formData = new FormData();
     formData.append('image', imageFile);
 
-    const response = await api.post(`/tribe-upload.php?type=${type}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await api.post(`/tribe-upload.php?type=${type}`, formData);
     return response.data;
   },
 
@@ -360,6 +347,127 @@ export const tribeAPI = {
     const response = await api.get(`/dinosaurs.php?recent&tribe_id=${tribeId}`);
     return response.data;
   },
+};
+
+// ===========================
+// ÉVÉNEMENTS
+// ===========================
+
+export const eventAPI = {
+  /**
+   * Récupérer tous les événements avec pagination
+   */
+  getAll: async (page = 1, limit = 20) => {
+    const response = await api.get(`/events.php?page=${page}&limit=${limit}`);
+    return response.data;
+  },
+
+  /**
+   * Récupérer un événement par ID avec ses images
+   */
+  getById: async (id) => {
+    const response = await api.get(`/events.php?id=${id}`);
+    return response.data;
+  },
+
+  /**
+   * Créer un nouvel événement (admin only)
+   */
+  create: async (eventData) => {
+    const formData = new FormData();
+    formData.append('title', eventData.title);
+    formData.append('description', eventData.description || '');
+    formData.append('event_date', eventData.event_date);
+
+    // Ajouter toutes les images
+    eventData.images.forEach((image) => {
+      formData.append('images[]', image);
+    });
+
+    const response = await api.post('/events.php', formData);
+    return response.data;
+  },
+
+  /**
+   * Mettre à jour un événement (admin only)
+   */
+  update: async (id, eventData) => {
+    const response = await api.put(`/events.php?id=${id}`, eventData);
+    return response.data;
+  },
+
+  /**
+   * Supprimer un événement (admin only)
+   */
+  delete: async (id) => {
+    const response = await api.delete(`/events.php?id=${id}`);
+    return response.data;
+  },
+};
+
+// ===========================
+// ADMINISTRATION
+// ===========================
+
+export const adminAPI = {
+  /**
+   * Récupérer les statistiques du dashboard admin
+   */
+  getStats: async () => {
+    const response = await api.get('/admin/stats.php');
+    return response.data;
+  },
+
+  // Gestion des tribus
+  tribes: {
+    /**
+     * Récupérer les tribus selon leur statut
+     * @param {string} status - 'pending', 'approved' ou 'all'
+     * @param {number} page - Numéro de page
+     * @param {number} limit - Nombre de résultats par page
+     */
+    getAll: async (status = 'pending', page = 1, limit = 20) => {
+      const response = await api.get(
+        `/admin/tribes.php?status=${status}&page=${page}&limit=${limit}`
+      );
+      return response.data;
+    },
+
+    /**
+     * Approuver une tribu
+     * @param {number} tribeId - ID de la tribu
+     */
+    approve: async (tribeId) => {
+      const response = await api.put('/admin/tribes.php', {
+        tribe_id: tribeId,
+        action: 'approve'
+      });
+      return response.data;
+    },
+
+    /**
+     * Rejeter une tribu
+     * @param {number} tribeId - ID de la tribu
+     * @param {string} rejectionReason - Raison du rejet (optionnel)
+     */
+    reject: async (tribeId, rejectionReason = null) => {
+      const response = await api.put('/admin/tribes.php', {
+        tribe_id: tribeId,
+        action: 'reject',
+        rejection_reason: rejectionReason
+      });
+      return response.data;
+    },
+
+    /**
+     * Supprimer une tribu (admin)
+     * @param {number} tribeId - ID de la tribu
+     */
+    delete: async (tribeId) => {
+      const response = await api.delete(`/admin/tribes.php?id=${tribeId}`);
+      return response.data;
+    }
+  }
 };
 
 export default api;

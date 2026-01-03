@@ -26,6 +26,14 @@ const Home = () => {
         <div className="home__banner-overlay"></div>
       </div>
 
+      {/* Bouton Admin en haut à droite */}
+      {isAuthenticated && user?.is_admin && (
+        <Link to="/admin" className="home__admin-link">
+          <span className="home__admin-icon">⚙️</span>
+          <span className="home__admin-text">Admin</span>
+        </Link>
+      )}
+
       {/* Avatar utilisateur en haut à droite */}
       {isAuthenticated && user && (
         <Link to="/profile" className="home__user-avatar">
@@ -134,13 +142,13 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="home__feature">
+          <Link to="/events" className="home__feature home__feature--clickable">
             <div className="home__feature-icon">🎉</div>
             <h3 className="home__feature-title">Evénements</h3>
             <p className="home__feature-desc">
               Remémore-toi les événements du serveur
             </p>
-          </div>
+          </Link>
         </div>
 
         {/* Footer */}

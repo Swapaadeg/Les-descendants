@@ -65,6 +65,116 @@
     }
   }
 
+  // Bouton Admin
+  &__admin-link {
+    position: absolute;
+    top: $spacing-md;
+    right: 90px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, rgba(#ff6b35, 0.2), rgba(#ff0080, 0.2));
+    border: 2px solid rgba(#ff6b35, 0.6);
+    border-radius: 8px;
+    color: #ff6b35;
+    font-weight: $font-weight-bold;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all $transition-base;
+    @include neon-shadow(#ff6b35, low);
+
+    @include md {
+      right: 100px;
+    }
+
+    @include sm {
+      right: 70px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(#ff6b35, 0.3), rgba(#ff0080, 0.3));
+      border-color: #ff6b35;
+      transform: translateY(-2px);
+      @include neon-shadow(#ff6b35, medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__admin-icon {
+    font-size: 1.3rem;
+
+    @include sm {
+      font-size: 1.1rem;
+    }
+  }
+
+  &__admin-text {
+    @include sm {
+      display: none;
+    }
+  }
+
+  // Avatar utilisateur
+  &__user-avatar {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(#00f0ff, 0.6);
+    transition: all $transition-base;
+    cursor: pointer;
+    @include neon-shadow(#00f0ff, low);
+
+    @include md {
+      width: 55px;
+      height: 55px;
+    }
+
+    @include sm {
+      width: 45px;
+      height: 45px;
+    }
+
+    &:hover {
+      transform: translateY(-2px) scale(1.05);
+      border-color: #00f0ff;
+      @include neon-shadow(#00f0ff, medium);
+    }
+
+    &:active {
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  &__user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__user-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(#00f0ff, 0.2), rgba(#b842ff, 0.2));
+    color: #00f0ff;
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+  }
+
   // Header avec titre
   &__header {
     width: 100%;
