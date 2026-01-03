@@ -47,9 +47,17 @@ export const useDinosaurs = () => {
     try {
       await dinoAPI.update(dinoId, updatedData);
 
-      // Rafraîchir la liste
-      await fetchDinosaurs();
+      // Mise à jour optimiste de l'état local sans recharger
+      setDinos(prevDinos =>
+        prevDinos.map(dino =>
+          dino.id === dinoId
+            ? { ...dino, ...updatedData }
+            : dino
+        )
+      );
     } catch (error) {
+      // En cas d'erreur, recharger pour avoir l'état correct
+      await fetchDinosaurs();
       console.error('Erreur lors de la mise à jour du dinosaure:', error);
       setError(error.message);
       throw error;

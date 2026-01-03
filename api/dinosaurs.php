@@ -190,14 +190,15 @@ function handlePost($pdo, $user) {
  */
 function handlePut($pdo, $user) {
     try {
-        // Récupérer les données JSON
-        $input = json_decode(file_get_contents('php://input'), true);
+        // Récupérer l'ID depuis les paramètres GET
+        $id = $_GET['id'] ?? null;
 
-        if (!isset($input['id'])) {
+        if (!$id) {
             sendJsonError('ID du dinosaure manquant', 400);
         }
 
-        $id = $input['id'];
+        // Récupérer les données JSON
+        $input = json_decode(file_get_contents('php://input'), true);
         $updates = [];
         $params = [':id' => $id];
 
