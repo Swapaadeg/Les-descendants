@@ -136,41 +136,10 @@ function handleGet($pdo) {
 // =====================================================
 function handlePost($pdo, $user) {
     try {
-        // DEBUG: Écrire dans un fichier pour debug
-        $debugFile = __DIR__ . '/debug_events.txt';
-        $debugContent = "=============== EVENTS POST DEBUG " . date('Y-m-d H:i:s') . " ===============\n";
-        $debugContent .= "[HEADERS] Content-Type: " . ($_SERVER['CONTENT_TYPE'] ?? 'not set') . "\n";
-        $debugContent .= "[HEADERS] Content-Length: " . ($_SERVER['CONTENT_LENGTH'] ?? 'not set') . "\n";
-        $debugContent .= "[REQUEST] Method: " . $_SERVER['REQUEST_METHOD'] . "\n";
-        $debugContent .= "[POST] Count: " . count($_POST) . "\n";
-        $debugContent .= "[POST] Data: " . print_r($_POST, true) . "\n";
-        $debugContent .= "[FILES] Count: " . (isset($_FILES['images']) ? count($_FILES['images']['name']) : 0) . "\n";
-        $debugContent .= "[FILES] Data: " . print_r($_FILES, true) . "\n";
-        $rawInput = file_get_contents('php://input');
-        $debugContent .= "[RAW] Input length: " . strlen($rawInput) . "\n";
-        $debugContent .= "[RAW] First 500 chars: " . substr($rawInput, 0, 500) . "\n";
-        $debugContent .= "=================================================\n\n";
-        file_put_contents($debugFile, $debugContent, FILE_APPEND);
-
-        // Aussi dans error_log
-        error_log('=============== EVENTS POST DEBUG ===============');
-        error_log('[HEADERS] Content-Type: ' . ($_SERVER['CONTENT_TYPE'] ?? 'not set'));
-        error_log('[HEADERS] Content-Length: ' . ($_SERVER['CONTENT_LENGTH'] ?? 'not set'));
-        error_log('[REQUEST] Method: ' . $_SERVER['REQUEST_METHOD']);
-        error_log('[POST] Count: ' . count($_POST));
-        error_log('[POST] Data: ' . print_r($_POST, true));
-        error_log('[FILES] Count: ' . (isset($_FILES['images']) ? count($_FILES['images']['name']) : 0));
-        error_log('[FILES] Data: ' . print_r($_FILES, true));
-        error_log('[RAW] Input length: ' . strlen($rawInput));
-        error_log('[RAW] First 500 chars: ' . substr($rawInput, 0, 500));
-        error_log('=================================================');
-
         // Validation des champs texte
         $title = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
         $event_date = $_POST['event_date'] ?? '';
-
-        error_log('[EVENTS POST] Title after trim: "' . $title . '" (length: ' . strlen($title) . ')');
 
         if (empty($title) || strlen($title) < 3 || strlen($title) > 191) {
             sendJsonError('Le titre doit contenir entre 3 et 191 caractères', 400);
