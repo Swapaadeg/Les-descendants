@@ -412,21 +412,17 @@
   }
 
   &__avatar {
-    font-size: 40px;
     width: 56px;
     height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid rgba($neon-cyan, 0.4);
+    box-shadow: 0 0 20px rgba($neon-cyan, 0.2);
+    object-fit: cover;
     background: linear-gradient(
       135deg,
       rgba($neon-cyan, 0.15) 0%,
       rgba($neon-purple, 0.15) 100%
     );
-    border-radius: 50%;
-    border: 2px solid rgba($neon-cyan, 0.4);
-    box-shadow: 0 0 20px rgba($neon-cyan, 0.2);
-    position: relative;
 
     &::after {
       content: '';
@@ -553,20 +549,17 @@
   }
 
   &__avatar {
-    font-size: 36px;
     width: 50px;
     height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid rgba($neon-green, 0.4);
+    box-shadow: 0 0 15px rgba($neon-green, 0.2);
+    object-fit: cover;
     background: linear-gradient(
       135deg,
       rgba($neon-green, 0.15) 0%,
       rgba($neon-cyan, 0.15) 100%
     );
-    border-radius: 50%;
-    border: 2px solid rgba($neon-green, 0.4);
-    box-shadow: 0 0 15px rgba($neon-green, 0.2);
   }
 
   &__username {

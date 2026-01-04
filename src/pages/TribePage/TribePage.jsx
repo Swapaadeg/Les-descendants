@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DinoCard from '../../components/DinoCard/DinoCard';
+import DinoCardCompact from '../../components/DinoCardCompact/DinoCardCompact';
 import { TribeSkeleton } from '../../components/Skeleton/Skeleton';
 import TribeMembersModal from '../../components/TribeMembersModal/TribeMembersModal';
 import { useTribe } from '../../hooks/useTribe';
@@ -42,7 +42,9 @@ const TribePage = () => {
 
   const loadPendingRequests = async () => {
     try {
+      console.log('🔍 Chargement des demandes en attente...');
       const data = await tribeAPI.members.getRequests();
+      console.log('📋 Demandes reçues:', data);
       setPendingRequests(data.requests || []);
     } catch (err) {
       console.error('Erreur chargement demandes:', err);
@@ -216,11 +218,17 @@ const TribePage = () => {
 
         <button
           className="tribe-page__btn tribe-page__btn--accent"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            // Recharger les demandes avant d'ouvrir la modal
+            if (isOwner) {
+              loadPendingRequests();
+            }
+            setIsModalOpen(true);
+          }}
         >
           <span className="tribe-page__btn-icon">👥</span>
           Gérer la tribu
-          {pendingRequests.length > 0 && ` (${pendingRequests.length})`}
+          {isOwner && pendingRequests.length > 0 && ` (${pendingRequests.length})`}
         </button>
       </div>
 
@@ -257,11 +265,9 @@ const TribePage = () => {
         ) : (
           <div className="tribe-page__dinos-grid">
             {recentDinos.map((dino) => (
-              <DinoCard
+              <DinoCardCompact
                 key={dino.id}
                 dino={dino}
-                onUpdate={() => loadRecentDinos()}
-                onDelete={() => loadRecentDinos()}
               />
             ))}
           </div>

@@ -3,8 +3,8 @@ import DinoCard from '../DinoCard';
 import dinoTypes from '../../data/types';
 import '../../styles/components/dino-list.scss';
 
-const DinoList = ({ dinos, onUpdateDino, onDeleteDino }) => {
-  const [filter, setFilter] = useState('all');
+const DinoList = ({ dinos, onUpdateDino, onDeleteDino, onToggleFeatured, initialFilter = 'all' }) => {
+  const [filter, setFilter] = useState(initialFilter);
   const [search, setSearch] = useState('');
 
   // Filtrer et trier les dinosaures par ordre alphabétique
@@ -94,6 +94,7 @@ const DinoList = ({ dinos, onUpdateDino, onDeleteDino }) => {
                 dino={dino}
                 onUpdate={onUpdateDino}
                 onDelete={onDeleteDino}
+                onToggleFeatured={onToggleFeatured}
               />
             ))}
           </div>

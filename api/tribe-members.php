@@ -19,16 +19,16 @@ $user = requireAuth($pdo);
 // Router selon la méthode HTTP
 switch ($method) {
     case 'GET':
-        handleGet($user);
+        handleGet($pdo, $user);
         break;
     case 'POST':
-        handlePost($user);
+        handlePost($pdo, $user);
         break;
     case 'PUT':
-        handlePut($user);
+        handlePut($pdo, $user);
         break;
     case 'DELETE':
-        handleDelete($user);
+        handleDelete($pdo, $user);
         break;
     default:
         sendJsonError('Méthode non autorisée', 405);
@@ -37,9 +37,9 @@ switch ($method) {
 /**
  * GET - Récupérer les demandes en attente (pour le owner)
  */
-function handleGet($user) {
+function handleGet($pdo, $user) {
     try {
-        $pdo = getDbConnection();
+        error_log("[tribe-members] GET request from user: " . $user['id']);
 
         // Récupérer la tribu de l'utilisateur
         $stmt = $pdo->prepare("
@@ -57,15 +57,17 @@ function handleGet($user) {
         // Si owner, récupérer les demandes en attente
         if ($membership['role'] === 'owner') {
             $stmt = $pdo->prepare("
-                SELECT tm.id, tm.user_id, tm.requested_at, tm.request_message,
-                       u.username, u.email
+                SELECT tm.id, tm.user_id, tm.request_message,
+                       u.username, u.email, u.avatar_url
                 FROM tribe_members tm
                 JOIN users u ON tm.user_id = u.id
                 WHERE tm.tribe_id = ? AND tm.is_validated = 0
-                ORDER BY tm.requested_at ASC
+                ORDER BY tm.id ASC
             ");
             $stmt->execute([$membership['tribe_id']]);
             $requests = $stmt->fetchAll();
+
+            error_log("[tribe-members] Found " . count($requests) . " pending requests for tribe " . $membership['tribe_id']);
 
             $result = array_map(function($req) {
                 return [
@@ -73,8 +75,8 @@ function handleGet($user) {
                     'user_id' => (int)$req['user_id'],
                     'username' => $req['username'],
                     'email' => $req['email'],
-                    'request_message' => $req['request_message'],
-                    'requested_at' => $req['requested_at']
+                    'avatar_url' => $req['avatar_url'],
+                    'request_message' => $req['request_message']
                 ];
             }, $requests);
 
@@ -91,9 +93,8 @@ function handleGet($user) {
 /**
  * POST - Demander à rejoindre une tribu
  */
-function handlePost($user) {
+function handlePost($pdo, $user) {
     try {
-        $pdo = getDbConnection();
 
         // Vérifier si l'utilisateur n'est pas déjà dans une tribu
         $stmt = $pdo->prepare("
@@ -162,9 +163,8 @@ function handlePost($user) {
 /**
  * PUT - Accepter ou refuser une demande
  */
-function handlePut($user) {
+function handlePut($pdo, $user) {
     try {
-        $pdo = getDbConnection();
         $input = json_decode(file_get_contents('php://input'), true);
 
         $requestId = $input['request_id'] ?? null;
@@ -227,9 +227,8 @@ function handlePut($user) {
 /**
  * DELETE - Quitter une tribu ou expulser un membre
  */
-function handleDelete($user) {
+function handleDelete($pdo, $user) {
     try {
-        $pdo = getDbConnection();
         $memberId = $_GET['member_id'] ?? null;
 
         if (!$memberId) {

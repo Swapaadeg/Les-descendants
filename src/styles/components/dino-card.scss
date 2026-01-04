@@ -51,31 +51,63 @@
     }
   }
 
-  &__delete-btn {
+  &__actions {
     position: absolute;
     top: $spacing-md;
     left: $spacing-md;
+    display: flex;
+    gap: $spacing-sm;
+    z-index: 10;
+  }
+
+  &__featured-btn,
+  &__delete-btn {
     width: 40px;
     height: 40px;
     padding: $spacing-sm;
-    background: rgba($neon-pink, 0.2);
-    border: 2px solid rgba($neon-pink, 0.5);
     border-radius: $border-radius-full;
     font-size: $font-size-lg;
     cursor: pointer;
     transition: all $transition-base;
-    z-index: 10;
+
+    @include md {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  &__featured-btn {
+    background: rgba($neon-yellow, 0.2);
+    border: 2px solid rgba($neon-yellow, 0.5);
+
+    &:hover {
+      background: rgba($neon-yellow, 0.3);
+      border-color: $neon-yellow;
+      transform: scale(1.1) rotate(-15deg);
+      @include neon-shadow($neon-yellow, medium);
+    }
+
+    &--active {
+      background: $neon-yellow;
+      border-color: $neon-yellow;
+      @include neon-shadow($neon-yellow, medium);
+      animation: pulse-star 2s ease-in-out infinite;
+
+      &:hover {
+        transform: scale(1.1) rotate(15deg);
+      }
+    }
+  }
+
+  &__delete-btn {
+    background: rgba($neon-pink, 0.2);
+    border: 2px solid rgba($neon-pink, 0.5);
 
     &:hover {
       background: $neon-pink;
       border-color: $neon-pink;
       transform: scale(1.1) rotate(10deg);
       @include neon-shadow($neon-pink, medium);
-    }
-
-    @include md {
-      width: 45px;
-      height: 45px;
     }
   }
 
@@ -563,5 +595,16 @@
   50% {
     transform: scale(1.05);
     opacity: 0.9;
+  }
+}
+
+@keyframes pulse-star {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba($neon-yellow, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba($neon-yellow, 0.8);
   }
 }

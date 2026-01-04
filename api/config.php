@@ -52,6 +52,12 @@ if (file_exists(__DIR__ . '/config.local.php')) {
     define('DB_PASS', 'votre_mot_de_passe');
 }
 
+// URL de base du serveur (pour les URLs absolues des uploads)
+// Défini après config.local.php pour permettre l'override
+if (!defined('BASE_URL')) {
+    define('BASE_URL', 'http://localhost:8000');
+}
+
 // Connexion à la base de données
 function getDbConnection() {
     try {
@@ -89,4 +95,17 @@ function sendJsonError($message, $statusCode = 400, $details = null) {
     }
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
     exit();
+}
+
+// Fonction pour convertir une URL relative en URL absolue
+function getFullUrl($relativePath) {
+    if (!$relativePath) {
+        return null;
+    }
+    // Si déjà une URL absolue (commence par http:// ou https://), retourner tel quel
+    if (preg_match('/^https?:\/\//', $relativePath)) {
+        return $relativePath;
+    }
+    // Ajouter le BASE_URL directement (garder /api/ dans le chemin)
+    return BASE_URL . $relativePath;
 }

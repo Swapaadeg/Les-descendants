@@ -47,13 +47,29 @@ export const useDinosaurs = () => {
     try {
       await dinoAPI.update(dinoId, updatedData);
 
-      // Mise à jour optimiste de l'état local sans recharger
+      // Mise à jour optimiste avec merge profond pour les objets imbriqués
       setDinos(prevDinos =>
-        prevDinos.map(dino =>
-          dino.id === dinoId
-            ? { ...dino, ...updatedData }
-            : dino
-        )
+        prevDinos.map(dino => {
+          if (dino.id !== dinoId) return dino;
+
+          // Merge profond des stats et mutatedStats
+          const updated = { ...dino };
+
+          if (updatedData.stats) {
+            updated.stats = { ...dino.stats, ...updatedData.stats };
+          }
+
+          if (updatedData.mutatedStats) {
+            updated.mutatedStats = { ...dino.mutatedStats, ...updatedData.mutatedStats };
+          }
+
+          // Autres propriétés (is_featured, etc.)
+          if (updatedData.isFeatured !== undefined) {
+            updated.isFeatured = updatedData.isFeatured;
+          }
+
+          return updated;
+        })
       );
     } catch (error) {
       // En cas d'erreur, recharger pour avoir l'état correct
@@ -78,6 +94,28 @@ export const useDinosaurs = () => {
     }
   };
 
+  // Toggle le statut featured d'un dinosaure
+  const toggleFeatured = async (dinoId, isFeatured) => {
+    try {
+      await dinoAPI.toggleFeatured(dinoId, isFeatured);
+
+      // Mise à jour optimiste de l'état local
+      setDinos(prevDinos =>
+        prevDinos.map(dino =>
+          dino.id === dinoId
+            ? { ...dino, isFeatured }
+            : dino
+        )
+      );
+    } catch (error) {
+      // En cas d'erreur, recharger pour avoir l'état correct
+      await fetchDinosaurs();
+      console.error('Erreur lors de la mise à jour du statut featured:', error);
+      setError(error.message);
+      throw error;
+    }
+  };
+
   return {
     dinos,
     loading,
@@ -85,6 +123,7 @@ export const useDinosaurs = () => {
     addDinosaur,
     updateDinosaur,
     deleteDinosaur,
+    toggleFeatured,
     refreshDinosaurs: fetchDinosaurs
   };
 };

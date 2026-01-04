@@ -80,8 +80,8 @@ function handleGet($user) {
                     'description' => $tribe['description'],
                     'owner_id' => (int)$tribe['owner_id'],
                     'base_photo_url' => $tribe['base_photo_url'],
-                    'banner_url' => $tribe['banner_url'],
-                    'logo_url' => $tribe['logo_url'],
+                    'banner_url' => getFullUrl($tribe['banner_url']),
+                    'logo_url' => getFullUrl($tribe['logo_url']),
                     'primary_color' => $tribe['primary_color'] ?? '#00f0ff',
                     'secondary_color' => $tribe['secondary_color'] ?? '#b842ff',
                     'font_family' => $tribe['font_family'] ?? '"Orbitron", sans-serif',
@@ -115,6 +115,10 @@ function handleGet($user) {
                 'description' => $tribe['description'],
                 'owner_username' => $tribe['owner_username'],
                 'base_photo_url' => $tribe['base_photo_url'],
+                'banner_url' => getFullUrl($tribe['banner_url']),
+                'logo_url' => getFullUrl($tribe['logo_url']),
+                'primary_color' => $tribe['primary_color'] ?? '#00f0ff',
+                'secondary_color' => $tribe['secondary_color'] ?? '#b842ff',
                 'member_count' => (int)$tribe['member_count'],
                 'created_at' => $tribe['created_at']
             ];

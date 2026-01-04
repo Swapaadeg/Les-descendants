@@ -83,20 +83,27 @@ const Home = () => {
                 <span className="home__btn-icon">🦖</span>
                 Mes dinosaures
               </Link>
-              {tribe && (
-                <Link to="/tribe" className="home__btn home__btn--accent">
-                  {tribe.logo_url ? (
-                    <img
-                      src={tribe.logo_url}
-                      alt={tribe.name}
-                      className="home__btn-tribe-logo"
-                    />
-                  ) : (
+              <Link to="/dashboard" className="home__btn home__btn--accent">
+                {tribe && tribe.id ? (
+                  <>
+                    {tribe.logo_url ? (
+                      <img
+                        src={tribe.logo_url}
+                        alt={tribe.name}
+                        className="home__btn-tribe-logo"
+                      />
+                    ) : (
+                      <span className="home__btn-icon">🏛️</span>
+                    )}
+                    <span>{tribe.name}</span>
+                  </>
+                ) : (
+                  <>
                     <span className="home__btn-icon">🏛️</span>
-                  )}
-                  <span>{tribe.name}</span>
-                </Link>
-              )}
+                    <span>Créer ou rejoindre une tribu</span>
+                  </>
+                )}
+              </Link>
               <button onClick={handleLogout} className="home__btn home__btn--secondary">
                 <span className="home__btn-icon">🚪</span>
                 Déconnexion
@@ -118,29 +125,29 @@ const Home = () => {
 
         {/* Caractéristiques */}
         <div className="home__features">
-          <div className="home__feature">
+          <Link to="/tribes" className="home__feature home__feature--clickable">
             <div className="home__feature-icon">🏕️</div>
             <h3 className="home__feature-title">Tribus</h3>
             <p className="home__feature-desc">
-              Crée ou rejoins une tribu pour partager tes dinos avec tes amis
+              Découvre toutes les tribus et leurs dinosaures en vitrine
             </p>
-          </div>
+          </Link>
 
-          <div className="home__feature">
+          <Link to="/dashboard" className="home__feature home__feature--clickable">
             <div className="home__feature-icon">📊</div>
             <h3 className="home__feature-title">Statistiques</h3>
             <p className="home__feature-desc">
               Suis l'évolution de tes dinosaures et compare-les avec ta tribu
             </p>
-          </div>
+          </Link>
 
-          <div className="home__feature">
+          <Link to="/dashboard?filter=mutated" className="home__feature home__feature--clickable">
             <div className="home__feature-icon">✨</div>
             <h3 className="home__feature-title">Mutations</h3>
             <p className="home__feature-desc">
-              Enregistre les stats mutées de tes dinos légendaires
+              Découvre les dinosaures mutés de ta tribu
             </p>
-          </div>
+          </Link>
 
           <Link to="/events" className="home__feature home__feature--clickable">
             <div className="home__feature-icon">🎉</div>

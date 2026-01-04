@@ -324,11 +324,22 @@ const TribeSelector = ({ onTribeSelected }) => {
             <div className="tribe-selector__list">
               {tribes.map((tribe) => (
                 <div key={tribe.id} className="tribe-card">
-                  <div className="tribe-card__header">
-                    <h3 className="tribe-card__name">{tribe.name}</h3>
-                    <span className="tribe-card__members">
-                      👥 {tribe.member_count} membre{tribe.member_count > 1 ? 's' : ''}
-                    </span>
+                  <div className="tribe-card__top">
+                    <div className="tribe-card__avatar">
+                      {tribe.logo_url ? (
+                        <img src={tribe.logo_url} alt={tribe.name} />
+                      ) : (
+                        <span>{tribe.name?.charAt(0)?.toUpperCase() || '🏛️'}</span>
+                      )}
+                    </div>
+                    <div className="tribe-card__title">
+                      <h3 className="tribe-card__name">{tribe.name}</h3>
+                      <div className="tribe-card__meta">
+                        <span className="tribe-card__pill tribe-card__pill--muted">
+                          👥 {tribe.member_count} membre{tribe.member_count > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {tribe.description && (
@@ -336,7 +347,10 @@ const TribeSelector = ({ onTribeSelected }) => {
                   )}
 
                   <div className="tribe-card__footer">
-                    <span className="tribe-card__owner">Chef: {tribe.owner_username}</span>
+                    <div className="tribe-card__owner">
+                      <span className="tribe-card__owner-label">Chef</span>
+                      <span className="tribe-card__owner-name">{tribe.owner_username}</span>
+                    </div>
                     <button
                       onClick={() => handleSelectTribe(tribe)}
                       className="tribe-card__btn"

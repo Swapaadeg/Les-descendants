@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import DinoForm from '../components/DinoForm';
 import DinoList from '../components/DinoList';
 import TribeSelector from '../components/TribeSelector';
 import { useDinosaurs } from '../hooks/useDinosaurs';
+import { useToast } from '../contexts/ToastContext';
 import { tribeAPI } from '../services/api';
 import '../styles/pages/dashboard.scss';
 
 function Dashboard() {
-  const { dinos, loading, error, addDinosaur, updateDinosaur, deleteDinosaur, refreshDinosaurs } = useDinosaurs();
+  const [searchParams] = useSearchParams();
+  const initialFilter = searchParams.get('filter') || 'all';
+  const { dinos, loading, error, addDinosaur, updateDinosaur, deleteDinosaur, toggleFeatured, refreshDinosaurs } = useDinosaurs();
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [tribe, setTribe] = useState(null);
   const [tribeLoading, setTribeLoading] = useState(true);
@@ -82,7 +86,21 @@ function Dashboard() {
   const handleUpdateDino = async (dinoId, updatedData) => {
     try {
       await updateDinosaur(dinoId, updatedData);
+
+      // Afficher une notification immédiate
+      try {
+        const dino = dinos.find(d => d.id === dinoId);
+        if (dino) {
+          showToast(
+            `🦖 Tâche créée: ${dino.species} - Stats modifiées !`,
+            'info'
+          );
+        }
+      } catch (toastError) {
+        console.error('Erreur toast:', toastError);
+      }
     } catch (error) {
+      console.error('Erreur mise à jour:', error);
       alert('Erreur lors de la mise à jour du dinosaure: ' + error.message);
     }
   };
@@ -94,6 +112,14 @@ function Dashboard() {
       } catch (error) {
         alert('Erreur lors de la suppression du dinosaure: ' + error.message);
       }
+    }
+  };
+
+  const handleToggleFeatured = async (dinoId, currentStatus) => {
+    try {
+      await toggleFeatured(dinoId, !currentStatus);
+    } catch (error) {
+      alert('Erreur lors de la mise à jour: ' + error.message);
     }
   };
 
@@ -186,6 +212,8 @@ function Dashboard() {
               dinos={dinos}
               onUpdateDino={handleUpdateDino}
               onDeleteDino={handleDeleteDino}
+              onToggleFeatured={handleToggleFeatured}
+              initialFilter={initialFilter}
             />
           </div>
         </div>

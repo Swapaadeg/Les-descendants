@@ -1,0 +1,175 @@
+@use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
+
+.dino-compact {
+  position: relative;
+  background: linear-gradient(135deg, rgba($neon-cyan, 0.05) 0%, rgba($neon-purple, 0.05) 100%);
+  border: 1px solid rgba($neon-cyan, 0.3);
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  transition: all $transition-base;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  &:hover {
+    border-color: $neon-cyan;
+    box-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+    transform: translateY(-2px);
+  }
+
+  // Badge muté compact
+  &__mutated-badge {
+    position: absolute;
+    top: $spacing-xs;
+    right: $spacing-xs;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 8px rgba($neon-purple, 0.8));
+    animation: pulse 2s infinite;
+  }
+
+  // Photo miniature
+  &__photo {
+    width: 100%;
+    height: 120px;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+    margin-bottom: $spacing-xs;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @include sm {
+      height: 100px;
+    }
+  }
+
+  // Header compact
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    padding-bottom: $spacing-xs;
+    border-bottom: 1px solid rgba($neon-cyan, 0.2);
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.1rem;
+    font-weight: $font-weight-bold;
+    color: $neon-cyan;
+    text-shadow: 0 0 10px rgba($neon-cyan, 0.5);
+    margin: 0;
+    line-height: 1.2;
+
+    @include sm {
+      font-size: 1rem;
+    }
+  }
+
+  &__level {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: 0.85rem;
+    color: rgba(#fff, 0.8);
+  }
+
+  &__level-value {
+    font-weight: $font-weight-medium;
+    color: $neon-cyan;
+
+    &--mutated {
+      color: $neon-purple;
+      text-shadow: 0 0 8px rgba($neon-purple, 0.6);
+    }
+  }
+
+  &__level-separator {
+    color: rgba(#fff, 0.5);
+    font-size: 0.75rem;
+  }
+
+  &__types {
+    display: flex;
+    gap: $spacing-xs;
+    font-size: 1rem;
+  }
+
+  &__type {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+
+  // Stats en grille compacte
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-xs;
+
+    @include sm {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba($color-dark, 0.4);
+    border: 1px solid rgba($neon-cyan, 0.1);
+    border-radius: $border-radius-sm;
+    padding: 4px 6px;
+    transition: all $transition-base;
+
+    &:hover {
+      border-color: rgba($neon-cyan, 0.3);
+      background: rgba($color-dark, 0.6);
+    }
+  }
+
+  &__stat-icon {
+    font-size: 0.9rem;
+    filter: drop-shadow(0 0 4px currentColor);
+    flex-shrink: 0;
+  }
+
+  &__stat-values {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    font-weight: $font-weight-medium;
+    min-width: 0;
+  }
+
+  &__stat-value {
+    color: rgba(#fff, 0.9);
+    white-space: nowrap;
+
+    &--mutated {
+      color: $neon-purple;
+      text-shadow: 0 0 6px rgba($neon-purple, 0.5);
+      font-size: 0.7rem;
+
+      &::before {
+        content: '→';
+        margin-right: 2px;
+        color: rgba(#fff, 0.5);
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}

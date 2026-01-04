@@ -33,6 +33,9 @@ switch ($method) {
     case 'DELETE':
         handleDelete($pdo, $user);
         break;
+    case 'PATCH':
+        handlePatch($pdo, $user);
+        break;
     default:
         sendJsonError('Méthode non autorisée', 405);
 }
@@ -42,14 +45,39 @@ switch ($method) {
  */
 function handleGet($pdo, $user) {
     try {
+        // Si ?featured est présent, retourner uniquement les dinos featured d'une tribu (accès public)
+        if (isset($_GET['tribe_id']) && isset($_GET['featured'])) {
+            $tribeId = (int)$_GET['tribe_id'];
+            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? AND is_featured = 1 ORDER BY updated_at DESC');
+            $stmt->execute([$tribeId]);
+            $dinosaurs = $stmt->fetchAll();
+        }
         // Si ?recent est présent, retourner les 3 derniers modifiés
-        if (isset($_GET['recent']) && isset($_GET['tribe_id'])) {
+        else if (isset($_GET['recent']) && isset($_GET['tribe_id'])) {
             $tribeId = (int)$_GET['tribe_id'];
             $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? ORDER BY updated_at DESC LIMIT 3');
             $stmt->execute([$tribeId]);
             $dinosaurs = $stmt->fetchAll();
         } else {
-            $stmt = $pdo->query('SELECT * FROM dinosaurs ORDER BY created_at DESC');
+            // Récupérer la tribu de l'utilisateur connecté
+            $stmt = $pdo->prepare("
+                SELECT t.id
+                FROM tribes t
+                JOIN tribe_members tm ON t.id = tm.tribe_id
+                WHERE tm.user_id = ? AND tm.is_validated = 1
+                LIMIT 1
+            ");
+            $stmt->execute([$user['id']]);
+            $tribe = $stmt->fetch();
+
+            if (!$tribe) {
+                sendJsonResponse([]); // Pas de tribu = pas de dinosaures
+                return;
+            }
+
+            // Retourner uniquement les dinosaures de la tribu de l'utilisateur
+            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? ORDER BY created_at DESC');
+            $stmt->execute([$tribe['id']]);
             $dinosaurs = $stmt->fetchAll();
         }
 
@@ -60,6 +88,7 @@ function handleGet($pdo, $user) {
                 'species' => $dino['species'],
                 'typeIds' => json_decode($dino['type_ids']),
                 'isMutated' => (bool)$dino['is_mutated'],
+                'isFeatured' => (bool)$dino['is_featured'],
                 'photoUrl' => $dino['photo_url'],
                 'stats' => [
                     'health' => (int)$dino['stat_health'],
@@ -199,6 +228,20 @@ function handlePut($pdo, $user) {
 
         // Récupérer les données JSON
         $input = json_decode(file_get_contents('php://input'), true);
+
+        // IMPORTANT: Récupérer les valeurs actuelles AVANT l'UPDATE pour créer les tâches
+        $oldStats = null;
+        if (isset($input['stats']) || isset($input['mutatedStats'])) {
+            $stmt = $pdo->prepare('SELECT
+                tribe_id,
+                stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_damage, stat_crafting,
+                mutated_stat_health, mutated_stat_stamina, mutated_stat_oxygen, mutated_stat_food,
+                mutated_stat_weight, mutated_stat_damage, mutated_stat_crafting
+                FROM dinosaurs WHERE id = ?');
+            $stmt->execute([$id]);
+            $oldStats = $stmt->fetch();
+        }
+
         $updates = [];
         $params = [':id' => $id];
 
@@ -219,6 +262,12 @@ function handlePut($pdo, $user) {
             }
         }
 
+        // Gérer le toggle featured
+        if (isset($input['is_featured'])) {
+            $updates[] = "is_featured = :is_featured";
+            $params[":is_featured"] = (int)$input['is_featured'];
+        }
+
         if (empty($updates)) {
             sendJsonError('Aucune donnée à mettre à jour', 400);
         }
@@ -226,6 +275,17 @@ function handlePut($pdo, $user) {
         $sql = "UPDATE dinosaurs SET " . implode(', ', $updates) . " WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
+
+        // Créer des tâches pour les changements de stats (avec les anciennes valeurs récupérées avant)
+        // Isolé dans un try/catch pour ne pas faire échouer l'UPDATE si la création de tâches échoue
+        if ($oldStats && (isset($input['stats']) || isset($input['mutatedStats']))) {
+            try {
+                createTasksForStatChanges($pdo, $id, $user['id'], $input, $oldStats);
+            } catch (Exception $e) {
+                error_log("Erreur lors de la création des tâches: " . $e->getMessage());
+                // On continue quand même, l'UPDATE a réussi
+            }
+        }
 
         sendJsonResponse(['message' => 'Dinosaure mis à jour avec succès']);
 
@@ -263,6 +323,53 @@ function handleDelete($pdo, $user) {
 
     } catch (PDOException $e) {
         sendJsonError('Erreur lors de la suppression: ' . $e->getMessage(), 500);
+    }
+}
+
+/**
+ * PATCH - Toggle le statut "featured" d'un dinosaure
+ */
+function handlePatch($pdo, $user) {
+    try {
+        // Récupérer l'ID depuis les paramètres GET
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            sendJsonError('ID du dinosaure manquant', 400);
+        }
+
+        // Vérifier que le dinosaure existe et appartient à la tribu de l'utilisateur
+        $stmt = $pdo->prepare("
+            SELECT d.*
+            FROM dinosaurs d
+            JOIN tribe_members tm ON d.tribe_id = tm.tribe_id
+            WHERE d.id = ? AND tm.user_id = ? AND tm.is_validated = 1
+        ");
+        $stmt->execute([$id, $user['id']]);
+        $dinosaur = $stmt->fetch();
+
+        if (!$dinosaur) {
+            sendJsonError('Dinosaure introuvable ou vous n\'avez pas la permission de le modifier', 403);
+        }
+
+        // Récupérer les données JSON
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        // Toggle le statut featured
+        if (isset($input['is_featured'])) {
+            $stmt = $pdo->prepare("UPDATE dinosaurs SET is_featured = ? WHERE id = ?");
+            $stmt->execute([(int)$input['is_featured'], $id]);
+
+            sendJsonResponse([
+                'message' => 'Statut featured mis à jour avec succès',
+                'is_featured' => (bool)$input['is_featured']
+            ]);
+        } else {
+            sendJsonError('Paramètre is_featured manquant', 400);
+        }
+
+    } catch (PDOException $e) {
+        sendJsonError('Erreur lors de la mise à jour: ' . $e->getMessage(), 500);
     }
 }
 
@@ -317,4 +424,45 @@ function deletePhoto($photoUrl) {
     if (file_exists($filePath)) {
         unlink($filePath);
     }
+}
+
+/**
+ * Crée des tâches pour chaque stat modifiée
+ */
+function createTasksForStatChanges($pdo, $dinoId, $userId, $input, $oldStats) {
+    if (!$oldStats || !$oldStats['tribe_id']) {
+        return; // Pas de tribu = pas de tâches
+    }
+
+    $tribeId = $oldStats['tribe_id'];
+
+    // Stats de base
+    if (isset($input['stats'])) {
+        foreach ($input['stats'] as $statKey => $newValue) {
+            $oldValue = $oldStats['stat_' . $statKey];
+            if ($oldValue != $newValue) {
+                createTask($pdo, $tribeId, $dinoId, $userId, $statKey, 'base', $oldValue, $newValue);
+            }
+        }
+    }
+
+    // Stats mutées
+    if (isset($input['mutatedStats'])) {
+        foreach ($input['mutatedStats'] as $statKey => $newValue) {
+            $oldValue = $oldStats['mutated_stat_' . $statKey];
+            if ($oldValue != $newValue) {
+                createTask($pdo, $tribeId, $dinoId, $userId, $statKey, 'mutated', $oldValue, $newValue);
+            }
+        }
+    }
+}
+
+/**
+ * Créer une tâche individuelle
+ */
+function createTask($pdo, $tribeId, $dinoId, $userId, $statName, $statType, $oldValue, $newValue) {
+    $stmt = $pdo->prepare('INSERT INTO dino_tasks
+        (tribe_id, dino_id, created_by, stat_name, stat_type, old_value, new_value)
+        VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute([$tribeId, $dinoId, $userId, $statName, $statType, $oldValue, $newValue]);
 }

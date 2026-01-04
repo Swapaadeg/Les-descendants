@@ -8,6 +8,15 @@ import axios from 'axios';
 // URL de base de l'API (PHP built-in server)
 const API_BASE_URL = 'http://localhost:8000/api';
 
+// Fonction pour convertir les URLs relatives en URLs absolues
+export const getFullImageUrl = (relativeUrl) => {
+  if (!relativeUrl) return null;
+  if (relativeUrl.startsWith('http')) return relativeUrl; // Déjà une URL absolue
+  // Retirer le /api du début si présent, et ajouter le base URL
+  const cleanPath = relativeUrl.startsWith('/api/') ? relativeUrl.substring(4) : relativeUrl;
+  return `http://localhost:8000${cleanPath}`;
+};
+
 // Instance axios configurée
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -36,10 +45,18 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // Ne pas rediriger si on est déjà sur les pages publiques (login, register, verify-email, reset-password)
+      const currentPath = window.location.pathname;
+      const publicPages = ['/login', '/register', '/verify-email', '/reset-password', '/'];
+      
       // Token expiré ou invalide - déconnecter l'utilisateur
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      
+      // Rediriger vers login SAUF si on est déjà sur une page publique
+      if (!publicPages.includes(currentPath)) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
@@ -229,6 +246,22 @@ export const dinoAPI = {
    */
   delete: async (id) => {
     const response = await api.delete(`/dinosaurs.php?id=${id}`);
+    return response.data;
+  },
+
+  /**
+   * Toggle le statut featured d'un dinosaure
+   */
+  toggleFeatured: async (id, isFeatured) => {
+    const response = await api.put(`/dinosaurs.php?id=${id}`, { is_featured: isFeatured });
+    return response.data;
+  },
+
+  /**
+   * Récupérer les dinosaures featured d'une tribu (accessible publiquement)
+   */
+  getFeatured: async (tribeId) => {
+    const response = await api.get(`/dinosaurs.php?tribe_id=${tribeId}&featured=1`);
     return response.data;
   },
 };
@@ -468,6 +501,38 @@ export const adminAPI = {
       return response.data;
     }
   }
+};
+
+// ===========================
+// TASKS
+// ===========================
+
+export const taskAPI = {
+  /**
+   * Récupérer les tâches de la tribu
+   */
+  getAll: async (status = 'pending') => {
+    const response = await api.get(`/tasks.php?status=${status}`);
+    return response.data;
+  },
+
+  /**
+   * Récupérer le nombre de tâches en attente (for badge)
+   */
+  getPendingCount: async () => {
+    const response = await api.get('/tasks.php?status=pending');
+    return response.data.length;
+  },
+
+  /**
+   * Marquer une tâche comme complète
+   */
+  complete: async (taskId) => {
+    const response = await api.put(`/tasks.php?id=${taskId}`, {
+      status: 'completed'
+    });
+    return response.data;
+  },
 };
 
 export default api;

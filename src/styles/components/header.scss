@@ -86,6 +86,78 @@
     }
   }
 
+  &__tasks-btn {
+    position: absolute;
+    top: $spacing-md;
+    left: $spacing-md;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, rgba($neon-cyan, 0.15), rgba($neon-cyan, 0.05));
+    border: 2px solid rgba($neon-cyan, 0.4);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all $transition-base;
+    @include neon-shadow($neon-cyan, low);
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($neon-cyan, 0.25), rgba($neon-cyan, 0.15));
+      border-color: $neon-cyan;
+      transform: translateY(-2px);
+      @include neon-shadow($neon-cyan, medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include sm {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  &__tasks-icon {
+    font-size: 1.5rem;
+    transition: transform $transition-base;
+
+    .header__tasks-btn:hover & {
+      transform: scale(1.1);
+    }
+
+    @include sm {
+      font-size: 1.3rem;
+    }
+  }
+
+  &__tasks-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffea00 0%, #ffb700 100%);
+    color: $color-dark;
+    font-size: 0.75rem;
+    font-weight: $font-weight-bold;
+    border-radius: 50px;
+    box-shadow: 0 0 15px rgba(#ffea00, 0.6);
+    animation: pulse-badge 2s ease-in-out infinite;
+
+    @include sm {
+      min-width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      padding: 0 5px;
+    }
+  }
+
   &__admin-link {
     position: absolute;
     top: $spacing-md;
@@ -201,5 +273,14 @@
   }
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
   }
 }

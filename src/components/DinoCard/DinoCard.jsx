@@ -3,7 +3,7 @@ import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
 import '../../styles/components/dino-card.scss';
 
-const DinoCard = ({ dino, onUpdate, onDelete }) => {
+const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured }) => {
   const [editingStats, setEditingStats] = useState({});
   const [tempValues, setTempValues] = useState({});
 
@@ -114,11 +114,12 @@ const DinoCard = ({ dino, onUpdate, onDelete }) => {
           ) : (
             <div
               className="dino-card__stat-value"
-              onClick={() => startEditing(stat.id, baseValue, false)}
-              title="Cliquer pour modifier"
+              onClick={onUpdate ? () => startEditing(stat.id, baseValue, false) : undefined}
+              title={onUpdate ? "Cliquer pour modifier" : undefined}
+              style={onUpdate ? undefined : { cursor: 'default' }}
             >
               {baseValue || baseValue === 0 ? baseValue : '—'}
-              <span className="dino-card__stat-edit-icon">✎</span>
+              {onUpdate && <span className="dino-card__stat-edit-icon">✎</span>}
             </div>
           )}
         </div>
@@ -158,11 +159,12 @@ const DinoCard = ({ dino, onUpdate, onDelete }) => {
             ) : (
               <div
                 className="dino-card__stat-value dino-card__stat-value--mutated"
-                onClick={() => startEditing(stat.id, mutatedValue, true)}
-                title="Cliquer pour modifier"
+                onClick={onUpdate ? () => startEditing(stat.id, mutatedValue, true) : undefined}
+                title={onUpdate ? "Cliquer pour modifier" : undefined}
+                style={onUpdate ? undefined : { cursor: 'default' }}
               >
                 {mutatedValue || mutatedValue === 0 ? mutatedValue : '—'}
-                <span className="dino-card__stat-edit-icon">✎</span>
+                {onUpdate && <span className="dino-card__stat-edit-icon">✎</span>}
               </div>
             )}
           </div>
@@ -173,14 +175,29 @@ const DinoCard = ({ dino, onUpdate, onDelete }) => {
 
   return (
     <article className="dino-card">
-      {/* Bouton de suppression */}
-      <button
-        className="dino-card__delete-btn"
-        onClick={() => onDelete(dino.id)}
-        title="Supprimer ce dinosaure"
-      >
-        🗑️
-      </button>
+      {/* Boutons d'action (seulement si les fonctions sont fournies) */}
+      {(onToggleFeatured || onDelete) && (
+        <div className="dino-card__actions">
+          {onToggleFeatured && (
+            <button
+              className={`dino-card__featured-btn ${dino.isFeatured ? 'dino-card__featured-btn--active' : ''}`}
+              onClick={() => onToggleFeatured(dino.id, dino.isFeatured)}
+              title={dino.isFeatured ? "Retirer de la vitrine" : "Mettre en vitrine"}
+            >
+              ⭐
+            </button>
+          )}
+          {onDelete && (
+            <button
+              className="dino-card__delete-btn"
+              onClick={() => onDelete(dino.id)}
+              title="Supprimer ce dinosaure"
+            >
+              🗑️
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Badge muté */}
       {dino.isMutated && (

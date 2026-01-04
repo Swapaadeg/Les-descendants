@@ -131,7 +131,7 @@ const TribeMembersModal = ({
       `⚠️ ATTENTION : Vous allez transférer la propriété de la tribu à ${selectedMember.username}.\n\n` +
       'Après cette action :\n' +
       '- Vous deviendrez un membre normal\n' +
-      `- ${selectedMember.username} deviendra le nouveau chef\n` +
+      `- ${selectedMember.username} deviendra le nouveau propriétaire\n` +
       '- Vous pourrez alors quitter la tribu si vous le souhaitez\n\n' +
       'Êtes-vous sûr de vouloir continuer ?'
     );
@@ -222,15 +222,14 @@ const TribeMembersModal = ({
                   {members.map((member) => (
                     <div key={member.user_id} className="tribe-member">
                       <div className="tribe-member__info">
-                        <span className="tribe-member__avatar">
-                          {member.role === 'owner' ? '👑' : '👤'}
-                        </span>
+                        <img 
+                          src={member.avatar_url || '/default-avatar.png'} 
+                          alt={member.username}
+                          className="tribe-member__avatar"
+                        />
                         <div>
                           <h4 className="tribe-member__username">
                             {member.username}
-                            {member.role === 'owner' && (
-                              <span className="tribe-member__role"> (Chef)</span>
-                            )}
                           </h4>
                           <p className="tribe-member__date">
                             Membre depuis le {formatDate(member.joined_at)}
@@ -270,7 +269,11 @@ const TribeMembersModal = ({
                     <div key={request.id} className="tribe-request">
                       <div className="tribe-request__header">
                         <div className="tribe-request__user">
-                          <span className="tribe-request__avatar">👤</span>
+                          <img 
+                            src={request.avatar_url || '/default-avatar.png'} 
+                            alt={request.username}
+                            className="tribe-request__avatar"
+                          />
                           <div>
                             <h4 className="tribe-request__username">
                               {request.username}
@@ -278,9 +281,6 @@ const TribeMembersModal = ({
                             <p className="tribe-request__email">{request.email}</p>
                           </div>
                         </div>
-                        <span className="tribe-request__date">
-                          {formatDate(request.requested_at)}
-                        </span>
                       </div>
 
                       {request.request_message && (
