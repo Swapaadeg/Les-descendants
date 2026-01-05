@@ -199,12 +199,12 @@
   }
 
   &__logo {
-    max-width: 300px;
+    max-width: 240px;
     height: auto;
     filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
 
     @include max-md {
-      max-width: 200px;
+      max-width: 170px;
     }
   }
 
