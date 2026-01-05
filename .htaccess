@@ -7,14 +7,11 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
+    # Servir les uploads depuis api/uploads (règle prioritaire)
+    RewriteRule ^uploads/(.*)$ api/uploads/$1 [L]
+
     # Ne pas rediriger les appels API
     RewriteCond %{REQUEST_URI} !^/api
-
-    # Ne pas rediriger les uploads
-    RewriteCond %{REQUEST_URI} !^/uploads
-
-    # Servir les uploads depuis api/uploads
-    RewriteRule ^uploads/(.*)$ api/uploads/$1 [L]
 
     # Rediriger tout vers index.html
     RewriteRule . /index.html [L]
