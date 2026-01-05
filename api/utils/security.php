@@ -10,8 +10,6 @@
  * - Rate limiting
  */
 
-require_once __DIR__ . '/../config.php';
-
 /**
  * Hasher un mot de passe avec Argon2id (le plus sécurisé)
  *

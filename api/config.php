@@ -115,3 +115,6 @@ function getFullUrl($relativePath) {
     // Ajouter le BASE_URL directement (garder /api/ dans le chemin)
     return BASE_URL . $relativePath;
 }
+// Inclure les utilitaires de sécurité après avoir défini les fonctions de config
+require_once __DIR__ . '/utils/security.php';
+?>
