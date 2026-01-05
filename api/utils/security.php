@@ -521,4 +521,13 @@ if (!function_exists('sendSecureJsonResponse')) {
         exit;
     }
 }
+
+/**
+ * Générer un token CSRF et le servir en JSON
+ * Utilisé par l'endpoint /api/auth/csrf-token.php
+ */
+function serveCsrfToken() {
+    $token = generateCSRFToken();
+    sendJsonResponse(['csrf_token' => $token]);
+}
 ?>
