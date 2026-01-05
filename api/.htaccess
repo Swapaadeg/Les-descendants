@@ -43,18 +43,5 @@
     Header set Pragma "no-cache"
 </IfModule>
 
-# Désactiver l'affichage des erreurs PHP en production
-php_flag display_errors Off
-php_flag display_startup_errors Off
-php_value error_reporting 0
-
-# Logs d'erreurs dans un fichier
-php_flag log_errors On
-php_value error_log logs/php_errors.log
-
-# Limites de sécurité
-php_value upload_max_filesize 10M
-php_value post_max_size 12M
-php_value max_execution_time 30
-php_value max_input_time 30
-php_value memory_limit 256M
+# Note: Les directives php_flag et php_value ne sont pas supportées sur o2switch
+# Utilisez un fichier .user.ini ou php.ini si nécessaire

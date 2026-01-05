@@ -11,13 +11,13 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../utils/security.php';
 
 // Gérer les requêtes OPTIONS
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
 // Autoriser uniquement GET
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
     sendJsonError('Méthode non autorisée', 405);
 }
 

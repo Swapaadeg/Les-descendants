@@ -5,16 +5,27 @@
 
 import axios from 'axios';
 
-// URL de base de l'API (PHP built-in server)
-const API_BASE_URL = 'http://localhost:8000/api';
+// URL de base de l'API
+// En développement: localhost:8000 (serveur PHP built-in depuis api/)
+// En production: https://arki-family.swapdevstudio.fr/api
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.MODE === 'production' 
+    ? 'https://arki-family.swapdevstudio.fr/api' 
+    : 'http://localhost:8000');
 
 // Fonction pour convertir les URLs relatives en URLs absolues
 export const getFullImageUrl = (relativeUrl) => {
   if (!relativeUrl) return null;
-  if (relativeUrl.startsWith('http')) return relativeUrl; // Déjà une URL absolue
-  // Retirer le /api du début si présent, et ajouter le base URL
-  const cleanPath = relativeUrl.startsWith('/api/') ? relativeUrl.substring(4) : relativeUrl;
-  return `http://localhost:8000${cleanPath}`;
+  if (relativeUrl.startsWith('http')) {
+    // En dev, retirer /api/ car le serveur sert depuis api/
+    // En prod, garder /api/ car c'est le vrai chemin
+    if (import.meta.env.MODE !== 'production') {
+      return relativeUrl.replace('/api/', '/');
+    }
+    return relativeUrl;
+  }
+  // URL relative
+  return relativeUrl;
 };
 
 // Instance axios configurée
@@ -271,6 +282,14 @@ export const tribeAPI = {
    */
   getAll: async () => {
     const response = await api.get('/tribes.php');
+    // Transformer les URLs uniquement en dev
+    if (import.meta.env.MODE !== 'production' && response.data.tribes) {
+      response.data.tribes = response.data.tribes.map(tribe => ({
+        ...tribe,
+        banner_url: tribe.banner_url ? tribe.banner_url.replace('/api/', '/') : null,
+        logo_url: tribe.logo_url ? tribe.logo_url.replace('/api/', '/') : null,
+      }));
+    }
     return response.data;
   },
 
@@ -279,6 +298,10 @@ export const tribeAPI = {
    */
   getMy: async () => {
     const response = await api.get('/tribes.php?my');
+    if (import.meta.env.MODE !== 'production' && response.data.tribe) {
+      response.data.tribe.banner_url = response.data.tribe.banner_url ? response.data.tribe.banner_url.replace('/api/', '/') : null;
+      response.data.tribe.logo_url = response.data.tribe.logo_url ? response.data.tribe.logo_url.replace('/api/', '/') : null;
+    }
     return response.data;
   },
 
@@ -295,6 +318,10 @@ export const tribeAPI = {
    */
   update: async (tribeData) => {
     const response = await api.put('/tribes.php', tribeData);
+    if (import.meta.env.MODE !== 'production' && response.data.tribe) {
+      response.data.tribe.banner_url = response.data.tribe.banner_url ? response.data.tribe.banner_url.replace('/api/', '/') : null;
+      response.data.tribe.logo_url = response.data.tribe.logo_url ? response.data.tribe.logo_url.replace('/api/', '/') : null;
+    }
     return response.data;
   },
 
