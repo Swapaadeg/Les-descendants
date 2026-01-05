@@ -298,7 +298,7 @@ function uploadAvatar($pdo, $user) {
     }
 
     // Mettre à jour la base de données
-    $avatarUrl = '/api/uploads/avatars/' . $filename;
+    $avatarUrl = '/uploads/avatars/' . $filename;
     $stmt = $pdo->prepare("UPDATE users SET photo_profil = ? WHERE id = ?");
     $stmt->execute([$avatarUrl, $user['id']]);
 

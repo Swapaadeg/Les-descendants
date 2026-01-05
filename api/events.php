@@ -389,7 +389,7 @@ function uploadEventImage($file, $eventId, $order) {
         throw new Exception('Erreur lors de l\'upload du fichier');
     }
 
-    return "/api/uploads/events/{$eventId}/{$fileName}";
+    return "/uploads/events/{$eventId}/{$fileName}";
 }
 
 /**

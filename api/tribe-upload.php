@@ -179,7 +179,7 @@ try {
     }
 
     // URL relative de l'image (avec préfixe /api/)
-    $imageUrl = "/api/uploads/tribes/{$tribeId}/{$filename}";
+    $imageUrl = "/uploads/tribes/{$tribeId}/{$filename}";
 
     // Mettre à jour la base de données
     $field = $type === 'banner' ? 'banner_url' : 'logo_url';

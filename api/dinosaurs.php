@@ -468,7 +468,7 @@ function uploadPhoto($file, $species) {
     }
 
     // Retourner l'URL relative
-    return '/api/uploads/' . $fileName;
+    return '/uploads/' . $fileName;
 }
 
 /**
