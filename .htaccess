@@ -10,10 +10,10 @@
     # Servir les uploads depuis api/uploads (règle prioritaire)
     RewriteRule ^uploads/(.*)$ api/uploads/$1 [L]
 
-    # Ne pas rediriger les appels API
+    # Rediriger tout vers index.html (sauf /api et fichiers/dossiers existants)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/api
-
-    # Rediriger tout vers index.html
     RewriteRule . /index.html [L]
 </IfModule>
 
@@ -84,3 +84,4 @@
     # Content Security Policy (strict pour XSS)
     Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:8000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
+
