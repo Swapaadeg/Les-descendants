@@ -3,7 +3,15 @@ import DinoCard from '../DinoCard';
 import dinoTypes from '../../data/types';
 import '../../styles/components/dino-list.scss';
 
-const DinoList = ({ dinos, onUpdateDino, onDeleteDino, onToggleFeatured, initialFilter = 'all' }) => {
+const DinoList = ({
+  dinos,
+  onUpdateDino,
+  onDeleteDino,
+  onToggleFeatured,
+  initialFilter = 'all',
+  members = [],
+  currentUserId
+}) => {
   const [filter, setFilter] = useState(initialFilter);
   const [search, setSearch] = useState('');
 
@@ -95,6 +103,8 @@ const DinoList = ({ dinos, onUpdateDino, onDeleteDino, onToggleFeatured, initial
                 onUpdate={onUpdateDino}
                 onDelete={onDeleteDino}
                 onToggleFeatured={onToggleFeatured}
+                members={members}
+                currentUserId={currentUserId}
               />
             ))}
           </div>

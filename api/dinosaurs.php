@@ -15,17 +15,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Récupérer la connexion à la base de données
 $pdo = getDbConnection();
 
-// Vérifier l'authentification
+// Vérifier l'authentification (JWT)
 $user = requireAuth($pdo);
 if (!$user) {
     exit;
 }
 
-// Protection CSRF pour les méthodes modifiant des données
-if (in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'])) {
-    $input = json_decode(file_get_contents('php://input'), true);
-    requireCsrfToken($input);
-}
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// The JWT in the Authorization header already provides protection against CSRF attacks
 
 // Router selon la méthode HTTP
 switch ($method) {
@@ -56,14 +53,23 @@ function handleGet($pdo, $user) {
         // Si ?featured est présent, retourner uniquement les dinos featured d'une tribu (accès public)
         if (isset($_GET['tribe_id']) && isset($_GET['featured'])) {
             $tribeId = (int)$_GET['tribe_id'];
-            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? AND is_featured = 1 ORDER BY updated_at DESC');
+            $stmt = $pdo->prepare('SELECT d.*, au.username as assigned_username
+                FROM dinosaurs d
+                LEFT JOIN users au ON d.assigned_user_id = au.id
+                WHERE d.tribe_id = ? AND d.is_featured = 1
+                ORDER BY d.updated_at DESC');
             $stmt->execute([$tribeId]);
             $dinosaurs = $stmt->fetchAll();
         }
         // Si ?recent est présent, retourner les 3 derniers modifiés
         else if (isset($_GET['recent']) && isset($_GET['tribe_id'])) {
             $tribeId = (int)$_GET['tribe_id'];
-            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? ORDER BY updated_at DESC LIMIT 3');
+            $stmt = $pdo->prepare('SELECT d.*, au.username as assigned_username
+                FROM dinosaurs d
+                LEFT JOIN users au ON d.assigned_user_id = au.id
+                WHERE d.tribe_id = ?
+                ORDER BY d.updated_at DESC
+                LIMIT 3');
             $stmt->execute([$tribeId]);
             $dinosaurs = $stmt->fetchAll();
         } else {
@@ -84,41 +90,17 @@ function handleGet($pdo, $user) {
             }
 
             // Retourner uniquement les dinosaures de la tribu de l'utilisateur
-            $stmt = $pdo->prepare('SELECT * FROM dinosaurs WHERE tribe_id = ? ORDER BY created_at DESC');
+            $stmt = $pdo->prepare('SELECT d.*, au.username as assigned_username
+                FROM dinosaurs d
+                LEFT JOIN users au ON d.assigned_user_id = au.id
+                WHERE d.tribe_id = ?
+                ORDER BY d.created_at DESC');
             $stmt->execute([$tribe['id']]);
             $dinosaurs = $stmt->fetchAll();
         }
 
         // Transformer les données pour le format attendu par React
-        $result = array_map(function($dino) {
-            return [
-                'id' => (int)$dino['id'],
-                'species' => $dino['species'],
-                'typeIds' => json_decode($dino['type_ids']),
-                'isMutated' => (bool)$dino['is_mutated'],
-                'isFeatured' => (bool)$dino['is_featured'],
-                'photoUrl' => $dino['photo_url'],
-                'stats' => [
-                    'health' => (int)$dino['stat_health'],
-                    'stamina' => (int)$dino['stat_stamina'],
-                    'oxygen' => (int)$dino['stat_oxygen'],
-                    'food' => (int)$dino['stat_food'],
-                    'weight' => (int)$dino['stat_weight'],
-                    'damage' => (int)$dino['stat_damage'],
-                    'crafting' => (int)$dino['stat_crafting']
-                ],
-                'mutatedStats' => [
-                    'health' => (int)$dino['mutated_stat_health'],
-                    'stamina' => (int)$dino['mutated_stat_stamina'],
-                    'oxygen' => (int)$dino['mutated_stat_oxygen'],
-                    'food' => (int)$dino['mutated_stat_food'],
-                    'weight' => (int)$dino['mutated_stat_weight'],
-                    'damage' => (int)$dino['mutated_stat_damage'],
-                    'crafting' => (int)$dino['mutated_stat_crafting']
-                ],
-                'createdAt' => $dino['created_at']
-            ];
-        }, $dinosaurs);
+        $result = array_map('mapDinosaurRow', $dinosaurs);
 
         sendJsonResponse($result);
     } catch (PDOException $e) {
@@ -309,6 +291,23 @@ function handlePut($pdo, $user) {
             $params[":is_featured"] = (int)$input['is_featured'];
         }
 
+        // Gérer l'assignation de membre
+        if (array_key_exists('assigned_user_id', $input)) {
+            $assignedUserId = $input['assigned_user_id'];
+
+            if ($assignedUserId !== null) {
+                // Vérifier que l'utilisateur assigné appartient à la même tribu
+                $stmt = $pdo->prepare("SELECT 1 FROM tribe_members WHERE tribe_id = ? AND user_id = ? AND is_validated = 1");
+                $stmt->execute([$dino['tribe_id'], $assignedUserId]);
+                if (!$stmt->fetch()) {
+                    sendJsonError('Impossible d\'assigner un membre en dehors de la tribu', 403);
+                }
+            }
+
+            $updates[] = "assigned_user_id = :assigned_user_id";
+            $params[":assigned_user_id"] = $assignedUserId !== null ? (int)$assignedUserId : null;
+        }
+
         if (empty($updates)) {
             sendJsonError('Aucune donnée à mettre à jour', 400);
         }
@@ -328,7 +327,18 @@ function handlePut($pdo, $user) {
             }
         }
 
-        sendJsonResponse(['message' => 'Dinosaure mis à jour avec succès']);
+        // Récupérer le dinosaure à jour pour le front
+        $stmt = $pdo->prepare('SELECT d.*, au.username as assigned_username
+            FROM dinosaurs d
+            LEFT JOIN users au ON d.assigned_user_id = au.id
+            WHERE d.id = ?');
+        $stmt->execute([$id]);
+        $updatedDino = $stmt->fetch();
+
+        sendJsonResponse([
+            'message' => 'Dinosaure mis à jour avec succès',
+            'dinosaur' => $updatedDino ? mapDinosaurRow($updatedDino) : null
+        ]);
 
     } catch (PDOException $e) {
         sendJsonError('Erreur lors de la mise à jour: ' . $e->getMessage(), 500);
@@ -517,4 +527,41 @@ function createTask($pdo, $tribeId, $dinoId, $userId, $statName, $statType, $old
         (tribe_id, dino_id, created_by, stat_name, stat_type, old_value, new_value)
         VALUES (?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute([$tribeId, $dinoId, $userId, $statName, $statType, $oldValue, $newValue]);
+}
+
+/**
+ * Transforme une ligne SQL de dinosaure en payload API
+ */
+function mapDinosaurRow($dino) {
+    return [
+        'id' => (int)$dino['id'],
+        'species' => $dino['species'],
+        'typeIds' => json_decode($dino['type_ids']),
+        'isMutated' => (bool)$dino['is_mutated'],
+        'isFeatured' => (bool)$dino['is_featured'],
+        'photoUrl' => $dino['photo_url'],
+        'assignedUser' => $dino['assigned_user_id'] ? [
+            'id' => (int)$dino['assigned_user_id'],
+            'username' => $dino['assigned_username']
+        ] : null,
+        'stats' => [
+            'health' => (int)$dino['stat_health'],
+            'stamina' => (int)$dino['stat_stamina'],
+            'oxygen' => (int)$dino['stat_oxygen'],
+            'food' => (int)$dino['stat_food'],
+            'weight' => (int)$dino['stat_weight'],
+            'damage' => (int)$dino['stat_damage'],
+            'crafting' => (int)$dino['stat_crafting']
+        ],
+        'mutatedStats' => [
+            'health' => (int)$dino['mutated_stat_health'],
+            'stamina' => (int)$dino['mutated_stat_stamina'],
+            'oxygen' => (int)$dino['mutated_stat_oxygen'],
+            'food' => (int)$dino['mutated_stat_food'],
+            'weight' => (int)$dino['mutated_stat_weight'],
+            'damage' => (int)$dino['mutated_stat_damage'],
+            'crafting' => (int)$dino['mutated_stat_crafting']
+        ],
+        'createdAt' => $dino['created_at']
+    ];
 }

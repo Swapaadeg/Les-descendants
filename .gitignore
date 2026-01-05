@@ -26,6 +26,8 @@ dist-ssr
 # API - Fichiers sensibles
 api/config.php
 api/config.local.php
+api/.env
+api/.env.local
 api/scripts/*.php
 !api/scripts/README.md
 api/uploads/*

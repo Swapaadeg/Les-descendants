@@ -45,32 +45,43 @@ export const useDinosaurs = () => {
   // Mettre à jour un dinosaure
   const updateDinosaur = async (dinoId, updatedData) => {
     try {
-      await dinoAPI.update(dinoId, updatedData);
+      const result = await dinoAPI.update(dinoId, updatedData);
+      const updatedFromApi = result?.dinosaur;
 
-      // Mise à jour optimiste avec merge profond pour les objets imbriqués
-      setDinos(prevDinos =>
-        prevDinos.map(dino => {
-          if (dino.id !== dinoId) return dino;
+      if (updatedFromApi) {
+        setDinos(prevDinos =>
+          prevDinos.map(dino => (dino.id === dinoId ? { ...dino, ...updatedFromApi } : dino))
+        );
+      } else {
+        // Fallback: mise à jour optimiste avec merge profond pour les objets imbriqués
+        setDinos(prevDinos =>
+          prevDinos.map(dino => {
+            if (dino.id !== dinoId) return dino;
 
-          // Merge profond des stats et mutatedStats
-          const updated = { ...dino };
+            const updated = { ...dino };
 
-          if (updatedData.stats) {
-            updated.stats = { ...dino.stats, ...updatedData.stats };
-          }
+            if (updatedData.stats) {
+              updated.stats = { ...dino.stats, ...updatedData.stats };
+            }
 
-          if (updatedData.mutatedStats) {
-            updated.mutatedStats = { ...dino.mutatedStats, ...updatedData.mutatedStats };
-          }
+            if (updatedData.mutatedStats) {
+              updated.mutatedStats = { ...dino.mutatedStats, ...updatedData.mutatedStats };
+            }
 
-          // Autres propriétés (is_featured, etc.)
-          if (updatedData.isFeatured !== undefined) {
-            updated.isFeatured = updatedData.isFeatured;
-          }
+            if (updatedData.isFeatured !== undefined) {
+              updated.isFeatured = updatedData.isFeatured;
+            }
 
-          return updated;
-        })
-      );
+            if (updatedData.assigned_user_id !== undefined) {
+              updated.assignedUser = updatedData.assigned_user_id
+                ? { id: updatedData.assigned_user_id, username: updated.assignedUser?.username || '' }
+                : null;
+            }
+
+            return updated;
+          })
+        );
+      }
     } catch (error) {
       // En cas d'erreur, recharger pour avoir l'état correct
       await fetchDinosaurs();

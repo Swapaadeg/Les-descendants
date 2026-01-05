@@ -14,7 +14,7 @@ export const useTasks = (status = 'pending') => {
   // Charger toutes les tâches selon le statut
   const fetchTasks = async () => {
     // Ne pas charger si pas de token
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) {
       setLoading(false);
       return;
@@ -36,7 +36,7 @@ export const useTasks = (status = 'pending') => {
   // Charger le nombre de tâches en attente (pour le badge)
   const fetchPendingCount = async () => {
     // Ne pas charger si pas de token
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     if (!token) {
       setPendingCount(0);
       return;

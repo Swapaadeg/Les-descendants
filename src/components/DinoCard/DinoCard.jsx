@@ -3,9 +3,11 @@ import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
 import '../../styles/components/dino-card.scss';
 
-const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured }) => {
+const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], currentUserId }) => {
   const [editingStats, setEditingStats] = useState({});
   const [tempValues, setTempValues] = useState({});
+
+  const assignedUserId = dino.assignedUser?.id || null;
 
   const isAquatic = shouldIgnoreOxygen(dino.typeIds, dinoTypes);
   const hasPhoto = dino.photoUrl;
@@ -180,6 +182,7 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured }) => {
         <div className="dino-card__actions">
           {onToggleFeatured && (
             <button
+              type="button"
               className={`dino-card__featured-btn ${dino.isFeatured ? 'dino-card__featured-btn--active' : ''}`}
               onClick={() => onToggleFeatured(dino.id, dino.isFeatured)}
               title={dino.isFeatured ? "Retirer de la vitrine" : "Mettre en vitrine"}
@@ -216,6 +219,66 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured }) => {
       {/* Header */}
       <div className="dino-card__header">
         <h3 className="dino-card__title">{dino.species}</h3>
+
+        {/* Assignation */}
+        <div className="dino-card__assignee">
+          <div className="dino-card__assignee-label">Assigné à</div>
+          <div className="dino-card__assignee-value">
+            {dino.assignedUser ? (
+              <span className="dino-card__assignee-chip">
+                <span className="dino-card__assignee-avatar">
+                  {dino.assignedUser.username?.charAt(0)?.toUpperCase() || '👤'}
+                </span>
+                <span className="dino-card__assignee-name">{dino.assignedUser.username}</span>
+              </span>
+            ) : (
+              <span className="dino-card__assignee-empty">Non assigné</span>
+            )}
+          </div>
+
+          {onUpdate && members.length > 0 && (
+            <div className="dino-card__assignee-actions">
+              <select
+                className="dino-card__assignee-select"
+                value={assignedUserId ?? ''}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const newAssignee = value === '' ? null : parseInt(value, 10);
+                  onUpdate(dino.id, { assigned_user_id: newAssignee });
+                }}
+              >
+                <option value="">Non assigné</option>
+                {members.map(member => (
+                  <option key={member.id} value={member.id}>
+                    {member.username}
+                  </option>
+                ))}
+              </select>
+
+              {currentUserId && assignedUserId !== currentUserId && (
+                <button
+                  type="button"
+                  className="dino-card__assignee-me"
+                  onClick={() => onUpdate(dino.id, { assigned_user_id: currentUserId })}
+                  title="M'assigner ce dino"
+                >
+                  Moi
+                </button>
+              )}
+
+              {assignedUserId && (
+                <button
+                  type="button"
+                  className="dino-card__assignee-clear"
+                  onClick={() => onUpdate(dino.id, { assigned_user_id: null })}
+                  title="Libérer ce dino"
+                >
+                  Libérer
+                </button>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Niveau */}
         <div className="dino-card__level">

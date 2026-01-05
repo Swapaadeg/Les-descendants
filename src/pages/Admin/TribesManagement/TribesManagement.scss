@@ -1,0 +1,579 @@
+@use "sass:color";
+@use '../../../styles/base/variables' as *;
+@use '../../../styles/base/responsive' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.tribes-management {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  // Header
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $neon-cyan;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    @include neon-text-shadow($neon-cyan, medium);
+  }
+
+  &__title-icon {
+    font-size: 2.5rem;
+  }
+
+  &__refresh-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, rgba($neon-cyan, 0.1), rgba($neon-purple, 0.1));
+    border: 2px solid rgba($neon-cyan, 0.5);
+    border-radius: 8px;
+    color: $neon-cyan;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($neon-cyan, 0.2), rgba($neon-purple, 0.2));
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, medium);
+    }
+
+    span {
+      font-size: 1.2rem;
+    }
+  }
+
+  // Tabs
+  &__tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid rgba($neon-cyan, 0.2);
+  }
+
+  &__tab {
+    padding: 1rem 2rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba($text-primary, 0.6);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    bottom: -2px;
+
+    &:hover {
+      color: $text-primary;
+      border-bottom-color: rgba($neon-cyan, 0.5);
+    }
+
+    &--active {
+      color: $neon-cyan;
+      border-bottom-color: $neon-cyan;
+      @include neon-text-shadow($neon-cyan, low);
+    }
+  }
+
+  &__tab-icon {
+    font-size: 1.2rem;
+  }
+
+  // Grid
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  // Pagination
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  &__pagination-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, rgba($neon-cyan, 0.1), rgba($neon-purple, 0.1));
+    border: 2px solid rgba($neon-cyan, 0.5);
+    border-radius: 8px;
+    color: $neon-cyan;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba($neon-cyan, 0.2), rgba($neon-purple, 0.2));
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, medium);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  &__pagination-info {
+    color: $text-primary;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__pagination-count {
+    font-size: 0.85rem;
+    color: rgba($text-primary, 0.6);
+  }
+
+  // Loading state
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    gap: 1.5rem;
+
+    p {
+      color: $neon-cyan;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+
+  &__spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba($neon-cyan, 0.2);
+    border-top-color: $neon-cyan;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    @include neon-shadow($neon-cyan, medium);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Error state
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    gap: 1rem;
+    text-align: center;
+
+    h2 {
+      color: $neon-pink;
+      margin: 0;
+      @include neon-text-shadow($neon-pink, medium);
+    }
+
+    p {
+      color: rgba($text-primary, 0.8);
+      max-width: 500px;
+    }
+  }
+
+  &__error-icon {
+    font-size: 4rem;
+  }
+
+  &__retry-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, rgba($neon-pink, 0.1), rgba($neon-pink, 0.05));
+    border: 2px solid rgba($neon-pink, 0.5);
+    border-radius: 8px;
+    color: $neon-pink;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($neon-pink, 0.2), rgba($neon-pink, 0.1));
+      border-color: $neon-pink;
+      @include neon-shadow($neon-pink, medium);
+    }
+  }
+
+  // Empty state
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem;
+    gap: 1rem;
+    text-align: center;
+
+    h2 {
+      color: $neon-cyan;
+      margin: 0;
+    }
+
+    p {
+      color: rgba($text-primary, 0.6);
+      max-width: 500px;
+    }
+  }
+
+  &__empty-icon {
+    font-size: 5rem;
+    opacity: 0.5;
+  }
+
+  // Modal
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(#000, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  &__modal {
+    background: linear-gradient(135deg, rgba($color-dark, 0.98), rgba(#0a0e27, 0.98));
+    border: 2px solid rgba($neon-cyan, 0.5);
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include neon-shadow($neon-cyan, high);
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  &__modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 2px solid rgba($neon-cyan, 0.3);
+
+    h2 {
+      margin: 0;
+      color: $neon-cyan;
+      font-size: 1.5rem;
+      @include neon-text-shadow($neon-cyan, medium);
+    }
+  }
+
+  &__modal-close {
+    background: transparent;
+    border: none;
+    color: rgba($text-primary, 0.6);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      color: $neon-pink;
+      @include neon-text-shadow($neon-pink, low);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  &__modal-body {
+    padding: 1.5rem;
+  }
+
+  &__modal-tribe-info {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba($color-dark, 0.5);
+    border-left: 3px solid rgba($neon-cyan, 0.5);
+    border-radius: 6px;
+
+    h3 {
+      margin: 0 0 0.5rem 0;
+      color: $neon-cyan;
+      font-size: 1.3rem;
+    }
+
+    p {
+      margin: 0.25rem 0;
+      color: rgba($text-primary, 0.8);
+    }
+
+    strong {
+      color: $neon-purple;
+    }
+  }
+
+  &__modal-description {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba($neon-cyan, 0.2);
+    font-style: italic;
+    color: rgba($text-primary, 0.7);
+  }
+
+  &__modal-confirm-text {
+    color: $text-primary;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  &__modal-approve-text {
+    color: #00ff88;
+  }
+
+  &__modal-reject-text {
+    color: $neon-pink;
+  }
+
+  &__modal-input-group {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: rgba($text-primary, 0.8);
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba($color-dark, 0.5);
+      border: 2px solid rgba($neon-cyan, 0.3);
+      border-radius: 8px;
+      color: $text-primary;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $neon-cyan;
+        @include neon-shadow($neon-cyan, low);
+      }
+
+      &::placeholder {
+        color: rgba($text-primary, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__modal-error {
+    padding: 1rem;
+    background: rgba($neon-pink, 0.1);
+    border: 1px solid rgba($neon-pink, 0.5);
+    border-radius: 6px;
+    color: $neon-pink;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 2px solid rgba($neon-cyan, 0.3);
+  }
+
+  &__modal-btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: 2px solid;
+    background: transparent;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--cancel {
+      color: rgba($text-primary, 0.8);
+      border-color: rgba($text-primary, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba($text-primary, 0.1);
+        border-color: rgba($text-primary, 0.5);
+      }
+    }
+
+    &--approve {
+      color: #00ff88;
+      border-color: rgba(#00ff88, 0.5);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba(#00ff88, 0.2), rgba(#00ff88, 0.1));
+        border-color: #00ff88;
+        @include neon-shadow(#00ff88, medium);
+      }
+    }
+
+    &--reject {
+      color: $neon-pink;
+      border-color: rgba($neon-pink, 0.5);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba($neon-pink, 0.2), rgba($neon-pink, 0.1));
+        border-color: $neon-pink;
+        @include neon-shadow($neon-pink, medium);
+      }
+    }
+  }
+
+  &__modal-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba($text-primary, 0.2);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+// Responsive adjustments
+.tribes-management {
+  @include max-lg {
+    padding: 1.5rem;
+
+    .tribes-management__title {
+      font-size: 2rem;
+    }
+
+    .tribes-management__grid {
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+  }
+
+  @include max-md {
+    padding: 1rem;
+
+    .tribes-management__header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .tribes-management__title {
+      font-size: 1.75rem;
+    }
+
+    .tribes-management__refresh-btn {
+      align-self: stretch;
+      justify-content: center;
+    }
+
+    .tribes-management__tabs {
+      flex-direction: column;
+      gap: 0;
+      border-bottom: none;
+    }
+
+    .tribes-management__tab {
+      border-bottom: 1px solid rgba($neon-cyan, 0.2);
+      border-left: 3px solid transparent;
+      padding: 1rem;
+
+      &.tribes-management__tab--active {
+        border-left-color: $neon-cyan;
+        border-bottom-color: rgba($neon-cyan, 0.2);
+      }
+    }
+
+    .tribes-management__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tribes-management__pagination {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tribes-management__pagination-btn {
+      width: 100%;
+    }
+
+    .tribes-management__modal {
+      max-width: 100%;
+      margin: 1rem;
+    }
+
+    .tribes-management__modal-actions {
+      flex-direction: column;
+    }
+  }
+}
