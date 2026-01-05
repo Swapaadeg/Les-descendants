@@ -66,8 +66,14 @@ api.interceptors.request.use(
         csrfToken = await fetchCSRFToken();
       }
       if (csrfToken) {
-        config.data = config.data || {};
-        config.data.csrf_token = csrfToken;
+        // Si c'est FormData (fichiers), ajouter le token à FormData
+        if (config.data instanceof FormData) {
+          config.data.append('csrf_token', csrfToken);
+        } else {
+          // Sinon, ajouter au JSON
+          config.data = config.data || {};
+          config.data.csrf_token = csrfToken;
+        }
       }
     }
     
