@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import DinoForm from '../components/DinoForm';
 import DinoList from '../components/DinoList';
 import TribeSelector from '../components/TribeSelector';
+import Footer from '../components/Footer/Footer';
 import { useDinosaurs } from '../hooks/useDinosaurs';
 import { useToast } from '../contexts/ToastContext';
 import { tribeAPI } from '../services/api';
@@ -219,14 +220,7 @@ function Dashboard() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="dashboard__footer">
-        <div className="container">
-          <p className="dashboard__footer-text">
-            Made with ❤️ for ARK: Survival Ascended
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

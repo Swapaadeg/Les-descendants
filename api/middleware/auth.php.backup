@@ -10,11 +10,7 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../utils/security.php';
 
 // Clé secrète JWT
-// JWT_SECRET doit être défini dans config.php ou config.local.php
-if (!defined('JWT_SECRET')) {
-    http_response_code(500);
-    die(json_encode(['error' => 'Configuration JWT manquante']));
-}
+define('JWT_SECRET', '083c6e86f465ce3b1c1642c722fe21a83de770e2fa1cc622306ed4eadce0074f');
 
 /**
  * Vérifier l'authentification JWT

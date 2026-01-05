@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTribe } from '../hooks/useTribe';
+import Footer from '../components/Footer/Footer';
 import '../styles/pages/home.scss';
 
 const Home = () => {
@@ -64,7 +65,7 @@ const Home = () => {
 
         {/* Titre principal */}
         <h1 className="home__title">
-          Bienvenue dans <span className="home__title-highlight">Arki'Family</span>
+          Bienvenue chez <span className="home__title-highlight">Arki'Family</span>
         </h1>
 
         {/* Sous-titre */}
@@ -158,17 +159,9 @@ const Home = () => {
           </Link>
         </div>
 
-        {/* Footer */}
-        <div className="home__footer">
-          <p className="home__footer-text">
-            Une plateforme communautaire pour les éleveurs d'Arki'Family
-          </p>
-          <div className="home__footer-season">
-            <span className="home__footer-season-icon">❄️</span>
-            Édition Hiver 2025
-          </div>
-        </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

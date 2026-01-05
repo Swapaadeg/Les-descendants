@@ -1,0 +1,160 @@
+@use '../base/variables' as *;
+@use '../base/responsive' as *;
+@use 'sass:color';
+
+.legal {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $color-dark 0%, color.adjust($color-dark, $lightness: -3%) 100%);
+
+  &__main {
+    padding: $spacing-xl 0;
+    min-height: calc(100vh - 80px);
+
+    @include sm {
+      padding: $spacing-lg 0;
+    }
+  }
+
+  &__content {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba($color-dark, 0.6);
+    border: 1px solid rgba($neon-cyan, 0.2);
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+    @include sm {
+      padding: $spacing-lg $spacing-md;
+      border-radius: $border-radius-md;
+    }
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 2.5rem;
+    font-weight: $font-weight-bold;
+    color: $neon-cyan;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    text-shadow: 0 0 20px rgba($neon-cyan, 0.5);
+
+    @include sm {
+      font-size: 2rem;
+      margin-bottom: $spacing-lg;
+    }
+  }
+
+  &__section {
+    margin-bottom: $spacing-xl;
+
+    h2 {
+      font-family: $font-display;
+      font-size: 1.5rem;
+      font-weight: $font-weight-medium;
+      color: $neon-purple;
+      margin-bottom: $spacing-md;
+      padding-bottom: $spacing-xs;
+      border-bottom: 2px solid rgba($neon-purple, 0.3);
+
+      @include sm {
+        font-size: 1.3rem;
+      }
+    }
+
+    p {
+      font-size: $font-size-base;
+      line-height: 1.8;
+      color: rgba(#fff, 0.85);
+      margin-bottom: $spacing-md;
+
+      @include sm {
+        font-size: $font-size-sm;
+        line-height: 1.6;
+      }
+    }
+
+    ul {
+      margin: $spacing-md 0;
+      padding-left: $spacing-lg;
+
+      @include sm {
+        padding-left: $spacing-md;
+      }
+
+      li {
+        font-size: $font-size-base;
+        line-height: 1.8;
+        color: rgba(#fff, 0.85);
+        margin-bottom: $spacing-sm;
+        position: relative;
+
+        @include sm {
+          font-size: $font-size-sm;
+          line-height: 1.6;
+        }
+
+        &::marker {
+          color: $neon-cyan;
+        }
+
+        strong {
+          color: $neon-cyan;
+          font-weight: $font-weight-medium;
+        }
+      }
+    }
+
+    a {
+      color: $neon-cyan;
+      text-decoration: none;
+      transition: all $transition-base;
+      border-bottom: 1px solid transparent;
+
+      &:hover {
+        color: color.adjust($neon-cyan, $lightness: 10%);
+        border-bottom-color: $neon-cyan;
+      }
+    }
+
+    strong {
+      color: #fff;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  &__back {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba($neon-cyan, 0.2);
+    text-align: center;
+  }
+
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md $spacing-xl;
+    background: linear-gradient(135deg, rgba($neon-cyan, 0.1) 0%, rgba($neon-purple, 0.1) 100%);
+    border: 2px solid rgba($neon-cyan, 0.3);
+    border-radius: $border-radius-md;
+    color: $neon-cyan;
+    font-family: $font-display;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    text-decoration: none;
+    transition: all $transition-base;
+
+    @include sm {
+      padding: $spacing-sm $spacing-lg;
+      font-size: $font-size-sm;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba($neon-cyan, 0.2) 0%, rgba($neon-purple, 0.2) 100%);
+      border-color: $neon-cyan;
+      box-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+      transform: translateY(-2px);
+    }
+  }
+}

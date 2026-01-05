@@ -6,6 +6,8 @@
 
 require_once 'config.php';
 require_once 'middleware/auth.php';
+require_once 'utils/security.php';
+require_once 'utils/xss.php';
 
 // Récupérer la méthode HTTP
 $method = $_SERVER['REQUEST_METHOD'];
@@ -15,6 +17,12 @@ $pdo = getDbConnection();
 
 // Vérifier l'authentification
 $user = requireAuth($pdo);
+
+// Protection CSRF pour les méthodes modifiant des données
+if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($input);
+}
 
 // Router selon la méthode HTTP
 switch ($method) {

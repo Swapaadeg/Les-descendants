@@ -6,6 +6,7 @@
 
 require_once 'config.php';
 require_once 'middleware/auth.php';
+require_once 'utils/security.php';
 
 // Vérifier l'authentification
 $pdo = getDbConnection();
@@ -19,6 +20,9 @@ if (!$user) {
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendJsonError('Méthode non autorisée', 405);
 }
+
+// Protection CSRF (le token peut être dans les headers ou form data)
+requireCsrfToken($_POST);
 
 // Vérifier le type d'upload
 $type = $_GET['type'] ?? null;

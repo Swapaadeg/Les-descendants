@@ -13,6 +13,13 @@ export const useTasks = (status = 'pending') => {
 
   // Charger toutes les tâches selon le statut
   const fetchTasks = async () => {
+    // Ne pas charger si pas de token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const data = await taskAPI.getAll(status);
@@ -28,6 +35,13 @@ export const useTasks = (status = 'pending') => {
 
   // Charger le nombre de tâches en attente (pour le badge)
   const fetchPendingCount = async () => {
+    // Ne pas charger si pas de token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setPendingCount(0);
+      return;
+    }
+
     try {
       const count = await taskAPI.getPendingCount();
       setPendingCount(count);

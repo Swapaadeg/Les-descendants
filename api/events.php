@@ -12,11 +12,19 @@
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/middleware/auth.php';
+require_once __DIR__ . '/utils/security.php';
+require_once __DIR__ . '/utils/xss.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
 $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getDbConnection();
+
+// Protection CSRF pour les méthodes modifiant des données (admin only)
+if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($input);
+}
 
 // Router
 switch ($method) {

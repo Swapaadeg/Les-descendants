@@ -1,5 +1,6 @@
 @use "sass:color";
 @use '../../styles/base/variables' as *;
+@use '../../styles/base/responsive' as *;
 @use '../../styles/abstracts/mixins' as *;
 
 .admin-dashboard {
@@ -340,53 +341,53 @@
 }
 
 // Responsive adjustments
-@media (max-width: 1024px) {
-  .admin-dashboard {
+.admin-dashboard {
+  @include max-lg {
     padding: 1.5rem;
 
-    &__title {
+    .admin-dashboard__title {
       font-size: 2rem;
     }
 
-    &__stats {
+    .admin-dashboard__stats {
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
   }
-}
 
-@media (max-width: 768px) {
-  .admin-dashboard {
+  @include max-md {
     padding: 1rem;
 
-    &__header {
+    .admin-dashboard__header {
       flex-direction: column;
       gap: 1rem;
       align-items: flex-start;
     }
 
-    &__title {
+    .admin-dashboard__title {
       font-size: 1.75rem;
     }
 
-    &__refresh-btn {
+    .admin-dashboard__refresh-btn {
       align-self: stretch;
       justify-content: center;
     }
 
-    &__stats {
+    .admin-dashboard__stats {
       grid-template-columns: 1fr;
     }
 
-    &__activity-item {
+    .admin-dashboard__activity-item {
       flex-direction: column;
+      gap: 0.75rem;
     }
 
-    &__activity-main {
+    .admin-dashboard__activity-main {
       flex-direction: column;
       align-items: flex-start;
+      gap: 0.5rem;
     }
 
-    &__quick-links-grid {
+    .admin-dashboard__quick-links-grid {
       grid-template-columns: 1fr;
     }
   }

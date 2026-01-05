@@ -26,6 +26,21 @@ dist-ssr
 # API - Fichiers sensibles
 api/config.php
 api/config.local.php
-api/migrate_to_arki_family.php
+api/scripts/*.php
+!api/scripts/README.md
 api/uploads/*
 !api/uploads/.gitkeep
+api/logs/*
+!api/logs/.gitkeep
+
+# Vendor composer
+api/vendor/
+api/composer.lock
+
+# Archives de déploiement
+deploy_*.tar.gz
+deploy_*.zip
+
+# Backup BDD
+*.sql.backup
+*.sql.gz

@@ -1,5 +1,6 @@
 @use "sass:color";
 @use '../../../styles/base/variables' as *;
+@use '../../../styles/base/responsive' as *;
 @use '../../../styles/abstracts/mixins' as *;
 
 .tribe-card {
@@ -195,38 +196,38 @@
 }
 
 // Responsive adjustments
-@media (max-width: 768px) {
-  .tribe-card {
+.tribe-card {
+  @include max-md {
     padding: 1.25rem;
 
-    &__header {
+    .tribe-card__header {
       flex-direction: column;
       gap: 0.75rem;
     }
 
-    &__name {
+    .tribe-card__name {
       font-size: 1.3rem;
     }
 
-    &__status {
+    .tribe-card__status {
       align-self: flex-start;
     }
 
-    &__info-item {
+    .tribe-card__info-item {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.4rem;
     }
 
-    &__info-value {
+    .tribe-card__info-value {
       text-align: left;
     }
 
-    &__actions {
+    .tribe-card__actions {
       flex-direction: column;
     }
 
-    &__btn {
+    .tribe-card__btn {
       width: 100%;
     }
   }

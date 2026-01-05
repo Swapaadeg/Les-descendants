@@ -6,6 +6,8 @@
 
 require_once 'config.php';
 require_once 'middleware/auth.php';
+require_once 'utils/security.php';
+require_once 'utils/xss.php';
 
 // Récupérer la méthode HTTP
 $method = $_SERVER['REQUEST_METHOD'];
@@ -17,6 +19,12 @@ $pdo = getDbConnection();
 $user = requireAuth($pdo);
 if (!$user) {
     exit;
+}
+
+// Protection CSRF pour les méthodes modifiant des données
+if (in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'])) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($input);
 }
 
 // Router selon la méthode HTTP
@@ -141,6 +149,24 @@ function handlePost($pdo, $user) {
 
         $tribeId = $tribe['id'];
 
+        // Récupérer les données du formulaire
+        $species = $_POST['species'] ?? '';
+        $typeIds = $_POST['typeIds'] ?? '[]';
+        $isMutated = isset($_POST['isMutated']) ? (int)$_POST['isMutated'] : 0;
+
+        // Validation et nettoyage XSS
+        if (detectXssPatterns($species)) {
+            logXssAttempt($species, 'dinosaurs.php - species');
+            sendJsonError('Le nom de l\'espèce contient des caractères non autorisés', 400);
+        }
+        
+        // Nettoyer le nom d'espèce
+        $species = sanitizeText($species, 100);
+        
+        if (empty($species)) {
+            sendJsonError('Le nom de l\'espèce est requis', 400);
+        }
+
         // Gérer l'upload de fichier
         $photoUrl = null;
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -226,6 +252,21 @@ function handlePut($pdo, $user) {
             sendJsonError('ID du dinosaure manquant', 400);
         }
 
+        // ✅ VÉRIFICATION DE PERMISSION: Vérifier que le dinosaure appartient à la tribu de l'utilisateur
+        $stmt = $pdo->prepare("
+            SELECT d.*, t.id as tribe_id
+            FROM dinosaurs d
+            JOIN tribes t ON d.tribe_id = t.id
+            JOIN tribe_members tm ON t.id = tm.tribe_id
+            WHERE d.id = ? AND tm.user_id = ? AND tm.is_validated = 1
+        ");
+        $stmt->execute([$id, $user['id']]);
+        $dino = $stmt->fetch();
+
+        if (!$dino) {
+            sendJsonError('Dinosaure introuvable ou vous n\'avez pas la permission de le modifier', 403);
+        }
+
         // Récupérer les données JSON
         $input = json_decode(file_get_contents('php://input'), true);
 
@@ -306,11 +347,22 @@ function handleDelete($pdo, $user) {
             sendJsonError('ID du dinosaure manquant', 400);
         }
 
-        // Récupérer le dinosaure pour supprimer sa photo
-        $stmt = $pdo->prepare('SELECT photo_url FROM dinosaurs WHERE id = ?');
-        $stmt->execute([$id]);
+        // ✅ VÉRIFICATION DE PERMISSION: Vérifier que le dinosaure appartient à la tribu de l'utilisateur
+        $stmt = $pdo->prepare("
+            SELECT d.*, t.id as tribe_id
+            FROM dinosaurs d
+            JOIN tribes t ON d.tribe_id = t.id
+            JOIN tribe_members tm ON t.id = tm.tribe_id
+            WHERE d.id = ? AND tm.user_id = ? AND tm.is_validated = 1
+        ");
+        $stmt->execute([$id, $user['id']]);
         $dino = $stmt->fetch();
 
+        if (!$dino) {
+            sendJsonError('Dinosaure introuvable ou vous n\'avez pas la permission de le supprimer', 403);
+        }
+
+        // Supprimer la photo si elle existe
         if ($dino && $dino['photo_url']) {
             deletePhoto($dino['photo_url']);
         }

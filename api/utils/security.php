@@ -453,4 +453,72 @@ function logActivity($action, $level = 'INFO', $details = [], $entityType = null
         return false;
     }
 }
+
+/**
+ * ===========================
+ * WRAPPERS POUR COMPATIBILITÉ
+ * ===========================
+ * Compatibilité avec les appels utilisant les noms minuscules
+ */
+
+if (!function_exists('generateCsrfToken')) {
+    function generateCsrfToken() {
+        return generateCSRFToken();
+    }
+}
+
+if (!function_exists('verifyCsrfToken')) {
+    function verifyCsrfToken($token, $maxAge = 3600) {
+        return verifyCSRFToken($token, $maxAge);
+    }
+}
+
+if (!function_exists('getCsrfTokenFromRequest')) {
+    function getCsrfTokenFromRequest($input = null) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Chercher dans JSON body
+        if (is_array($input) && isset($input['csrf_token'])) {
+            return $input['csrf_token'];
+        }
+        
+        // Chercher dans $_POST
+        if (isset($_POST['csrf_token'])) {
+            return $_POST['csrf_token'];
+        }
+        
+        // Chercher dans les headers
+        $headers = getallheaders();
+        if (isset($headers['X-CSRF-Token'])) {
+            return $headers['X-CSRF-Token'];
+        }
+        
+        return null;
+    }
+}
+
+if (!function_exists('requireCsrfToken')) {
+    function requireCsrfToken($input = null) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        $token = getCsrfTokenFromRequest($input);
+        
+        if (!verifyCsrfToken($token)) {
+            sendJsonError('Token CSRF invalide ou expiré', 403);
+            exit;
+        }
+    }
+}
+
+if (!function_exists('sendSecureJsonResponse')) {
+    function sendSecureJsonResponse($data) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+        exit;
+    }
+}
 ?>

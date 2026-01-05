@@ -33,6 +33,7 @@
 @use './components/skeleton';
 @use './components/tribe-selector';
 @use './components/tribe-members-modal';
+@use './components/footer';
 
 // ===========================
 // PAGES
@@ -43,6 +44,7 @@
 @use './pages/dashboard';
 @use './pages/tribe-page';
 @use './pages/tribe-customization';
+@use './pages/legal';
 
 // ===========================
 // GOOGLE FONTS (à la fin)

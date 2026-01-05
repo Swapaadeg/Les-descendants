@@ -34,12 +34,15 @@ if ($isLocal && file_exists(__DIR__ . '/config.local.php')) {
 
     // Configuration BDD production
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'sc5jewe1253_ark-tracker');
-    define('DB_USER', 'sc5jewe1253_swap');
-    define('DB_PASS', 'Nidoking63450'); // ⚠️ À MODIFIER avec tes vrais identifiants
+    define('DB_NAME', 'VOTRE_NOM_DE_BASE');
+    define('DB_USER', 'VOTRE_UTILISATEUR');
+    define('DB_PASS', 'VOTRE_MOT_DE_PASSE'); // ⚠️ À MODIFIER avec tes vrais identifiants
 
     // URL de base production
-    define('BASE_URL', 'https://les-descendants.sc5jewe1253.universe.wf');
+    define('BASE_URL', 'https://votre-domaine.com');
+    
+    // Clé secrète JWT (⚠️ GÉNÉRER UNE CLÉ UNIQUE AVEC: php -r "echo bin2hex(random_bytes(64));")
+    define('JWT_SECRET', 'GENERER_UNE_CLE_SECRETE_UNIQUE_DE_128_CARACTERES');
 
     // Mode debug désactivé en production
     define('DEBUG_MODE', false);

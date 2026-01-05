@@ -152,15 +152,12 @@
   &__types {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-sm;
+    grid-template-columns: repeat(5, 1fr);
+    gap: $spacing-md;
 
-    @include sm {
+    @include max-md {
       grid-template-columns: repeat(3, 1fr);
-    }
-
-    @include md {
-      grid-template-columns: repeat(5, 1fr);
-      gap: $spacing-md;
+      gap: $spacing-sm;
     }
   }
 
@@ -312,16 +309,16 @@
 
   &__stats-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: $spacing-md;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-lg;
 
-    @include sm {
+    @include max-md {
       grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-md;
     }
 
-    @include md {
-      grid-template-columns: repeat(3, 1fr);
-      gap: $spacing-lg;
+    @include max-sm {
+      grid-template-columns: 1fr;
     }
   }
 

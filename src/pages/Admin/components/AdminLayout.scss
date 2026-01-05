@@ -25,17 +25,16 @@
     height: calc(100vh - 80px);
     overflow-y: auto;
 
-    @include md {
-      width: 240px;
-      padding: $spacing-xl $spacing-md;
-    }
-
-    @include sm {
+    @include max-md {
+      position: fixed;
+      width: 100%;
+      max-width: 280px;
       position: fixed;
       left: -280px;
       top: 80px;
       z-index: 100;
       transition: left 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
 
       &.open {
         left: 0;
@@ -110,11 +109,7 @@
     padding: $spacing-2xl;
     overflow-y: auto;
 
-    @include md {
-      padding: $spacing-xl $spacing-lg;
-    }
-
-    @include sm {
+    @include max-md {
       padding: $spacing-lg;
     }
   }

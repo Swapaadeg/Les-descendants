@@ -232,11 +232,11 @@ const TribePage = () => {
         </button>
       </div>
 
-      {/* Section derniers dinosaures modifiés */}
+      {/* Section dinosaures mis en vitrine */}
       <div className="tribe-page__section">
         <h2 className="tribe-page__section-title">
           <span className="tribe-page__section-icon">⭐</span>
-          Derniers dinosaures modifiés
+          Dinosaures mis en vitrine
         </h2>
 
         {error && (

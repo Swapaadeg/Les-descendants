@@ -1,41 +1,60 @@
-# Protection du fichier de configuration
-<Files "config.php">
-    <RequireAll>
-        Require all denied
-    </RequireAll>
-</Files>
+# Protection des fichiers sensibles
+<FilesMatch "(config\.php|config\.local\.php|composer\.(json|lock))$">
+    Require all denied
+</FilesMatch>
 
-# Protection du fichier database.sql
-<Files "database.sql">
-    <RequireAll>
-        Require all denied
-    </RequireAll>
-</Files>
+# Protection des fichiers SQL
+<FilesMatch "\.(sql|db|sqlite)$">
+    Require all denied
+</FilesMatch>
 
-# Activer la réécriture d'URL
-RewriteEngine On
+# Protection du dossier scripts en production
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^scripts/ - [F,L]
+</IfModule>
 
-# Autoriser l'accès aux fichiers PHP de l'API
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# CORS Headers
+# CORS Headers optimisés
 <IfModule mod_headers.c>
-    # Gérer les origines autorisées
-    SetEnvIf Origin "^http://localhost:5173$" CORS_ALLOW_ORIGIN=true
-    SetEnvIf Origin "^http://localhost:3000$" CORS_ALLOW_ORIGIN=true
-    SetEnvIf Origin "^http://localhost:8000$" CORS_ALLOW_ORIGIN=true
-    SetEnvIf Origin "^http://127.0.0.1:5173$" CORS_ALLOW_ORIGIN=true
-    SetEnvIf Origin "^http://127.0.0.1:3000$" CORS_ALLOW_ORIGIN=true
+    # Gérer les origines autorisées (développement)
+    SetEnvIf Origin "^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$" CORS_ALLOW_ORIGIN=true
+    
+    # Ajouter ton domaine de production ici
+    SetEnvIf Origin "^https://les-descendants\.sc5jewe1253\.universe\.wf$" CORS_ALLOW_ORIGIN=true
 
-    # Ajouter les headers si l'origine est autorisée
+    # Headers CORS
     Header set Access-Control-Allow-Origin "%{HTTP_ORIGIN}e" env=CORS_ALLOW_ORIGIN
     Header set Access-Control-Allow-Credentials "true" env=CORS_ALLOW_ORIGIN
     Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" env=CORS_ALLOW_ORIGIN
     Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With" env=CORS_ALLOW_ORIGIN
+    Header set Access-Control-Max-Age "86400" env=CORS_ALLOW_ORIGIN
 
     # Headers de sécurité
     Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Frame-Options "DENY"
     Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy pour API (JSON uniquement)
+    Header set Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none';"
+    
+    # Pas de cache pour les réponses API
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
 </IfModule>
+
+# Désactiver l'affichage des erreurs PHP en production
+php_flag display_errors Off
+php_flag display_startup_errors Off
+php_value error_reporting 0
+
+# Logs d'erreurs dans un fichier
+php_flag log_errors On
+php_value error_log logs/php_errors.log
+
+# Limites de sécurité
+php_value upload_max_filesize 10M
+php_value post_max_size 12M
+php_value max_execution_time 30
+php_value max_input_time 30
+php_value memory_limit 256M

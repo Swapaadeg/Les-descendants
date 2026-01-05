@@ -6,12 +6,17 @@
 
 require_once 'config.php';
 require_once 'middleware/auth.php';
+require_once 'utils/security.php';
 
 // Vérifier la méthode HTTP
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendJsonError('Méthode non autorisée', 405);
     exit;
 }
+
+// Protection CSRF
+$input = json_decode(file_get_contents('php://input'), true);
+requireCsrfToken($input);
 
 // Connexion DB
 $pdo = getDbConnection();

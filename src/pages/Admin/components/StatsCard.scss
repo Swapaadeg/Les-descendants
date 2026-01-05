@@ -1,4 +1,5 @@
 @use '../../../styles/base/variables' as *;
+@use '../../../styles/base/responsive' as *;
 @use '../../../styles/abstracts/mixins' as *;
 
 .stats-card {
@@ -107,6 +108,20 @@
     .stats-card__value {
       color: $neon-purple;
       @include neon-text-shadow($neon-purple, low);
+    }
+  }
+
+  // Responsive
+  @include max-md {
+    padding: $spacing-md;
+    gap: $spacing-md;
+
+    .stats-card__icon {
+      font-size: 2.5rem;
+    }
+
+    .stats-card__value {
+      font-size: $font-size-2xl;
     }
   }
 }

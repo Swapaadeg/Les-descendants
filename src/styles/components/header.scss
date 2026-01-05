@@ -56,12 +56,7 @@
     filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
     transition: all $transition-base;
 
-    @include md {
-      width: 160px;
-      height: 160px;
-    }
-
-    @include sm {
+    @include max-md {
       width: 140px;
       height: 140px;
     }
@@ -114,7 +109,7 @@
       transform: translateY(0);
     }
 
-    @include sm {
+    @include max-md {
       padding: 0.5rem 0.75rem;
     }
   }
@@ -127,7 +122,7 @@
       transform: scale(1.1);
     }
 
-    @include sm {
+    @include max-md {
       font-size: 1.3rem;
     }
   }
@@ -150,7 +145,7 @@
     box-shadow: 0 0 15px rgba(#ffea00, 0.6);
     animation: pulse-badge 2s ease-in-out infinite;
 
-    @include sm {
+    @include max-md {
       min-width: 20px;
       height: 20px;
       font-size: 0.7rem;
@@ -188,12 +183,7 @@
       transform: translateY(0);
     }
 
-    @include md {
-      right: 100px;
-      padding: 0.65rem 1.1rem;
-    }
-
-    @include sm {
+    @include max-md {
       right: 70px;
       padding: 0.5rem 0.75rem;
       font-size: 0.85rem;
@@ -203,13 +193,13 @@
   &__admin-icon {
     font-size: 1.3rem;
 
-    @include sm {
+    @include max-md {
       font-size: 1.1rem;
     }
   }
 
   &__admin-text {
-    @include sm {
+    @include max-md {
       display: none;
     }
   }
@@ -234,12 +224,7 @@
       box-shadow: 0 0 25px rgba($neon-purple, 0.8);
     }
 
-    @include md {
-      width: 70px;
-      height: 70px;
-    }
-
-    @include sm {
+    @include max-md {
       width: 50px;
       height: 50px;
     }

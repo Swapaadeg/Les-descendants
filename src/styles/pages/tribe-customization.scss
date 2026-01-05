@@ -27,7 +27,7 @@
     gap: $spacing-md;
     @include neon-text-shadow($neon-cyan, medium);
 
-    @include sm {
+    @include max-md {
       font-size: $font-size-2xl;
     }
   }
@@ -100,7 +100,7 @@
     justify-content: center;
     gap: $spacing-lg;
 
-    @include sm {
+    @include max-md {
       flex-direction: column;
     }
   }
@@ -253,7 +253,7 @@
   grid-template-columns: 1fr 1fr;
   gap: $spacing-lg;
 
-  @include sm {
+  @include max-md {
     grid-template-columns: 1fr;
   }
 }

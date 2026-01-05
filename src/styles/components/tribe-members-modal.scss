@@ -56,7 +56,7 @@
       );
     }
 
-    @include sm {
+    @include max-md {
       max-height: 100vh;
       border-radius: 0;
       max-width: 100%;
@@ -86,7 +86,7 @@
     margin: 0;
     text-shadow: 0 0 20px rgba($neon-cyan, 0.5);
 
-    @include sm {
+    @include max-md {
       font-size: $font-size-xl;
     }
   }
@@ -130,7 +130,7 @@
     border-bottom: 1px solid rgba($neon-cyan, 0.2);
     overflow-x: auto;
 
-    @include sm {
+    @include max-md {
       padding: $spacing-sm $spacing-md;
     }
   }
@@ -189,7 +189,7 @@
       }
     }
 
-    @include sm {
+    @include max-md {
       padding: $spacing-sm $spacing-md;
       font-size: $font-size-xs;
     }
@@ -216,7 +216,7 @@
     overflow-y: auto;
     padding: $spacing-xl;
 
-    @include sm {
+    @include max-md {
       padding: $spacing-md;
     }
 
@@ -1070,7 +1070,7 @@
       border-color: rgba($neon-pink, 0.4);
     }
 
-    @include sm {
+    @include max-md {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -1177,7 +1177,7 @@
       }
     }
 
-    @include sm {
+    @include max-md {
       width: 100%;
     }
   }

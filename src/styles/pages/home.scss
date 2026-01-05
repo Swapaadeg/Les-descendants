@@ -12,8 +12,8 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 
   // ===========================
   // BANNER EN ARRIÈRE-PLAN
@@ -89,7 +89,7 @@
       padding: 0.65rem 1.1rem;
     }
 
-    @include sm {
+    @include max-md {
       right: 70px;
       padding: 0.5rem 0.75rem;
       font-size: 0.85rem;
@@ -99,13 +99,13 @@
   &__admin-icon {
     font-size: 1.3rem;
 
-    @include sm {
+    @include max-md {
       font-size: 1.1rem;
     }
   }
 
   &__admin-text {
-    @include sm {
+    @include max-md {
       display: none;
     }
   }
@@ -134,12 +134,7 @@
       box-shadow: 0 0 25px rgba($neon-purple, 0.8);
     }
 
-    @include md {
-      width: 70px;
-      height: 70px;
-    }
-
-    @include sm {
+    @include max-md {
       width: 50px;
       height: 50px;
     }
@@ -177,6 +172,11 @@
     width: 100%;
     padding: $spacing-2xl;
     text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     @include max-md {
       padding: $spacing-lg;
@@ -248,6 +248,7 @@
     justify-content: center;
     margin-bottom: $spacing-3xl;
     flex-wrap: wrap;
+    width: 100%;
 
     @include max-md {
       flex-direction: column;
@@ -351,6 +352,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: $spacing-xl;
     margin-bottom: $spacing-3xl;
+    width: 100%;
 
     @include max-md {
       grid-template-columns: 1fr;
@@ -475,54 +477,11 @@
     font-size: 0.95rem;
     line-height: 1.5;
   }
-
-  // ===========================
-  // FOOTER
-  // ===========================
-
-  &__footer {
-    margin-top: $spacing-2xl;
-    padding-top: $spacing-xl;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  &__footer-text {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.9rem;
-    margin-bottom: $spacing-md;
-  }
-
-  &__footer-season {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-sm;
-    padding: $spacing-sm $spacing-lg;
-    background: linear-gradient(135deg, rgba(135, 206, 250, 0.15) 0%, rgba(147, 112, 219, 0.15) 100%);
-    border: 1px solid rgba(135, 206, 250, 0.3);
-    border-radius: 50px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
-    backdrop-filter: blur(10px);
-  }
-
-  &__footer-season-icon {
-    font-size: 1.1rem;
-    animation: float 3s ease-in-out infinite;
-  }
 }
 
 // ===========================
 // ANIMATIONS
 // ===========================
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 
 // Animation d'apparition au chargement
 .home__content > * {

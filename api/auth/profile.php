@@ -26,6 +26,7 @@
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../utils/security.php';
 
 header('Content-Type: application/json');
 
@@ -34,6 +35,18 @@ header('Content-Type: application/json');
 // ===========================
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+// Protection CSRF pour les méthodes modifiant des données
+if (in_array($method, ['POST', 'PUT'])) {
+    if ($method === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_avatar') {
+        // Pour les uploads, le token peut être dans $_POST
+        requireCsrfToken($_POST);
+    } else {
+        // Pour les autres requêtes JSON
+        $input = json_decode(file_get_contents('php://input'), true);
+        requireCsrfToken($input);
+    }
+}
 
 if ($method === 'PUT') {
     handlePut();

@@ -5,8 +5,40 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    host: true, // Permet l'accès depuis le réseau local
+    host: true,
     port: 5173
+  },
+  build: {
+    // Optimisations production
+    target: 'es2015',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Retirer les console.log en prod
+        drop_debugger: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'swiper-vendor': ['swiper'],
+          'axios-vendor': ['axios']
+        },
+        // Noms de fichiers avec hash pour cache-busting
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+      }
+    },
+    // Taille max des chunks
+    chunkSizeWarningLimit: 1000,
+    // Source maps en production (pour debugging)
+    sourcemap: false,
+    // Compression
+    cssCodeSplit: true,
+    // Optimisation des assets
+    assetsInlineLimit: 4096 // 4kb
   },
   plugins: [
     react(),
@@ -33,19 +65,46 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB
         runtimeCaching: [
           {
-            urlPattern: /^http:\/\/(localhost|192\.168\.1\.70)\/api\/.*/i,
+            // Cache API avec stratégie NetworkFirst
+            urlPattern: /\/api\/.*/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 // 24 heures
+                maxAgeSeconds: 60 * 60 // 1 heure
               },
               cacheableResponse: {
                 statuses: [0, 200]
+              },
+              networkTimeoutSeconds: 10
+            }
+          },
+          {
+            // Cache images avec stratégie CacheFirst
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 jours
+              }
+            }
+          },
+          {
+            // Cache fonts
+            urlPattern: /\.(?:woff|woff2|ttf|eot)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fonts-cache',
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 365 * 24 * 60 * 60 // 1 an
               }
             }
           }
