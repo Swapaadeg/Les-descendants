@@ -4,6 +4,11 @@
  * À modifier avec vos identifiants o2switch
  */
 
+// Start output buffering to ensure headers can be sent
+if (ob_get_level() === 0) {
+    ob_start();
+}
+
 // Activer le rapport d'erreurs pour le développement
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
