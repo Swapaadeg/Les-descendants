@@ -34,13 +34,43 @@ const api = axios.create({
   withCredentials: true, // Pour envoyer les cookies
 });
 
-// Intercepteur pour ajouter le token JWT dans les requêtes
+// Variable pour stocker le token CSRF
+let csrfToken = null;
+
+// Fonction pour récupérer le token CSRF
+export const fetchCSRFToken = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/auth/csrf-token.php`, {
+      withCredentials: true,
+    });
+    csrfToken = response.data.csrf_token;
+    return csrfToken;
+  } catch (error) {
+    console.error('Error fetching CSRF token:', error);
+    return null;
+  }
+};
+
+// Intercepteur pour ajouter le token JWT et CSRF dans les requêtes
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    // Ajouter le JWT token
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Ajouter le CSRF token pour les requêtes non-GET
+    if (['post', 'put', 'delete'].includes(config.method.toLowerCase())) {
+      if (!csrfToken) {
+        csrfToken = await fetchCSRFToken();
+      }
+      if (csrfToken) {
+        config.data = config.data || {};
+        config.data.csrf_token = csrfToken;
+      }
+    }
+    
     return config;
   },
   (error) => Promise.reject(error)
