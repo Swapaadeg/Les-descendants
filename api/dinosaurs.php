@@ -308,6 +308,39 @@ function handlePut($pdo, $user) {
             $params[":assigned_user_id"] = $assignedUserId !== null ? (int)$assignedUserId : null;
         }
 
+        // Gérer l'upload d'une nouvelle image si présente
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            // Supprimer l'ancienne image si elle existe
+            if (!empty($dino['image_url'])) {
+                $oldImagePath = __DIR__ . $dino['image_url'];
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Uploader la nouvelle image
+            $uploadDir = __DIR__ . "/uploads/tribes/{$dino['tribe_id']}/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $fileExtension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            
+            if (!in_array($fileExtension, $allowedExtensions)) {
+                sendJsonError('Format d\'image non autorisé', 400);
+            }
+
+            $fileName = 'dino_' . $id . '_' . time() . '.' . $fileExtension;
+            $filePath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+                $imageUrl = "/uploads/tribes/{$dino['tribe_id']}/{$fileName}";
+                $updates[] = "image_url = :image_url";
+                $params[":image_url"] = $imageUrl;
+            }
+        }
+
         if (empty($updates)) {
             sendJsonError('Aucune donnée à mettre à jour', 400);
         }

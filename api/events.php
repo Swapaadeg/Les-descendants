@@ -310,6 +310,48 @@ function handlePut($pdo, $user) {
         }
     }
 
+    // Gérer l'upload de nouvelles images si présentes
+    if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+        // Supprimer les anciennes images en DB et fichiers
+        $stmt = $pdo->prepare("SELECT image_url FROM event_images WHERE event_id = ?");
+        $stmt->execute([$id]);
+        $oldImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // Supprimer les anciens fichiers
+        foreach ($oldImages as $oldUrl) {
+            $oldPath = __DIR__ . $oldUrl;
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+        
+        // Supprimer les anciennes entrées en DB
+        $stmt = $pdo->prepare("DELETE FROM event_images WHERE event_id = ?");
+        $stmt->execute([$id]);
+        
+        // Uploader les nouvelles images
+        $uploadedCount = 0;
+        for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
+            $file = [
+                'name' => $_FILES['images']['name'][$i],
+                'type' => $_FILES['images']['type'][$i],
+                'tmp_name' => $_FILES['images']['tmp_name'][$i],
+                'error' => $_FILES['images']['error'][$i],
+                'size' => $_FILES['images']['size'][$i]
+            ];
+
+            $imageUrl = uploadEventImage($id, $file);
+            if ($imageUrl) {
+                $stmt = $pdo->prepare("
+                    INSERT INTO event_images (event_id, image_url, display_order)
+                    VALUES (?, ?, ?)
+                ");
+                $stmt->execute([$id, $imageUrl, $uploadedCount]);
+                $uploadedCount++;
+            }
+        }
+    }
+
     logActivity('Événement modifié', 'INFO', ['event_id' => $id, 'user_id' => $user['id']]);
 
     sendJsonResponse([
