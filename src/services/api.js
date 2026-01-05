@@ -34,8 +34,11 @@ const api = axios.create({
   withCredentials: true, // Pour envoyer les cookies
 });
 
-// Variable pour stocker le token CSRF
+// Variable pour stocker le token CSRF (en mémoire)
 let csrfToken = null;
+
+// Charger un éventuel token CSRF déjà stocké (après refresh)
+csrfToken = localStorage.getItem('csrfToken');
 
 // Fonction pour récupérer le token CSRF
 export const fetchCSRFToken = async () => {
@@ -44,6 +47,9 @@ export const fetchCSRFToken = async () => {
       withCredentials: true,
     });
     csrfToken = response.data.csrf_token;
+    if (csrfToken) {
+      localStorage.setItem('csrfToken', csrfToken);
+    }
     return csrfToken;
   } catch (error) {
     console.error('Error fetching CSRF token:', error);
@@ -62,6 +68,10 @@ api.interceptors.request.use(
     
     // Ajouter le CSRF token pour les requêtes non-GET
     if (['post', 'put', 'delete'].includes(config.method.toLowerCase())) {
+      // Utiliser le token en mémoire ou récupéré du localStorage
+      if (!csrfToken) {
+        csrfToken = localStorage.getItem('csrfToken');
+      }
       if (!csrfToken) {
         csrfToken = await fetchCSRFToken();
       }
