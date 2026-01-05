@@ -46,3 +46,4 @@ deploy_*.zip
 # Backup BDD
 *.sql.backup
 *.sql.gz
+
