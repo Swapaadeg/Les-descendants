@@ -13,10 +13,9 @@ try {
     
     // Tables et colonnes à mettre à jour
     $updates = [
-        'users' => ['avatar_url'],
-        'tribes' => ['logo_url', 'banner_url'],
-        'dinosaurs' => ['image_url'],
-        'events' => ['image_url'],
+        'users' => ['photo_profil'],
+        'tribes' => ['logo_url', 'banner_url', 'base_photo_url'],
+        'dinosaurs' => ['photo_url'],
     ];
     
     $totalUpdated = 0;
