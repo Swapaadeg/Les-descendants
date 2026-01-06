@@ -371,6 +371,8 @@ function handlePut($pdo, $user) {
         $stmt->execute([$id]);
         $nextOrder = (int)$stmt->fetchColumn();
         
+        $uploadErrors = [];
+        
         // Uploader les nouvelles images sans supprimer les existantes
         for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
             $file = [
@@ -393,7 +395,8 @@ function handlePut($pdo, $user) {
                     $nextOrder++;
                 }
             } catch (Exception $e) {
-                // Log l'erreur mais continue avec les autres fichiers
+                // Collecter les erreurs pour les retourner à l'utilisateur
+                $uploadErrors[] = $file['name'] . ': ' . $e->getMessage();
                 error_log("Erreur upload image événement: " . $e->getMessage());
             }
         }
@@ -401,10 +404,18 @@ function handlePut($pdo, $user) {
 
     logActivity('Événement modifié', 'INFO', ['event_id' => $id, 'user_id' => $user['id']]);
 
-    sendJsonResponse([
+    $response = [
         'id' => $id,
         'message' => 'Événement mis à jour avec succès'
-    ]);
+    ];
+    
+    // Ajouter les erreurs d'upload si présentes
+    if (!empty($uploadErrors)) {
+        $response['upload_errors'] = $uploadErrors;
+        $response['message'] = 'Événement mis à jour mais certaines images n\'ont pas pu être uploadées';
+    }
+
+    sendJsonResponse($response);
 }
 
 // =====================================================
@@ -450,7 +461,15 @@ function uploadEventImage($file, $eventId, $order) {
 
     // Créer le dossier si nécessaire
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+        if (!mkdir($uploadDir, 0755, true)) {
+            $error = error_get_last();
+            throw new Exception("Impossible de créer le dossier uploads: " . ($error['message'] ?? 'Unknown error'));
+        }
+    }
+    
+    // Vérifier que le dossier est accessible en écriture
+    if (!is_writable($uploadDir)) {
+        throw new Exception("Le dossier uploads n'est pas accessible en écriture: $uploadDir");
     }
 
     // Valider le type MIME
@@ -475,7 +494,8 @@ function uploadEventImage($file, $eventId, $order) {
 
     // Déplacer le fichier
     if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-        throw new Exception('Erreur lors de l\'upload du fichier');
+        $error = error_get_last();
+        throw new Exception("Erreur lors de l'upload du fichier: " . ($error['message'] ?? 'move_uploaded_file failed'));
     }
 
     return "/uploads/events/{$eventId}/{$fileName}";
