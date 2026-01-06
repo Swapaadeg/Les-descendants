@@ -66,7 +66,7 @@ function handleGet($pdo, $user) {
         if ($membership['role'] === 'owner') {
             $stmt = $pdo->prepare("
                 SELECT tm.id, tm.user_id, tm.request_message,
-                       u.username, u.email, u.avatar_url
+                       u.username, u.email, u.photo_profil
                 FROM tribe_members tm
                 JOIN users u ON tm.user_id = u.id
                 WHERE tm.tribe_id = ? AND tm.is_validated = 0
@@ -83,7 +83,7 @@ function handleGet($pdo, $user) {
                     'user_id' => (int)$req['user_id'],
                     'username' => $req['username'],
                     'email' => $req['email'],
-                    'avatar_url' => $req['avatar_url'],
+                    'avatar_url' => $req['photo_profil'],
                     'request_message' => $req['request_message']
                 ];
             }, $requests);

@@ -1,3 +1,29 @@
+RewriteEngine On
+RewriteBase /api/
+
+# =========================
+# PROTECTIONS PRIORITAIRES
+# =========================
+
+# Protection du dossier scripts (DOIT ÊTRE EN PREMIER)
+RewriteRule ^scripts/ - [F,L]
+
+# =========================
+# ROUTAGE API (CRUCIAL)
+# =========================
+
+# Laisser passer les fichiers existants (PHP, uploads, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Laisser passer les dossiers existants
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# =========================
+# PROTECTIONS
+# =========================
+
 # Protection des fichiers sensibles
 <FilesMatch "(config\.php|config\.local\.php|composer\.(json|lock))$">
     Require all denied
@@ -8,40 +34,21 @@
     Require all denied
 </FilesMatch>
 
-# Protection du dossier scripts en production
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^scripts/ - [F,L]
-</IfModule>
+# =========================
+# SÉCURITÉ
+# =========================
 
-# CORS Headers optimisés
+# CORS géré dans config.php (PHP) - NE PAS DUPLIQUER ICI
+
 <IfModule mod_headers.c>
-    # Gérer les origines autorisées (développement)
-    SetEnvIf Origin "^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$" CORS_ALLOW_ORIGIN=true
-    
-    # Ajouter ton domaine de production ici
-    SetEnvIf Origin "^https://les-descendants\.sc5jewe1253\.universe\.wf$" CORS_ALLOW_ORIGIN=true
-
-    # Headers CORS
-    Header set Access-Control-Allow-Origin "%{HTTP_ORIGIN}e" env=CORS_ALLOW_ORIGIN
-    Header set Access-Control-Allow-Credentials "true" env=CORS_ALLOW_ORIGIN
-    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" env=CORS_ALLOW_ORIGIN
-    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With" env=CORS_ALLOW_ORIGIN
-    Header set Access-Control-Max-Age "86400" env=CORS_ALLOW_ORIGIN
-
-    # Headers de sécurité
+    # Headers de sécurité uniquement
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "DENY"
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
-    
-    # Content Security Policy pour API (JSON uniquement)
+
     Header set Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none';"
-    
-    # Pas de cache pour les réponses API
+
     Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
     Header set Pragma "no-cache"
 </IfModule>
-
-# Note: Les directives php_flag et php_value ne sont pas supportées sur o2switch
-# Utilisez un fichier .user.ini ou php.ini si nécessaire

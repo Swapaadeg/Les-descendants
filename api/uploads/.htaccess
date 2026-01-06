@@ -1,13 +1,9 @@
-# Autoriser l'accès aux images
+# Autoriser l'accès aux images (Apache 2.2 compatible)
 <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    <RequireAll>
-        Require all granted
-    </RequireAll>
+    Allow from all
 </FilesMatch>
 
 # Bloquer l'accès aux fichiers PHP
 <FilesMatch "\.php$">
-    <RequireAll>
-        Require all denied
-    </RequireAll>
+    Deny from all
 </FilesMatch>

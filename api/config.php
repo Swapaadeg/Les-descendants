@@ -3,6 +3,9 @@
  * Configuration de la base de données MySQL
  * À modifier avec vos identifiants o2switch
  */
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Start output buffering to ensure headers can be sent
 if (ob_get_level() === 0) {
@@ -112,7 +115,10 @@ function getFullUrl($relativePath) {
     if (preg_match('/^https?:\/\//', $relativePath)) {
         return $relativePath;
     }
-    // Ajouter le BASE_URL directement (garder /api/ dans le chemin)
+    // Éviter le double /api/ : si BASE_URL se termine par /api et le chemin commence par /api/
+    if (str_ends_with(BASE_URL, '/api') && str_starts_with($relativePath, '/api/')) {
+        $relativePath = substr($relativePath, 4); // Enlever '/api' du début
+    }
     return BASE_URL . $relativePath;
 }
 // Inclure les utilitaires de sécurité après avoir défini les fonctions de config
