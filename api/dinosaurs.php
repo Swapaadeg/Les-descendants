@@ -172,11 +172,6 @@ function handlePost($pdo, $user) {
             $photoUrl = uploadPhoto($_FILES['photo'], $_POST['species']);
         }
 
-        // Récupérer les données du formulaire
-        $species = $_POST['species'] ?? '';
-        $typeIds = $_POST['typeIds'] ?? '[]';
-        $isMutated = isset($_POST['isMutated']) ? (int)$_POST['isMutated'] : 0;
-
         // Stats de base
         $stats = json_decode($_POST['stats'] ?? '{}', true);
         $mutatedStats = json_decode($_POST['mutatedStats'] ?? '{}', true);
