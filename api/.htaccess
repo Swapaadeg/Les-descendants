@@ -47,7 +47,7 @@ RewriteRule ^ - [L]
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
 
-    Header set Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none';"
+    # CSP removed - not needed for JSON API and can interfere with responses
 
     Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
     Header set Pragma "no-cache"
