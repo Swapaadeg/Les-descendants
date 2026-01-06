@@ -133,6 +133,7 @@
   }
 
   &__photo {
+    position: relative;
     width: 100%;
     height: 260px;
     margin-bottom: $spacing-lg;
@@ -155,6 +156,43 @@
     &:hover img {
       transform: scale(1.1);
     }
+    
+    &--empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba($neon-cyan, 0.05);
+      border-style: dashed;
+    }
+  }
+  
+  &__change-image-btn,
+  &__add-image-btn {
+    position: absolute;
+    bottom: $spacing-sm;
+    right: $spacing-sm;
+    padding: $spacing-xs $spacing-sm;
+    background: rgba($color-dark, 0.9);
+    border: 1px solid $neon-cyan;
+    border-radius: $border-radius-sm;
+    color: $neon-cyan;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all $transition-fast;
+    z-index: 2;
+    
+    &:hover {
+      background: $neon-cyan;
+      color: $color-dark;
+      @include neon-shadow($neon-cyan, medium);
+      transform: scale(1.05);
+    }
+  }
+  
+  &__add-image-btn {
+    position: static;
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-base;
   }
 
   &__header {

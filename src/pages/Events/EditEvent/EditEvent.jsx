@@ -144,7 +144,7 @@ const EditEvent = () => {
       const updateData = {
         ...formData,
         imagesToDelete,
-        newImages,
+        images: newImages, // Renommer newImages -> images pour l'API
         imageOrder: existingImages.map((img, index) => ({ id: img.id, display_order: index })),
       };
 

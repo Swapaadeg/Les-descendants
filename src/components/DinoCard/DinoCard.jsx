@@ -11,13 +11,34 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
 
   const isAquatic = shouldIgnoreOxygen(dino.typeIds, dinoTypes);
   const hasPhoto = dino.photoUrl;
-  const photoSrc = dino.photoUrl;
+  // Préfixer l'URL avec le serveur API
+  const photoSrc = dino.photoUrl ? `http://localhost:8000${dino.photoUrl}` : null;
 
   // Calculer les niveaux
   const baseLevel = calculateLevel(dino.stats, dino.species, isAquatic);
   const totalLevel = dino.isMutated
     ? calculateTotalLevel(dino.stats, dino.mutatedStats, dino.species, isAquatic)
     : null;
+
+  // Handler pour le changement d'image
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && onUpdate) {
+      // Vérifier le type de fichier
+      if (!file.type.startsWith('image/')) {
+        alert('Veuillez sélectionner une image valide');
+        return;
+      }
+      
+      // Vérifier la taille (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('L\'image ne doit pas dépasser 5MB');
+        return;
+      }
+      
+      onUpdate(dino.id, { image: file });
+    }
+  };
 
   const startEditing = (statId, currentValue, isMutated = false) => {
     const key = `${statId}-${isMutated}`;
@@ -213,6 +234,46 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
       {hasPhoto && (
         <div className="dino-card__photo">
           <img src={photoSrc} alt={dino.species} />
+          {onUpdate && (
+            <>
+              <input
+                type="file"
+                id={`image-input-${dino.id}`}
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+              />
+              <button
+                type="button"
+                className="dino-card__change-image-btn"
+                onClick={() => document.getElementById(`image-input-${dino.id}`).click()}
+                title="Changer l'image"
+              >
+                📷
+              </button>
+            </>
+          )}
+        </div>
+      )}
+      
+      {/* Ajouter une image si pas de photo */}
+      {!hasPhoto && onUpdate && (
+        <div className="dino-card__photo dino-card__photo--empty">
+          <input
+            type="file"
+            id={`image-input-${dino.id}`}
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          />
+          <button
+            type="button"
+            className="dino-card__add-image-btn"
+            onClick={() => document.getElementById(`image-input-${dino.id}`).click()}
+            title="Ajouter une image"
+          >
+            📷 Ajouter une photo
+          </button>
         </div>
       )}
 

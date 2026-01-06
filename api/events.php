@@ -245,11 +245,19 @@ function handlePut($pdo, $user) {
         sendJsonError('Événement introuvable', 404);
     }
 
-    // Lire le body JSON
-    $input = json_decode(file_get_contents('php://input'), true);
+    // Détecter si c'est du FormData (avec images) ou du JSON
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    $isFormData = strpos($contentType, 'multipart/form-data') !== false;
 
-    if (!$input) {
-        sendJsonError('Corps de requête invalide', 400);
+    if ($isFormData) {
+        // Lire depuis $_POST pour FormData
+        $input = $_POST;
+    } else {
+        // Lire depuis php://input pour JSON
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            sendJsonError('Corps de requête invalide', 400);
+        }
     }
 
     // Construire la requête de mise à jour dynamiquement

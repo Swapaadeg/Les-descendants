@@ -48,6 +48,12 @@ export const useDinosaurs = () => {
       const result = await dinoAPI.update(dinoId, updatedData);
       const updatedFromApi = result?.dinosaur;
 
+      // Si c'est un upload d'image, recharger toute la liste pour avoir l'URL fraîche
+      if (updatedData.image instanceof File) {
+        await fetchDinosaurs();
+        return result;
+      }
+
       if (updatedFromApi) {
         setDinos(prevDinos =>
           prevDinos.map(dino => (dino.id === dinoId ? { ...dino, ...updatedFromApi } : dino))
@@ -86,7 +92,8 @@ export const useDinosaurs = () => {
       // En cas d'erreur, recharger pour avoir l'état correct
       await fetchDinosaurs();
       console.error('Erreur lors de la mise à jour du dinosaure:', error);
-      setError(error.message);
+      console.error('Error response:', error.response?.data);
+      setError(error.response?.data?.error || error.message);
       throw error;
     }
   };

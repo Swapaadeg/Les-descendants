@@ -9,6 +9,13 @@ require_once 'middleware/auth.php';
 require_once 'utils/security.php';
 require_once 'utils/xss.php';
 
+// LOG IMMÉDIAT au démarrage du script
+error_log("=== DINOSAURS.PHP CALLED ===");
+error_log("METHOD: " . $_SERVER['REQUEST_METHOD']);
+error_log("URL: " . $_SERVER['REQUEST_URI']);
+error_log("AUTH HEADER: " . ($_SERVER['HTTP_AUTHORIZATION'] ?? 'MISSING'));
+error_log("CONTENT_TYPE: " . ($_SERVER['CONTENT_TYPE'] ?? 'NONE'));
+
 // Récupérer la méthode HTTP
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -16,8 +23,11 @@ $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getDbConnection();
 
 // Vérifier l'authentification (JWT)
+error_log("About to call requireAuth...");
 $user = requireAuth($pdo);
+error_log("After requireAuth. User: " . ($user ? json_encode($user) : 'NULL'));
 if (!$user) {
+    error_log("Authentication failed, exiting");
     exit;
 }
 
@@ -109,9 +119,16 @@ function handleGet($pdo, $user) {
 }
 
 /**
- * POST - Ajouter un nouveau dinosaure
+ * POST - Ajouter un dinosaure OU mettre à jour avec image (si ?id= présent)
  */
 function handlePost($pdo, $user) {
+    // Si un ID est fourni en query string, on fait un UPDATE (upload d'image)
+    if (isset($_GET['id']) && !empty($_GET['id'])) {
+        error_log("POST with ID - routing to handlePut for image upload");
+        return handlePut($pdo, $user);
+    }
+    
+    // Sinon, c'est un ajout classique
     try {
         // Récupérer la tribu de l'utilisateur
         $stmt = $pdo->prepare("
@@ -227,6 +244,16 @@ function handlePost($pdo, $user) {
  */
 function handlePut($pdo, $user) {
     try {
+        error_log("DEBUG: handlePut called for dino update");
+        error_log("DEBUG: METHOD = " . $_SERVER['REQUEST_METHOD']);
+        error_log("DEBUG: GET id = " . ($_GET['id'] ?? 'NULL'));
+        error_log("DEBUG: user = " . json_encode($user));
+    } catch (Exception $e) {
+        sendJsonError('Error in debug logging: ' . $e->getMessage(), 500);
+        return;
+    }
+    
+    try {
         // Récupérer l'ID depuis les paramètres GET
         $id = $_GET['id'] ?? null;
 
@@ -249,8 +276,24 @@ function handlePut($pdo, $user) {
             sendJsonError('Dinosaure introuvable ou vous n\'avez pas la permission de le modifier', 403);
         }
 
-        // Récupérer les données JSON
-        $input = json_decode(file_get_contents('php://input'), true);
+        // Détecter si c'est du FormData (avec image) ou du JSON
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        $isFormData = strpos($contentType, 'multipart/form-data') !== false;
+
+        if ($isFormData) {
+            // Lire depuis $_POST pour FormData
+            $input = $_POST;
+            // Décoder les objets JSON envoyés dans FormData
+            if (isset($input['stats']) && is_string($input['stats'])) {
+                $input['stats'] = json_decode($input['stats'], true);
+            }
+            if (isset($input['mutatedStats']) && is_string($input['mutatedStats'])) {
+                $input['mutatedStats'] = json_decode($input['mutatedStats'], true);
+            }
+        } else {
+            // Lire depuis php://input pour JSON
+            $input = json_decode(file_get_contents('php://input'), true);
+        }
 
         // IMPORTANT: Récupérer les valeurs actuelles AVANT l'UPDATE pour créer les tâches
         $oldStats = null;
@@ -311,8 +354,8 @@ function handlePut($pdo, $user) {
         // Gérer l'upload d'une nouvelle image si présente
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             // Supprimer l'ancienne image si elle existe
-            if (!empty($dino['image_url'])) {
-                $oldImagePath = __DIR__ . $dino['image_url'];
+            if (!empty($dino['photo_url'])) {
+                $oldImagePath = __DIR__ . $dino['photo_url'];
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }
@@ -335,14 +378,23 @@ function handlePut($pdo, $user) {
             $filePath = $uploadDir . $fileName;
 
             if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
-                $imageUrl = "/uploads/tribes/{$dino['tribe_id']}/{$fileName}";
-                $updates[] = "image_url = :image_url";
-                $params[":image_url"] = $imageUrl;
+                $photoUrl = "/uploads/tribes/{$dino['tribe_id']}/{$fileName}";
+                $updates[] = "photo_url = :photo_url";
+                $params[":photo_url"] = $photoUrl;
             }
         }
+        
+        // Debug: log ce qui a été reçu
+        error_log("DEBUG dinosaur PUT - FormData: " . ($isFormData ? 'oui' : 'non'));
+        error_log("DEBUG dinosaur PUT - FILES: " . json_encode($_FILES));
+        error_log("DEBUG dinosaur PUT - POST: " . json_encode($_POST));
+        error_log("DEBUG dinosaur PUT - updates count: " . count($updates));
 
         if (empty($updates)) {
-            sendJsonError('Aucune donnée à mettre à jour', 400);
+            // Vérifier s'il y a au moins une image à uploader
+            if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                sendJsonError('Aucune donnée à mettre à jour', 400);
+            }
         }
 
         $sql = "UPDATE dinosaurs SET " . implode(', ', $updates) . " WHERE id = :id";
@@ -374,7 +426,9 @@ function handlePut($pdo, $user) {
         ]);
 
     } catch (PDOException $e) {
-        sendJsonError('Erreur lors de la mise à jour: ' . $e->getMessage(), 500);
+        sendJsonError('Erreur DB lors de la mise à jour: ' . $e->getMessage() . ' | File: ' . $e->getFile() . ' | Line: ' . $e->getLine(), 500);
+    } catch (Exception $e) {
+        sendJsonError('Erreur lors de la mise à jour: ' . $e->getMessage() . ' | File: ' . $e->getFile() . ' | Line: ' . $e->getLine(), 500);
     }
 }
 

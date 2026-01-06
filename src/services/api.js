@@ -60,33 +60,40 @@ export const fetchCSRFToken = async () => {
 // Intercepteur pour ajouter le token JWT et CSRF dans les requêtes
 api.interceptors.request.use(
   async (config) => {
+    console.log('[Interceptor] config.method:', config.method, 'config.url:', config.url);
+    
     // Ajouter le JWT token
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Ajouter le CSRF token pour les requêtes non-GET
+    // Ajouter le CSRF token pour les requêtes non-GET (sauf FormData)
     if (['post', 'put', 'delete'].includes(config.method.toLowerCase())) {
-      // Utiliser le token en mémoire ou récupéré du localStorage
-      if (!csrfToken) {
-        csrfToken = localStorage.getItem('csrfToken');
-      }
-      if (!csrfToken) {
-        csrfToken = await fetchCSRFToken();
-      }
-      if (csrfToken) {
-        // Si c'est FormData (fichiers), ajouter le token à FormData
-        if (config.data instanceof FormData) {
-          config.data.append('csrf_token', csrfToken);
-        } else {
-          // Sinon, ajouter au JSON
+      // Si c'est FormData (fichiers), on n'ajoute PAS le CSRF token
+      // Le JWT Bearer token suffit pour la sécurité
+      if (config.data instanceof FormData) {
+        console.log('[Interceptor] FormData request - skipping CSRF token (JWT auth is sufficient)');
+      } else {
+        // Sinon, ajouter le CSRF token au JSON
+        // Utiliser le token en mémoire ou récupéré du localStorage
+        if (!csrfToken) {
+          csrfToken = localStorage.getItem('csrfToken');
+        }
+        if (!csrfToken) {
+          console.log('[Interceptor] Fetching CSRF token...');
+          csrfToken = await fetchCSRFToken();
+          console.log('[Interceptor] CSRF token fetched:', csrfToken);
+        }
+        if (csrfToken) {
+          console.log('[Interceptor] Adding CSRF to JSON');
           config.data = config.data || {};
           config.data.csrf_token = csrfToken;
         }
       }
     }
     
+    console.log('[Interceptor] Returning config');
     return config;
   },
   (error) => Promise.reject(error)
@@ -289,6 +296,48 @@ export const dinoAPI = {
    * Mettre à jour un dinosaure
    */
   update: async (id, dinoData) => {
+    console.log('dinoAPI.update called with:', { id, dinoData });
+    console.log('dinoData.image:', dinoData.image);
+    console.log('dinoData.image instanceof File:', dinoData.image instanceof File);
+    console.log('typeof dinoData.image:', typeof dinoData.image);
+    
+    // Si une image est présente, envoyer en FormData
+    if (dinoData.image instanceof File) {
+      console.log('✅ FormData branch - image is a File');
+      const formData = new FormData();
+      
+      console.log('BEFORE append - formData:', formData);
+      formData.append('image', dinoData.image);
+      console.log('AFTER append image - formData entries:');
+      for (let pair of formData.entries()) {
+        console.log('  ', pair[0], ':', pair[1]);
+      }
+      
+      // Ajouter les autres champs
+      Object.keys(dinoData).forEach(key => {
+        if (key !== 'image') {
+          if (typeof dinoData[key] === 'object') {
+            formData.append(key, JSON.stringify(dinoData[key]));
+          } else {
+            formData.append(key, dinoData[key]);
+          }
+        }
+      });
+      
+      console.log('AFTER forEach - formData entries:');
+      for (let pair of formData.entries()) {
+        console.log('  ', pair[0], ':', pair[1]);
+      }
+      
+      console.log('About to call api.post with formData (using POST instead of PUT for file upload)');
+      // Ne pas définir Content-Type - axios le détecte automatiquement pour FormData
+      // TEMP: Using POST instead of PUT because PHP doesn't parse $_FILES on PUT
+      const response = await api.post(`/dinosaurs.php?id=${id}`, formData);
+      return response.data;
+    }
+    
+    console.log('❌ JSON branch - image is NOT a File, sending as JSON');
+    // Sinon envoyer en JSON
     const response = await api.put(`/dinosaurs.php?id=${id}`, dinoData);
     return response.data;
   },
@@ -493,6 +542,28 @@ export const eventAPI = {
    * Mettre à jour un événement (admin only)
    */
   update: async (id, eventData) => {
+    // Si des images sont présentes, envoyer en FormData
+    if (eventData.images && eventData.images.length > 0) {
+      const formData = new FormData();
+      
+      // Ajouter les images
+      eventData.images.forEach((image) => {
+        formData.append('images[]', image);
+      });
+      
+      // Ajouter les autres champs (title, description, etc.)
+      Object.keys(eventData).forEach(key => {
+        if (key !== 'images') {
+          formData.append(key, eventData[key]);
+        }
+      });
+      
+      // Ne pas définir Content-Type - axios le détecte automatiquement pour FormData
+      const response = await api.put(`/events.php?id=${id}`, formData);
+      return response.data;
+    }
+    
+    // Sinon envoyer en JSON (pour modification texte ou réordonnancement)
     const response = await api.put(`/events.php?id=${id}`, eventData);
     return response.data;
   },
