@@ -542,7 +542,7 @@ export const eventAPI = {
    * Mettre à jour un événement (admin only)
    */
   update: async (id, eventData) => {
-    // Si des images sont présentes, envoyer en FormData
+    // Si des images sont présentes, envoyer en FormData avec POST (PHP limitation)
     if (eventData.images && eventData.images.length > 0) {
       const formData = new FormData();
       
@@ -551,15 +551,19 @@ export const eventAPI = {
         formData.append('images[]', image);
       });
       
-      // Ajouter les autres champs (title, description, etc.)
+      // Ajouter les autres champs (title, description, imagesToDelete, imageOrder, etc.)
       Object.keys(eventData).forEach(key => {
         if (key !== 'images') {
-          formData.append(key, eventData[key]);
+          if (typeof eventData[key] === 'object') {
+            formData.append(key, JSON.stringify(eventData[key]));
+          } else {
+            formData.append(key, eventData[key]);
+          }
         }
       });
       
-      // Ne pas définir Content-Type - axios le détecte automatiquement pour FormData
-      const response = await api.put(`/events.php?id=${id}`, formData);
+      // Using POST instead of PUT because PHP doesn't parse $_FILES on PUT
+      const response = await api.post(`/events.php?id=${id}`, formData);
       return response.data;
     }
     

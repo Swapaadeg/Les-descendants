@@ -5,6 +5,7 @@ import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useEventDetail } from '../../../hooks/useEvents';
 import { eventAPI } from '../../../services/api';
+import { getImageUrl } from '../../../config/api';
 import Header from '../../../components/Header/Header';
 import Skeleton from '../../../components/Skeleton/Skeleton';
 
@@ -136,7 +137,7 @@ const EventDetail = () => {
                   <SwiperSlide key={image.id}>
                     <div className="event-detail__slide">
                       <img
-                        src={image.image_url}
+                        src={getImageUrl(image.image_url)}
                         alt={`${event.title} - Image ${image.display_order + 1}`}
                       />
                     </div>

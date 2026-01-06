@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useEvents } from '../../../hooks/useEvents';
+import { getImageUrl } from '../../../config/api';
 import Header from '../../../components/Header/Header';
 import Skeleton from '../../../components/Skeleton/Skeleton';
 import './EventsList.scss';
@@ -73,7 +74,7 @@ const EventsList = () => {
                   >
                     <div className="event-card__image">
                       {event.thumbnail_url ? (
-                        <img src={event.thumbnail_url} alt={event.title} />
+                        <img src={getImageUrl(event.thumbnail_url)} alt={event.title} />
                       ) : (
                         <div className="event-card__placeholder">
                           <span>📸</span>

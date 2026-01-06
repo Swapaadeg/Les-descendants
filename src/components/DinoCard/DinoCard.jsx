@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
+import { getImageUrl } from '../../config/api';
 import '../../styles/components/dino-card.scss';
 
 const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], currentUserId }) => {
@@ -11,8 +12,7 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
 
   const isAquatic = shouldIgnoreOxygen(dino.typeIds, dinoTypes);
   const hasPhoto = dino.photoUrl;
-  // Préfixer l'URL avec le serveur API
-  const photoSrc = dino.photoUrl ? `http://localhost:8000${dino.photoUrl}` : null;
+  const photoSrc = getImageUrl(dino.photoUrl);
 
   // Calculer les niveaux
   const baseLevel = calculateLevel(dino.stats, dino.species, isAquatic);

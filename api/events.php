@@ -21,9 +21,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getDbConnection();
 
 // Protection CSRF pour les méthodes modifiant des données (admin only)
+// SAUF pour FormData avec JWT qui est suffisant pour l'authentification
 if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
-    $input = json_decode(file_get_contents('php://input'), true);
-    requireCsrfToken($input);
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    $isFormData = strpos($contentType, 'multipart/form-data') !== false;
+    
+    // Si c'est du FormData, le JWT est suffisant (pas besoin de CSRF)
+    // Sinon on vérifie le token CSRF
+    if (!$isFormData) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        requireCsrfToken($input);
+    }
 }
 
 // Router
@@ -140,9 +148,15 @@ function handleGet($pdo) {
 }
 
 // =====================================================
-// POST - Créer un événement
+// POST - Créer un événement OU mettre à jour avec images (si ?id= présent)
 // =====================================================
 function handlePost($pdo, $user) {
+    // Si un ID est fourni en query string, on fait un UPDATE (ajout d'images)
+    if (isset($_GET['id']) && !empty($_GET['id'])) {
+        return handlePut($pdo, $user);
+    }
+    
+    // Sinon, c'est un ajout classique
     try {
         // Validation des champs texte
         $title = trim($_POST['title'] ?? '');
@@ -300,6 +314,38 @@ function handlePut($pdo, $user) {
         $stmt->execute($values);
     }
 
+    // Gérer la suppression sélective d'images
+    if (isset($input['imagesToDelete'])) {
+        // Décoder si c'est une string JSON (cas FormData)
+        $imagesToDelete = $input['imagesToDelete'];
+        if (is_string($imagesToDelete)) {
+            $imagesToDelete = json_decode($imagesToDelete, true);
+        }
+        
+        if (is_array($imagesToDelete) && !empty($imagesToDelete)) {
+            foreach ($imagesToDelete as $imageId) {
+                $imageId = (int)$imageId;
+                
+                // Récupérer le chemin de l'image avant suppression
+                $stmt = $pdo->prepare("SELECT image_url FROM event_images WHERE id = ? AND event_id = ?");
+                $stmt->execute([$imageId, $id]);
+                $imageUrl = $stmt->fetchColumn();
+                
+                if ($imageUrl) {
+                    // Supprimer le fichier physique
+                    $imagePath = __DIR__ . $imageUrl;
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    
+                    // Supprimer l'entrée en base de données
+                    $stmt = $pdo->prepare("DELETE FROM event_images WHERE id = ? AND event_id = ?");
+                    $stmt->execute([$imageId, $id]);
+                }
+            }
+        }
+    }
+
     // Gérer le réordonnancement des images
     if (isset($input['imageOrder']) && is_array($input['imageOrder'])) {
         foreach ($input['imageOrder'] as $imageUpdate) {
@@ -320,25 +366,12 @@ function handlePut($pdo, $user) {
 
     // Gérer l'upload de nouvelles images si présentes
     if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-        // Supprimer les anciennes images en DB et fichiers
-        $stmt = $pdo->prepare("SELECT image_url FROM event_images WHERE event_id = ?");
+        // Obtenir le prochain display_order (ajouter après les images existantes)
+        $stmt = $pdo->prepare("SELECT COALESCE(MAX(display_order), -1) + 1 FROM event_images WHERE event_id = ?");
         $stmt->execute([$id]);
-        $oldImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $nextOrder = (int)$stmt->fetchColumn();
         
-        // Supprimer les anciens fichiers
-        foreach ($oldImages as $oldUrl) {
-            $oldPath = __DIR__ . $oldUrl;
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
-        }
-        
-        // Supprimer les anciennes entrées en DB
-        $stmt = $pdo->prepare("DELETE FROM event_images WHERE event_id = ?");
-        $stmt->execute([$id]);
-        
-        // Uploader les nouvelles images
-        $uploadedCount = 0;
+        // Uploader les nouvelles images sans supprimer les existantes
         for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
             $file = [
                 'name' => $_FILES['images']['name'][$i],
@@ -348,14 +381,20 @@ function handlePut($pdo, $user) {
                 'size' => $_FILES['images']['size'][$i]
             ];
 
-            $imageUrl = uploadEventImage($id, $file);
-            if ($imageUrl) {
-                $stmt = $pdo->prepare("
-                    INSERT INTO event_images (event_id, image_url, display_order)
-                    VALUES (?, ?, ?)
-                ");
-                $stmt->execute([$id, $imageUrl, $uploadedCount]);
-                $uploadedCount++;
+            try {
+                $imageUrl = uploadEventImage($file, $id, $nextOrder);
+                
+                if ($imageUrl) {
+                    $stmt = $pdo->prepare("
+                        INSERT INTO event_images (event_id, image_url, display_order)
+                        VALUES (?, ?, ?)
+                    ");
+                    $stmt->execute([$id, $imageUrl, $nextOrder]);
+                    $nextOrder++;
+                }
+            } catch (Exception $e) {
+                // Log l'erreur mais continue avec les autres fichiers
+                error_log("Erreur upload image événement: " . $e->getMessage());
             }
         }
     }

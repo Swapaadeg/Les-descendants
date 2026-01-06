@@ -11,6 +11,25 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || (
     : 'http://localhost:8000'
 );
 
+/**
+ * Helper pour construire les URLs d'images
+ * Ajoute le préfixe API_BASE_URL si l'URL est relative
+ */
+export const getImageUrl = (relativePath) => {
+  if (!relativePath) return null;
+  // Si l'URL commence déjà par http, la retourner telle quelle
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
+  }
+  // Enlever le préfixe /api/ si présent (pour éviter api/api/)
+  let cleanPath = relativePath;
+  if (cleanPath.startsWith('/api/')) {
+    cleanPath = cleanPath.substring(4); // Enlève '/api'
+  }
+  // Préfixer avec l'URL de l'API
+  return `${API_BASE_URL}${cleanPath}`;
+};
+
 // Endpoints
 export const API_ENDPOINTS = {
   dinosaurs: `${API_BASE_URL}/dinosaurs.php`

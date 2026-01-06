@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useEvents, useEventDetail } from '../../../hooks/useEvents';
+import { getImageUrl } from '../../../config/api';
 import Header from '../../../components/Header/Header';
 import './EditEvent.scss';
 
@@ -285,7 +286,7 @@ const EditEvent = () => {
                       onDragOver={handleDragOver}
                       onDrop={() => handleDrop(index)}
                     >
-                      <img src={image.image_url} alt={`Image ${index + 1}`} />
+                      <img src={getImageUrl(image.image_url)} alt={`Image ${index + 1}`} />
                       <div className="edit-event__image-overlay">
                         <span className="edit-event__image-number">{index + 1}</span>
                         {index === 0 && (
