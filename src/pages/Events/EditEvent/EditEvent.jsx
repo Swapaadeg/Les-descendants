@@ -151,12 +151,16 @@ const EditEvent = () => {
 
       const response = await updateEvent(id, updateData);
       
+      console.log('Response from updateEvent:', response);
+      
       // Vérifier s'il y a des erreurs d'upload
       if (response.upload_errors && response.upload_errors.length > 0) {
+        console.error('Upload errors:', response.upload_errors);
         setError(`Événement modifié mais erreurs d'upload:\n${response.upload_errors.join('\n')}`);
         // Attendre 3 secondes avant de naviguer pour que l'utilisateur voie l'erreur
         setTimeout(() => navigate(`/events/${id}`), 3000);
       } else {
+        console.log('No upload errors, navigating...');
         navigate(`/events/${id}`);
       }
     } catch (err) {
