@@ -9,6 +9,20 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../utils/security.php';
 
+// Polyfill pour getallheaders() (FastCGI/PHP-FPM compatibility)
+if (!function_exists('getallheaders')) {
+    function getallheaders() {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $header = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                $headers[$header] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
 // Clé secrète JWT
 // JWT_SECRET doit être défini dans config.php ou config.local.php
 if (!defined('JWT_SECRET')) {
