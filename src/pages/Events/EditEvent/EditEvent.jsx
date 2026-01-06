@@ -142,10 +142,16 @@ const EditEvent = () => {
       setSubmitting(true);
 
       // Préparer les données pour l'update
+      // Filtrer newImages pour ne garder que les vrais fichiers File
+      const validNewImages = newImages.filter(img => img instanceof File);
+      
+      console.log('newImages:', newImages);
+      console.log('validNewImages:', validNewImages);
+      
       const updateData = {
         ...formData,
         imagesToDelete,
-        images: newImages, // Renommer newImages -> images pour l'API
+        images: validNewImages, // Seulement les vrais fichiers File
         imageOrder: existingImages.map((img, index) => ({ id: img.id, display_order: index })),
       };
 

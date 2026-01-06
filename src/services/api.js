@@ -543,7 +543,12 @@ export const eventAPI = {
    */
   update: async (id, eventData) => {
     // Si des images sont présentes, envoyer en FormData avec POST (PHP limitation)
-    if (eventData.images && eventData.images.length > 0) {
+    // Vérifier que les images sont bien des objets File
+    const hasFileUploads = eventData.images && 
+                          eventData.images.length > 0 && 
+                          eventData.images.some(img => img instanceof File);
+    
+    if (hasFileUploads) {
       const formData = new FormData();
       
       // Ajouter les images
