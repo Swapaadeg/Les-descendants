@@ -118,6 +118,11 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('=== handleSubmit called ===');
+    console.log('formData:', formData);
+    console.log('existingImages:', existingImages);
+    console.log('newImages:', newImages);
+    console.log('imagesToDelete:', imagesToDelete);
     setError(null);
 
     // Validation
