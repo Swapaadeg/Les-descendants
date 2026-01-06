@@ -149,8 +149,16 @@ const EditEvent = () => {
         imageOrder: existingImages.map((img, index) => ({ id: img.id, display_order: index })),
       };
 
-      await updateEvent(id, updateData);
-      navigate(`/events/${id}`);
+      const response = await updateEvent(id, updateData);
+      
+      // Vérifier s'il y a des erreurs d'upload
+      if (response.upload_errors && response.upload_errors.length > 0) {
+        setError(`Événement modifié mais erreurs d'upload:\n${response.upload_errors.join('\n')}`);
+        // Attendre 3 secondes avant de naviguer pour que l'utilisateur voie l'erreur
+        setTimeout(() => navigate(`/events/${id}`), 3000);
+      } else {
+        navigate(`/events/${id}`);
+      }
     } catch (err) {
       setError(err.message || 'Erreur lors de la modification de l\'événement');
     } finally {
