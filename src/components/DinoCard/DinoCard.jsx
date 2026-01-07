@@ -337,7 +337,7 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
               >
                 <option value="">Non assigné</option>
                 {members.map(member => (
-                  <option key={member.id} value={member.id}>
+                  <option key={member.id} value={member.user_id}>
                     {member.username}
                   </option>
                 ))}

@@ -272,39 +272,7 @@
 
   .swiper-button-next,
   .swiper-button-prev {
-    background: rgba($color-dark, 0.95);
-    backdrop-filter: blur(10px);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid $neon-cyan;
-    @include neon-shadow($neon-cyan, medium);
-    transition: all $transition-base;
-
-    &:hover {
-      background: rgba($neon-cyan, 0.2);
-      border-color: $neon-purple;
-      @include neon-shadow($neon-purple, high);
-      transform: scale(1.1);
-    }
-
-    &::after {
-      font-size: 24px;
-      font-weight: bold;
-      color: $neon-cyan;
-    }
-
-    @include sm {
-      display: none !important; // Masquer sur mobile (utiliser swipe)
-    }
-  }
-
-  // Force le masquage des flèches en mobile avec media query directe
-  @media (max-width: 768px) {
-    .swiper-button-next,
-    .swiper-button-prev {
-      display: none !important;
-    }
+    display: none !important;
   }
 
   .swiper-button-prev {
