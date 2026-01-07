@@ -321,6 +321,11 @@ function verifyCSRFToken($token, $maxAge = 3600) {
         return false;
     }
 
+    // Vérifier que le token n'est pas null
+    if ($token === null || $token === '') {
+        return false;
+    }
+
     // Vérifier l'expiration
     if (time() - $_SESSION['csrf_token_time'] > $maxAge) {
         return false;
