@@ -93,7 +93,7 @@ try {
 
     // Chercher par email OU username
     $stmt = $pdo->prepare("
-        SELECT id, email, username, password_hash, is_admin, is_banned, email_verified
+        SELECT id, email, username, password_hash, is_admin, is_banned, email_verified, photo_profil
         FROM users
         WHERE email = ? OR username = ?
     ");
@@ -194,7 +194,8 @@ try {
             'email' => $user['email'],
             'username' => $user['username'],
             'is_admin' => (bool)$user['is_admin'],
-            'email_verified' => (bool)$user['email_verified']
+            'email_verified' => (bool)$user['email_verified'],
+            'photo_profil' => $user['photo_profil']
         ]
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
