@@ -98,10 +98,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Réponse invalide du serveur');
       }
 
-      if (!response.user.email_verified) {
-        throw new Error('Tu dois confirmer ton email avant de te connecter. Vérifie ta boîte mail !');
-      }
-
       setUser(response.user);
       return response;
     } catch (err) {

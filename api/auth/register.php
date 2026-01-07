@@ -137,20 +137,16 @@ try {
     // Hasher le mot de passe
     $passwordHash = hashPassword($password);
 
-    // Générer un token de vérification d'email
-    $verificationToken = generateSecureToken(32);
-
-    // Insérer l'utilisateur
+    // Insérer l'utilisateur avec email_verified = TRUE (vérification désactivée)
     $stmt = $pdo->prepare("
-        INSERT INTO users (email, username, password_hash, verification_token, created_at)
-        VALUES (?, ?, ?, ?, NOW())
+        INSERT INTO users (email, username, password_hash, email_verified, created_at)
+        VALUES (?, ?, ?, TRUE, NOW())
     ");
 
     $stmt->execute([
         $email,
         $username,
-        $passwordHash,
-        $verificationToken
+        $passwordHash
     ]);
 
     $userId = $pdo->lastInsertId();
@@ -163,34 +159,19 @@ try {
     ]);
 
     // ===========================
-    // ENVOYER L'EMAIL DE VÉRIFICATION
-    // ===========================
-
-    $emailSent = sendVerificationEmail($email, $username, $verificationToken);
-
-    if (!$emailSent) {
-        // Log l'erreur mais ne pas bloquer l'inscription
-        logActivity('Erreur envoi email de vérification', 'ERROR', [
-            'user_id' => $userId,
-            'email' => $email
-        ]);
-    }
-
-    // ===========================
     // RÉPONSE SUCCÈS
     // ===========================
 
     http_response_code(201);
     echo json_encode([
         'success' => true,
-        'message' => 'Compte créé avec succès ! Vérifie ton email pour activer ton compte.',
+        'message' => 'Compte créé avec succès ! Tu peux maintenant te connecter.',
         'user' => [
             'id' => $userId,
             'email' => $email,
             'username' => $username,
-            'email_verified' => false
-        ],
-        'email_sent' => $emailSent
+            'email_verified' => true
+        ]
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
 } catch (PDOException $e) {
