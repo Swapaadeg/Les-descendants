@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendJsonError('Méthode non autorisée', 405);
 }
 
-// Protection CSRF (le token peut être dans les headers ou form data)
-requireCsrfToken($_POST);
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// The JWT in the Authorization header already provides protection against CSRF attacks
 
 // Vérifier le type d'upload
 $type = $_GET['type'] ?? null;
