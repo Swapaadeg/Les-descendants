@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DEFAULT_AVATAR_IMAGE } from '../../config/api';
 import '../../styles/components/tribe-members-modal.scss';
 
 const TribeMembersModal = ({
@@ -222,8 +223,8 @@ const TribeMembersModal = ({
                   {members.map((member) => (
                     <div key={member.user_id} className="tribe-member">
                       <div className="tribe-member__info">
-                        <img 
-                          src={member.avatar_url || '/default-avatar.png'} 
+                        <img
+                          src={member.avatar_url || DEFAULT_AVATAR_IMAGE}
                           alt={member.username}
                           className="tribe-member__avatar"
                         />
@@ -269,8 +270,8 @@ const TribeMembersModal = ({
                     <div key={request.id} className="tribe-request">
                       <div className="tribe-request__header">
                         <div className="tribe-request__user">
-                          <img 
-                            src={request.avatar_url || '/default-avatar.png'} 
+                          <img
+                            src={request.avatar_url || DEFAULT_AVATAR_IMAGE}
                             alt={request.username}
                             className="tribe-request__avatar"
                           />
