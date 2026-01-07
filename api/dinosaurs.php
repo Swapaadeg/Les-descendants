@@ -333,15 +333,28 @@ function handlePut($pdo, $user) {
             $assignedUserId = $input['assigned_user_id'];
 
             if ($assignedUserId !== null) {
-                // Log pour debug
-                error_log("DEBUG: Checking assignment - tribe_id={$dino['tribe_id']}, assigned_user_id={$assignedUserId}");
+                // Log pour debug dans un fichier accessible
+                $debugLog = __DIR__ . '/debug_assignment.log';
+                $debugMsg = date('Y-m-d H:i:s') . " - Checking assignment:\n";
+                $debugMsg .= "  - Dino ID: {$dino['id']}\n";
+                $debugMsg .= "  - Dino tribe_id: {$dino['tribe_id']}\n";
+                $debugMsg .= "  - Assigned user_id: {$assignedUserId}\n";
 
                 // Vérifier que l'utilisateur assigné appartient à la même tribu
                 $stmt = $pdo->prepare("SELECT user_id, tribe_id, is_validated FROM tribe_members WHERE tribe_id = ? AND user_id = ? AND is_validated = 1");
                 $stmt->execute([$dino['tribe_id'], $assignedUserId]);
                 $member = $stmt->fetch();
 
-                error_log("DEBUG: Member found: " . ($member ? json_encode($member) : 'NULL'));
+                $debugMsg .= "  - Member found: " . ($member ? json_encode($member) : 'NULL') . "\n";
+                $debugMsg .= "  - Query params: tribe_id={$dino['tribe_id']}, user_id={$assignedUserId}\n";
+
+                // Vérifier tous les membres de la tribu pour debug
+                $stmt2 = $pdo->prepare("SELECT user_id, tribe_id, is_validated FROM tribe_members WHERE tribe_id = ?");
+                $stmt2->execute([$dino['tribe_id']]);
+                $allMembers = $stmt2->fetchAll();
+                $debugMsg .= "  - All tribe members: " . json_encode($allMembers) . "\n\n";
+
+                file_put_contents($debugLog, $debugMsg, FILE_APPEND);
 
                 if (!$member) {
                     sendJsonError('Impossible d\'assigner un membre en dehors de la tribu', 403);
