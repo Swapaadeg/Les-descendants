@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
-import { getImageUrl } from '../../config/api';
+import { getImageUrl, DEFAULT_AVATAR_IMAGE } from '../../config/api';
 import '../../styles/components/dino-card.scss';
 
 const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], currentUserId }) => {
@@ -313,9 +313,11 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
           <div className="dino-card__assignee-value">
             {dino.assignedUser ? (
               <span className="dino-card__assignee-chip">
-                <span className="dino-card__assignee-avatar">
-                  {dino.assignedUser.username?.charAt(0)?.toUpperCase() || '👤'}
-                </span>
+                <img
+                  src={DEFAULT_AVATAR_IMAGE}
+                  alt={dino.assignedUser.username}
+                  className="dino-card__assignee-avatar"
+                />
                 <span className="dino-card__assignee-name">{dino.assignedUser.username}</span>
               </span>
             ) : (

@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTasks } from '../../hooks/useTasks';
 import { useToast } from '../../contexts/ToastContext';
 import TasksModal from '../TasksModal/TasksModal';
+import { DEFAULT_AVATAR_IMAGE } from '../../config/api';
 import '../../styles/components/header.scss';
 
 const Header = () => {
@@ -70,17 +71,11 @@ const Header = () => {
       )}
       {user && (
         <Link to="/profile" className="header__user-avatar">
-          {user.photo_profil ? (
-            <img
-              src={user.photo_profil}
-              alt={user.username}
-              className="header__user-avatar-img"
-            />
-          ) : (
-            <div className="header__user-avatar-placeholder">
-              {user.username?.charAt(0).toUpperCase() || '👤'}
-            </div>
-          )}
+          <img
+            src={user.photo_profil || DEFAULT_AVATAR_IMAGE}
+            alt={user.username}
+            className="header__user-avatar-img"
+          />
         </Link>
       )}
 

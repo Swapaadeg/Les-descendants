@@ -11,8 +11,9 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || (
     : 'http://localhost:8000'
 );
 
-// Image par défaut pour les dinosaures sans photo
+// Images par défaut
 export const DEFAULT_DINO_IMAGE = '/assets/default-dino.svg';
+export const DEFAULT_AVATAR_IMAGE = '/assets/default-avatar.svg';
 
 /**
  * Helper pour construire les URLs d'images
