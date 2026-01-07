@@ -78,13 +78,26 @@
   }
 
   &__mutation-btn {
+    // Override fixed dimensions for text button
+    width: auto;
+    height: auto;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-md;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    white-space: nowrap;
+
     background: rgba($neon-purple, 0.2);
     border: 2px solid rgba($neon-purple, 0.5);
+
+    @include md {
+      font-size: $font-size-base;
+    }
 
     &:hover {
       background: rgba($neon-purple, 0.3);
       border-color: $neon-purple;
-      transform: scale(1.1);
+      transform: scale(1.05);
       @include neon-shadow($neon-purple, medium);
     }
 
@@ -95,7 +108,7 @@
       animation: pulse-mutation 2s ease-in-out infinite;
 
       &:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
       }
     }
   }

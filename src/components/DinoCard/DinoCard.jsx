@@ -223,9 +223,8 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
               type="button"
               className={`dino-card__mutation-btn ${dino.isMutated ? 'dino-card__mutation-btn--active' : ''}`}
               onClick={handleToggleMutation}
-              title={dino.isMutated ? "Retirer la mutation" : "Activer la mutation"}
             >
-              ✨
+              {dino.isMutated ? "✨ Retirer la mutation" : "✨ Activer la mutation"}
             </button>
           )}
           {onToggleFeatured && (
