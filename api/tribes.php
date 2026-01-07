@@ -50,6 +50,18 @@ function handleGet($user) {
     try {
         $pdo = getDbConnection();
 
+        // Si ?pending_count est présent, compter les demandes en attente (admin uniquement)
+        if (isset($_GET['pending_count']) && $user && $user['is_admin']) {
+            $stmt = $pdo->query("
+                SELECT COUNT(*) as count
+                FROM tribe_members
+                WHERE is_validated = 0
+            ");
+            $result = $stmt->fetch();
+            sendJsonResponse(['count' => (int)$result['count']]);
+            return;
+        }
+
         // Si ?my est présent, récupérer la tribu de l'utilisateur
         if (isset($_GET['my']) && $user) {
             $stmt = $pdo->prepare("

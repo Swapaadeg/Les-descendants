@@ -53,11 +53,20 @@
 
   &__actions {
     position: absolute;
-    top: $spacing-md;
-    left: $spacing-md;
+    top: $spacing-sm;
+    left: $spacing-sm;
+    right: $spacing-sm;
     display: flex;
     gap: $spacing-sm;
     z-index: 10;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    @include md {
+      top: $spacing-md;
+      left: $spacing-md;
+      right: auto;
+    }
   }
 
   &__mutation-btn,
@@ -150,8 +159,8 @@
 
   &__mutated-badge {
     position: absolute;
-    top: $spacing-md;
-    right: $spacing-md;
+    top: $spacing-sm;
+    right: $spacing-sm;
     padding: $spacing-sm $spacing-md;
     background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
     border-radius: $border-radius-full;
@@ -161,9 +170,11 @@
     letter-spacing: 0.1em;
     @include neon-shadow($neon-pink);
     animation: pulse-badge 2s ease-in-out infinite;
-    z-index: 10;
+    z-index: 15;
 
     @include md {
+      top: $spacing-md;
+      right: $spacing-md;
       font-size: $font-size-sm;
       padding: $spacing-sm $spacing-lg;
     }
@@ -173,6 +184,7 @@
     position: relative;
     width: 100%;
     height: 260px;
+    margin-top: 50px;
     margin-bottom: $spacing-lg;
     border-radius: $border-radius-md;
     overflow: hidden;
@@ -181,6 +193,7 @@
 
     @include md {
       height: 320px;
+      margin-top: 60px;
     }
 
     img {

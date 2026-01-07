@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTasks } from '../../hooks/useTasks';
+import { usePendingRequests } from '../../hooks/usePendingRequests';
 import { useToast } from '../../contexts/ToastContext';
 import TasksModal from '../TasksModal/TasksModal';
 import { DEFAULT_AVATAR_IMAGE } from '../../config/api';
@@ -11,8 +12,10 @@ const Header = () => {
   const { user } = useAuth();
   const [showTasksModal, setShowTasksModal] = useState(false);
   const { pendingCount, refreshPendingCount } = useTasks();
+  const { pendingCount: pendingRequestsCount, refreshPendingCount: refreshPendingRequests } = usePendingRequests();
   const { showToast } = useToast();
   const previousCount = useRef(0);
+  const previousRequestsCount = useRef(0);
 
   // Rafraîchir le compteur de tâches toutes les 30 secondes
   useEffect(() => {
@@ -22,6 +25,15 @@ const Header = () => {
       return () => clearInterval(interval);
     }
   }, [user, refreshPendingCount]);
+
+  // Rafraîchir le compteur de demandes de tribu (admin uniquement)
+  useEffect(() => {
+    if (user?.is_admin) {
+      refreshPendingRequests();
+      const interval = setInterval(refreshPendingRequests, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [user, refreshPendingRequests]);
 
   // Afficher une notification quand le count augmente
   useEffect(() => {
@@ -34,6 +46,18 @@ const Header = () => {
     }
     previousCount.current = pendingCount;
   }, [pendingCount, showToast]);
+
+  // Afficher une notification quand les demandes de tribu augmentent
+  useEffect(() => {
+    if (pendingRequestsCount > previousRequestsCount.current && previousRequestsCount.current > 0) {
+      const diff = pendingRequestsCount - previousRequestsCount.current;
+      showToast(
+        `👥 ${diff} nouvelle${diff > 1 ? 's' : ''} demande${diff > 1 ? 's' : ''} de tribu !`,
+        'info'
+      );
+    }
+    previousRequestsCount.current = pendingRequestsCount;
+  }, [pendingRequestsCount, showToast]);
 
   return (
     <header className="header">
@@ -67,6 +91,9 @@ const Header = () => {
         <Link to="/admin" className="header__admin-link">
           <span className="header__admin-icon">⚙️</span>
           <span className="header__admin-text">Admin</span>
+          {pendingRequestsCount > 0 && (
+            <span className="header__admin-badge">{pendingRequestsCount}</span>
+          )}
         </Link>
       )}
       {user && (

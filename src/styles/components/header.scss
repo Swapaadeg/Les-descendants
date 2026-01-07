@@ -162,6 +162,11 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
+    // Needed for badge positioning
+    &::before {
+      content: '';
+      position: relative;
+    }
     background: linear-gradient(135deg, rgba(#ff6b35, 0.2), rgba(#ff0080, 0.2));
     border: 2px solid rgba(#ff6b35, 0.6);
     border-radius: 8px;
@@ -201,6 +206,34 @@
   &__admin-text {
     @include max-md {
       display: none;
+    }
+  }
+
+  &__admin-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
+    border-radius: $border-radius-full;
+    color: $color-light;
+    font-size: 0.75rem;
+    font-weight: $font-weight-bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include neon-shadow($neon-pink, medium);
+    animation: pulse-badge 2s ease-in-out infinite;
+
+    @include max-md {
+      min-width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      padding: 0 5px;
+      top: -6px;
+      right: -6px;
     }
   }
 
