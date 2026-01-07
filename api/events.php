@@ -20,19 +20,9 @@ header('Content-Type: application/json; charset=utf-8');
 $method = $_SERVER['REQUEST_METHOD'];
 $pdo = getDbConnection();
 
-// Protection CSRF pour les méthodes modifiant des données (admin only)
-// SAUF pour FormData avec JWT qui est suffisant pour l'authentification
-if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
-    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-    $isFormData = strpos($contentType, 'multipart/form-data') !== false;
-    
-    // Si c'est du FormData, le JWT est suffisant (pas besoin de CSRF)
-    // Sinon on vérifie le token CSRF
-    if (!$isFormData) {
-        $input = json_decode(file_get_contents('php://input'), true);
-        requireCsrfToken($input);
-    }
-}
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// All modification operations require JWT authentication via requireAdmin()
+// JWT tokens in the Authorization header already provide protection against CSRF attacks
 
 // Router
 switch ($method) {

@@ -103,6 +103,30 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
       return;
     }
 
+    // Vérifier que toutes les stats sont remplies
+    const requiredStats = ['health', 'stamina', 'food', 'weight', 'damage'];
+    if (!isAquatic) requiredStats.push('oxygen');
+    if (hascraftingStat) requiredStats.push('crafting');
+
+    const missingStats = requiredStats.filter(stat => !formData.stats[stat] || formData.stats[stat] === '');
+
+    if (missingStats.length > 0) {
+      alert(`Veuillez remplir toutes les stats de base (${missingStats.join(', ')})`);
+      return;
+    }
+
+    // Si muté, vérifier les stats mutées
+    if (formData.isMutated) {
+      const missingMutatedStats = requiredStats.filter(stat =>
+        !formData.mutatedStats[stat] || formData.mutatedStats[stat] === ''
+      );
+
+      if (missingMutatedStats.length > 0) {
+        alert(`Veuillez remplir toutes les stats mutées (${missingMutatedStats.join(', ')})`);
+        return;
+      }
+    }
+
     onAddDino(formData);
 
     // Reset du formulaire

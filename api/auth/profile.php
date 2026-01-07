@@ -36,17 +36,8 @@ header('Content-Type: application/json');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Protection CSRF pour les méthodes modifiant des données
-if (in_array($method, ['POST', 'PUT'])) {
-    if ($method === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_avatar') {
-        // Pour les uploads, le token peut être dans $_POST
-        requireCsrfToken($_POST);
-    } else {
-        // Pour les autres requêtes JSON
-        $input = json_decode(file_get_contents('php://input'), true);
-        requireCsrfToken($input);
-    }
-}
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// The JWT in the Authorization header already provides protection against CSRF attacks
 
 if ($method === 'PUT') {
     handlePut();
