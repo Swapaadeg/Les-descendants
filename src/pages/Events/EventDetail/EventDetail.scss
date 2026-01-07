@@ -295,7 +295,15 @@
     }
 
     @include sm {
-      display: none; // Masquer sur mobile (utiliser swipe)
+      display: none !important; // Masquer sur mobile (utiliser swipe)
+    }
+  }
+
+  // Force le masquage des flèches en mobile avec media query directe
+  @media (max-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      display: none !important;
     }
   }
 
