@@ -249,17 +249,18 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
         </div>
       )}
 
-      {/* Badge muté */}
-      {dino.isMutated && (
-        <div className="dino-card__mutated-badge">
-          ✨ MUTÉ
-        </div>
-      )}
-
       {/* Photo */}
       {hasPhoto && (
         <div className="dino-card__photo">
           <img src={photoSrc} alt={dino.species} />
+
+          {/* Badge muté */}
+          {dino.isMutated && (
+            <div className="dino-card__mutated-badge">
+              ✨ MUTÉ
+            </div>
+          )}
+
           {onUpdate && (
             <>
               <input
