@@ -21,6 +21,17 @@ const EventDetail = () => {
   const { user } = useAuth();
   const { event, loading, error } = useEventDetail(id);
   const [deleting, setDeleting] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Détecter le redimensionnement de la fenêtre
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleDelete = async () => {
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.')) {
@@ -35,6 +46,16 @@ const EventDetail = () => {
       alert('Erreur lors de la suppression : ' + (err.response?.data?.error || err.message));
       setDeleting(false);
     }
+  };
+
+  const handleImageClick = (imageUrl) => {
+    if (isMobile) {
+      setFullscreenImage(imageUrl);
+    }
+  };
+
+  const closeFullscreen = () => {
+    setFullscreenImage(null);
   };
 
   if (loading) {
@@ -127,7 +148,7 @@ const EventDetail = () => {
                 modules={[Navigation, Pagination, Keyboard]}
                 spaceBetween={20}
                 slidesPerView={1}
-                navigation
+                navigation={!isMobile}
                 pagination={{ clickable: true }}
                 keyboard={{ enabled: true }}
                 loop={event.images.length > 1}
@@ -135,7 +156,11 @@ const EventDetail = () => {
               >
                 {event.images.map((image) => (
                   <SwiperSlide key={image.id}>
-                    <div className="event-detail__slide">
+                    <div
+                      className="event-detail__slide"
+                      onClick={() => handleImageClick(image.image_url)}
+                      style={{ cursor: isMobile ? 'pointer' : 'default' }}
+                    >
                       <img
                         src={getImageUrl(image.image_url)}
                         alt={`${event.title} - Image ${image.display_order + 1}`}
@@ -144,6 +169,20 @@ const EventDetail = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+            </div>
+          )}
+
+          {/* Modal plein écran pour mobile */}
+          {fullscreenImage && (
+            <div className="event-detail__fullscreen" onClick={closeFullscreen}>
+              <button className="event-detail__fullscreen-close" onClick={closeFullscreen}>
+                ✕
+              </button>
+              <img
+                src={getImageUrl(fullscreenImage)}
+                alt="Image en plein écran"
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
           )}
 

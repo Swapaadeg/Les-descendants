@@ -322,3 +322,68 @@
     }
   }
 }
+
+// =====================================================
+// FULLSCREEN IMAGE MODAL
+// =====================================================
+
+.event-detail__fullscreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-lg;
+  animation: fadeIn 0.2s ease-out;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: $border-radius-md;
+    @include neon-shadow($neon-cyan, high);
+  }
+}
+
+.event-detail__fullscreen-close {
+  position: absolute;
+  top: $spacing-lg;
+  right: $spacing-lg;
+  background: rgba($color-dark, 0.9);
+  border: 2px solid $neon-cyan;
+  color: $neon-cyan;
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all $transition-base;
+  @include neon-shadow($neon-cyan, medium);
+  font-family: $font-primary;
+  z-index: 10000;
+
+  &:hover {
+    background: rgba($neon-cyan, 0.2);
+    border-color: $neon-purple;
+    @include neon-shadow($neon-purple, high);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
