@@ -60,6 +60,7 @@
     z-index: 10;
   }
 
+  &__mutation-btn,
   &__featured-btn,
   &__delete-btn {
     width: 40px;
@@ -73,6 +74,29 @@
     @include md {
       width: 45px;
       height: 45px;
+    }
+  }
+
+  &__mutation-btn {
+    background: rgba($neon-purple, 0.2);
+    border: 2px solid rgba($neon-purple, 0.5);
+
+    &:hover {
+      background: rgba($neon-purple, 0.3);
+      border-color: $neon-purple;
+      transform: scale(1.1);
+      @include neon-shadow($neon-purple, medium);
+    }
+
+    &--active {
+      background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
+      border-color: $neon-pink;
+      @include neon-shadow($neon-pink, medium);
+      animation: pulse-mutation 2s ease-in-out infinite;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
 
@@ -296,6 +320,9 @@
     margin-bottom: $spacing-md;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 
     @include md {
       font-size: $font-size-2xl;
@@ -730,5 +757,16 @@
   50% {
     transform: scale(1.05);
     box-shadow: 0 0 25px rgba($neon-yellow, 0.8);
+  }
+}
+
+@keyframes pulse-mutation {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba($neon-pink, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba($neon-pink, 0.8);
   }
 }

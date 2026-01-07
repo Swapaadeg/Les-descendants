@@ -83,6 +83,23 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
     }
   };
 
+  // Handler pour activer/désactiver la mutation
+  const handleToggleMutation = () => {
+    if (!onUpdate) return;
+
+    const newMutatedStatus = !dino.isMutated;
+
+    // Si on active la mutation et qu'il n'y a pas de stats mutées, les initialiser avec les stats de base
+    const mutatedStats = newMutatedStatus && !dino.mutatedStats
+      ? { ...dino.stats }
+      : dino.mutatedStats || {};
+
+    onUpdate(dino.id, {
+      isMutated: newMutatedStatus,
+      mutatedStats: mutatedStats
+    });
+  };
+
   const renderStat = (stat, baseValue, mutatedValue = null) => {
     // Ne pas afficher l'oxygène pour les dinos aquatiques
     if (stat.id === 'oxygen' && isAquatic) return null;
@@ -199,8 +216,18 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
   return (
     <article className="dino-card">
       {/* Boutons d'action (seulement si les fonctions sont fournies) */}
-      {(onToggleFeatured || onDelete) && (
+      {(onToggleFeatured || onDelete || onUpdate) && (
         <div className="dino-card__actions">
+          {onUpdate && (
+            <button
+              type="button"
+              className={`dino-card__mutation-btn ${dino.isMutated ? 'dino-card__mutation-btn--active' : ''}`}
+              onClick={handleToggleMutation}
+              title={dino.isMutated ? "Retirer la mutation" : "Activer la mutation"}
+            >
+              ✨
+            </button>
+          )}
           {onToggleFeatured && (
             <button
               type="button"

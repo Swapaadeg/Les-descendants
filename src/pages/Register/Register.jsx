@@ -117,20 +117,20 @@ const Register = () => {
 
             <div className="auth__success">
               <span>✓</span>
-              Un email de confirmation a été envoyé à ton adresse. Vérifie ta boîte mail pour activer ton compte !
+              Ton compte est prêt ! Tu peux maintenant te connecter et rejoindre l'aventure.
             </div>
 
             <div className="auth__info">
               <p>Prochaines étapes :</p>
               <ul>
-                <li>Consulte ton email (pense à vérifier les spams)</li>
-                <li>Clique sur le lien de confirmation</li>
-                <li>Connecte-toi et rejoins une tribu !</li>
+                <li>Connecte-toi avec tes identifiants</li>
+                <li>Rejoins ou crée une tribu</li>
+                <li>Commence à gérer tes dinosaures !</li>
               </ul>
             </div>
 
             <Link to="/login" className="auth__btn auth__btn--primary" style={{ textAlign: 'center', display: 'block', marginTop: '2rem' }}>
-              Aller à la connexion
+              Se connecter maintenant
             </Link>
 
             <Link to="/" className="auth__back">

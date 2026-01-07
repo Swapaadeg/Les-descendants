@@ -258,10 +258,9 @@ function handlePut($pdo, $user) {
 
         // ✅ VÉRIFICATION DE PERMISSION: Vérifier que le dinosaure appartient à la tribu de l'utilisateur
         $stmt = $pdo->prepare("
-            SELECT d.*, t.id as tribe_id
+            SELECT d.*
             FROM dinosaurs d
-            JOIN tribes t ON d.tribe_id = t.id
-            JOIN tribe_members tm ON t.id = tm.tribe_id
+            JOIN tribe_members tm ON d.tribe_id = tm.tribe_id
             WHERE d.id = ? AND tm.user_id = ? AND tm.is_validated = 1
         ");
         $stmt->execute([$id, $user['id']]);
@@ -334,10 +333,17 @@ function handlePut($pdo, $user) {
             $assignedUserId = $input['assigned_user_id'];
 
             if ($assignedUserId !== null) {
+                // Log pour debug
+                error_log("DEBUG: Checking assignment - tribe_id={$dino['tribe_id']}, assigned_user_id={$assignedUserId}");
+
                 // Vérifier que l'utilisateur assigné appartient à la même tribu
-                $stmt = $pdo->prepare("SELECT 1 FROM tribe_members WHERE tribe_id = ? AND user_id = ? AND is_validated = 1");
+                $stmt = $pdo->prepare("SELECT user_id, tribe_id, is_validated FROM tribe_members WHERE tribe_id = ? AND user_id = ? AND is_validated = 1");
                 $stmt->execute([$dino['tribe_id'], $assignedUserId]);
-                if (!$stmt->fetch()) {
+                $member = $stmt->fetch();
+
+                error_log("DEBUG: Member found: " . ($member ? json_encode($member) : 'NULL'));
+
+                if (!$member) {
                     sendJsonError('Impossible d\'assigner un membre en dehors de la tribu', 403);
                 }
             }
@@ -441,10 +447,9 @@ function handleDelete($pdo, $user) {
 
         // ✅ VÉRIFICATION DE PERMISSION: Vérifier que le dinosaure appartient à la tribu de l'utilisateur
         $stmt = $pdo->prepare("
-            SELECT d.*, t.id as tribe_id
+            SELECT d.*
             FROM dinosaurs d
-            JOIN tribes t ON d.tribe_id = t.id
-            JOIN tribe_members tm ON t.id = tm.tribe_id
+            JOIN tribe_members tm ON d.tribe_id = tm.tribe_id
             WHERE d.id = ? AND tm.user_id = ? AND tm.is_validated = 1
         ");
         $stmt->execute([$id, $user['id']]);

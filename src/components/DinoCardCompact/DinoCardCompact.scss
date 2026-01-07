@@ -64,6 +64,9 @@
     text-shadow: 0 0 10px rgba($neon-cyan, 0.5);
     margin: 0;
     line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 
     @include sm {
       font-size: 1rem;
