@@ -292,7 +292,9 @@ const TribePage = () => {
             await loadPendingRequests();
           } catch (err) {
             console.error('Erreur expulsion membre:', err);
-            setError('Erreur lors de l\'expulsion du membre');
+            const errorMsg = err.response?.data?.error || err.message || 'Erreur lors de l\'expulsion du membre';
+            alert('Erreur : ' + errorMsg);
+            setError(errorMsg);
           }
         }}
         onRenameTribe={async (updates) => {
@@ -313,12 +315,16 @@ const TribePage = () => {
               // Rediriger vers le dashboard après avoir quitté
               navigate('/dashboard');
             } else {
-              console.error('Membre actuel non trouvé');
-              setError('Impossible de trouver votre profil dans la tribu');
+              console.error('Membre actuel non trouvé', { members: tribe.members, current_user_id: tribe.current_user_id });
+              const errorMsg = 'Impossible de trouver votre profil dans la tribu';
+              alert('Erreur : ' + errorMsg);
+              setError(errorMsg);
             }
           } catch (err) {
             console.error('Erreur en quittant la tribu:', err);
-            setError('Erreur lors de la sortie de la tribu');
+            const errorMsg = err.response?.data?.error || err.message || 'Erreur lors de la sortie de la tribu';
+            alert('Erreur : ' + errorMsg);
+            setError(errorMsg);
           }
         }}
         onDeleteTribe={async () => {
