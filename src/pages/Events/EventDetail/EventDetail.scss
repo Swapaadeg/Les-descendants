@@ -3,6 +3,12 @@
 @use '../../../styles/abstracts/mixins' as *;
 
 .event-detail {
+    // Empêche le scroll horizontal en responsive sur le carousel
+    &__carousel {
+      @include max-md {
+        overflow-x: hidden;
+      }
+    }
   min-height: 100vh;
   background: linear-gradient(
     135deg,
