@@ -159,8 +159,8 @@
 
   &__mutated-badge {
     position: absolute;
-    top: $spacing-sm;
-    right: $spacing-sm;
+    bottom: $spacing-md;
+    left: $spacing-md;
     padding: $spacing-sm $spacing-md;
     background: linear-gradient(135deg, $neon-pink 0%, $neon-purple 100%);
     border-radius: $border-radius-full;
@@ -173,8 +173,8 @@
     z-index: 15;
 
     @include md {
-      top: $spacing-md;
-      right: $spacing-md;
+      bottom: $spacing-lg;
+      left: $spacing-lg;
       font-size: $font-size-sm;
       padding: $spacing-sm $spacing-lg;
     }
