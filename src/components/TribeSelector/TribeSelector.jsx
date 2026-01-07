@@ -176,7 +176,7 @@ const TribeSelector = ({ onTribeSelected }) => {
                 className="tribe-selector__input"
                 value={createForm.name}
                 onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                placeholder="Les Descendants"
+                placeholder="Arki'tribe"
                 required
                 minLength={3}
                 maxLength={100}
@@ -194,18 +194,6 @@ const TribeSelector = ({ onTribeSelected }) => {
                 rows={4}
                 disabled={loading}
               />
-            </div>
-
-            <div className="tribe-selector__field tribe-selector__field--checkbox">
-              <label className="tribe-selector__checkbox">
-                <input
-                  type="checkbox"
-                  checked={createForm.is_public}
-                  onChange={(e) => setCreateForm({ ...createForm, is_public: e.target.checked })}
-                  disabled={loading}
-                />
-                <span>Tribu publique (visible dans la liste des tribus)</span>
-              </label>
             </div>
 
             <div className="tribe-selector__actions">
