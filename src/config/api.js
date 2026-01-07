@@ -11,12 +11,18 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || (
     : 'http://localhost:8000'
 );
 
+// Image par défaut pour les dinosaures sans photo
+export const DEFAULT_DINO_IMAGE = '/assets/default-dino.svg';
+
 /**
  * Helper pour construire les URLs d'images
  * Ajoute le préfixe API_BASE_URL si l'URL est relative
+ * Retourne une image par défaut si aucune image n'est fournie
  */
-export const getImageUrl = (relativePath) => {
-  if (!relativePath) return null;
+export const getImageUrl = (relativePath, useDefault = true) => {
+  if (!relativePath) {
+    return useDefault ? DEFAULT_DINO_IMAGE : null;
+  }
   // Si l'URL commence déjà par http, la retourner telle quelle
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
     return relativePath;
