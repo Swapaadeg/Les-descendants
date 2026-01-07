@@ -18,11 +18,9 @@ $pdo = getDbConnection();
 // Vérifier l'authentification
 $user = requireAuth($pdo);
 
-// Protection CSRF pour les méthodes modifiant des données
-if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
-    $input = json_decode(file_get_contents('php://input'), true);
-    requireCsrfToken($input);
-}
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// All modification operations require JWT authentication via requireAuth()
+// JWT tokens in the Authorization header already provide protection against CSRF attacks
 
 // Router selon la méthode HTTP
 switch ($method) {

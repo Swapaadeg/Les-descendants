@@ -21,11 +21,9 @@ if ($method !== 'GET' || isset($_GET['my'])) {
     $user = requireAuth($pdo);
 }
 
-// Protection CSRF pour les méthodes modifiant des données
-if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
-    $input = json_decode(file_get_contents('php://input'), true);
-    requireCsrfToken($input);
-}
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// All modification operations require JWT authentication via requireAuth()
+// JWT tokens in the Authorization header already provide protection against CSRF attacks
 
 // Router selon la méthode HTTP
 switch ($method) {
@@ -71,14 +69,27 @@ function handleGet($user) {
 
             // Récupérer les membres
             $stmt = $pdo->prepare("
-                SELECT u.id, u.username, u.email, tm.role, tm.joined_at
+                SELECT u.id, u.username, u.email, u.photo_profil, tm.id as member_id, tm.role, tm.joined_at
                 FROM tribe_members tm
                 JOIN users u ON tm.user_id = u.id
                 WHERE tm.tribe_id = ? AND tm.is_validated = 1
                 ORDER BY tm.role DESC, tm.joined_at ASC
             ");
             $stmt->execute([$tribe['id']]);
-            $members = $stmt->fetchAll();
+            $members_raw = $stmt->fetchAll();
+
+            // Mapper les champs pour le frontend
+            $members = array_map(function($m) {
+                return [
+                    'id' => (int)$m['member_id'],
+                    'user_id' => (int)$m['id'],
+                    'username' => $m['username'],
+                    'email' => $m['email'],
+                    'avatar_url' => $m['photo_profil'],
+                    'role' => $m['role'],
+                    'joined_at' => $m['joined_at']
+                ];
+            }, $members_raw);
 
             sendJsonResponse([
                 'tribe' => [

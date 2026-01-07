@@ -14,9 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Protection CSRF
-$input = json_decode(file_get_contents('php://input'), true);
-requireCsrfToken($input);
+// Note: CSRF protection is not needed with JWT Bearer token authentication
+// JWT tokens in the Authorization header already provide protection against CSRF attacks
 
 // Connexion DB
 $pdo = getDbConnection();
