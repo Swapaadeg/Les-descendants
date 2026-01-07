@@ -78,6 +78,10 @@ export const useDinosaurs = () => {
               updated.isFeatured = updatedData.isFeatured;
             }
 
+            if (updatedData.isMutated !== undefined) {
+              updated.isMutated = updatedData.isMutated;
+            }
+
             if (updatedData.assigned_user_id !== undefined) {
               updated.assignedUser = updatedData.assigned_user_id
                 ? { id: updatedData.assigned_user_id, username: updated.assignedUser?.username || '' }
