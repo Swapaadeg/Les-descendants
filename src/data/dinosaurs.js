@@ -18,6 +18,7 @@ export const arkDinosaurs = [
   { name: 'Giganotosaurus', types: [1] },
   { name: 'Kaprosuchus', types: [1] },
   { name: 'Megalosaurus', types: [1] },
+  { name: 'Megatherium', types: [1] },
   { name: 'Microraptor', types: [1, 5] },
   { name: 'Raptor', types: [1] },
   { name: 'Rex', types: [1] },

@@ -31,6 +31,7 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
   });
 
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [speciesSearch, setSpeciesSearch] = useState('');
 
   const selectedDino = arkDinosaurs.find(d => d.name === formData.species);
   const isAquatic = selectedDino && shouldIgnoreOxygen(selectedDino.types, dinoTypes);
@@ -42,6 +43,11 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
   // Filtrer les espèces déjà ajoutées
   const availableSpecies = arkDinosaurs.filter(dino =>
     !existingDinos.some(existing => existing.species === dino.name)
+  );
+
+  // Filtrer par recherche
+  const filteredSpecies = availableSpecies.filter(dino =>
+    dino.name.toLowerCase().includes(speciesSearch.toLowerCase())
   );
 
   const handleChange = (e) => {
@@ -203,20 +209,34 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
               ✨ Toutes les espèces ont été ajoutées!
             </div>
           ) : (
-            <select
-              name="species"
-              className="dino-form__select"
-              value={formData.species}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Sélectionner une espèce</option>
-              {availableSpecies.sort((a, b) => a.name.localeCompare(b.name)).map(dino => (
-                <option key={dino.name} value={dino.name}>
-                  {dino.name}
-                </option>
-              ))}
-            </select>
+            <>
+              <input
+                type="text"
+                className="dino-form__search"
+                placeholder="🔍 Rechercher une espèce..."
+                value={speciesSearch}
+                onChange={(e) => setSpeciesSearch(e.target.value)}
+              />
+              <select
+                name="species"
+                className="dino-form__select"
+                value={formData.species}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Sélectionner une espèce</option>
+                {filteredSpecies.sort((a, b) => a.name.localeCompare(b.name)).map(dino => (
+                  <option key={dino.name} value={dino.name}>
+                    {dino.name}
+                  </option>
+                ))}
+              </select>
+              {filteredSpecies.length === 0 && speciesSearch && (
+                <div className="dino-form__no-results">
+                  Aucune espèce trouvée pour "{speciesSearch}"
+                </div>
+              )}
+            </>
           )}
         </div>
 

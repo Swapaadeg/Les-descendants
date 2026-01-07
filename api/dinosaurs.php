@@ -328,6 +328,12 @@ function handlePut($pdo, $user) {
             $params[":is_featured"] = (int)$input['is_featured'];
         }
 
+        // Gérer le toggle mutation
+        if (isset($input['isMutated'])) {
+            $updates[] = "is_mutated = :is_mutated";
+            $params[":is_mutated"] = (int)$input['isMutated'];
+        }
+
         // Gérer l'assignation de membre
         if (array_key_exists('assigned_user_id', $input)) {
             $assignedUserId = $input['assigned_user_id'];

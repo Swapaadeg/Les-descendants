@@ -147,6 +147,44 @@
 
   &__select {
     cursor: pointer;
+    margin-top: $spacing-md;
+  }
+
+  &__search {
+    width: 100%;
+    padding: $spacing-md;
+    background: rgba($color-dark, 0.8);
+    border: 2px solid rgba($neon-cyan, 0.3);
+    border-radius: $border-radius-sm;
+    color: $color-light;
+    font-size: $font-size-base;
+    transition: all $transition-base;
+    margin-bottom: $spacing-md;
+
+    &:focus {
+      outline: none;
+      border-color: $neon-cyan;
+      @include neon-shadow($neon-cyan, low);
+    }
+
+    &::placeholder {
+      color: rgba($color-light, 0.5);
+    }
+
+    @include md {
+      padding: $spacing-lg;
+    }
+  }
+
+  &__no-results {
+    margin-top: $spacing-sm;
+    padding: $spacing-md;
+    background: rgba($neon-pink, 0.1);
+    border: 1px solid rgba($neon-pink, 0.3);
+    border-radius: $border-radius-sm;
+    color: rgba($color-light, 0.7);
+    font-size: $font-size-sm;
+    text-align: center;
   }
 
   &__types {
