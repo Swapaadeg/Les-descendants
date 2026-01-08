@@ -5,34 +5,34 @@ import { TribeSkeleton } from '../../../components/Skeleton/Skeleton';
 import TribeMembersModal from '../../../components/TribeMembersModal/TribeMembersModal';
 import { useTribe } from '../../../hooks/useTribe';
 import { useAuth } from '../../../contexts/AuthContext';
-import { tribeAPI } from '../../../services/api';
+import { tribeAPI, dinoAPI } from '../../../services/api';
 import '../../../styles/pages/tribe-page.scss';
 
 const TribePage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { tribe, loading: tribeLoading, refreshTribe } = useTribe();
-  const [recentDinos, setRecentDinos] = useState([]);
+  const [featuredDinos, setFeaturedDinos] = useState([]);
   const [dinosLoading, setDinosLoading] = useState(true);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Charger les dinosaures récents et les demandes en attente
+  // Charger les dinosaures featured et les demandes en attente
   useEffect(() => {
     if (tribe) {
-      loadRecentDinos();
+      loadFeaturedDinos();
       if (tribe.user_role === 'owner') {
         loadPendingRequests();
       }
     }
   }, [tribe]);
 
-  const loadRecentDinos = async () => {
+  const loadFeaturedDinos = async () => {
     try {
       setDinosLoading(true);
-      const data = await tribeAPI.getRecentDinos(tribe.id);
-      setRecentDinos(data);
+      const data = await dinoAPI.getFeatured(tribe.id);
+      setFeaturedDinos(data);
     } catch (err) {
       setError('Erreur lors du chargement des dinosaures');
     } finally {
@@ -186,8 +186,8 @@ const TribePage = () => {
             {tribe.members?.length || 0} membres
           </span>
           <span className="tribe-page__stat">
-            <span className="tribe-page__stat-icon">🦖</span>
-            {recentDinos.length} dinosaures récents
+            <span className="tribe-page__stat-icon">⭐</span>
+            {featuredDinos.length} dinosaure{featuredDinos.length > 1 ? 's' : ''} en vitrine
           </span>
         </div>
       </div>
@@ -246,21 +246,21 @@ const TribePage = () => {
             <div className="tribe-page__spinner"></div>
             <p>Chargement des dinosaures...</p>
           </div>
-        ) : recentDinos.length === 0 ? (
+        ) : featuredDinos.length === 0 ? (
           <div className="tribe-page__empty">
             <span className="tribe-page__empty-icon">🦕</span>
-            <h3>Aucun dinosaure récent</h3>
-            <p>Les dinosaures ajoutés ou modifiés récemment apparaîtront ici</p>
+            <h3>Aucun dinosaure en vitrine</h3>
+            <p>Cliquez sur l'étoile ⭐ d'un dinosaure pour le mettre en vitrine</p>
             <button
               className="tribe-page__btn tribe-page__btn--primary"
               onClick={() => navigate('/dashboard')}
             >
-              Ajouter un dinosaure
+              Gérer les dinosaures
             </button>
           </div>
         ) : (
           <div className="tribe-page__dinos-grid">
-            {recentDinos.map((dino) => (
+            {featuredDinos.map((dino) => (
               <DinoCardCompact
                 key={dino.id}
                 dino={dino}
