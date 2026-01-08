@@ -35,6 +35,7 @@ export const arkDinosaurs = [
   { name: 'Ankylosaurus', types: [2] },
   { name: 'Armadoggo', types: [2] },
   { name: 'Arthropleura', types: [1] },
+  { name: 'Bison', types: [2] },
   { name: 'Brontosaurus', types: [2] },
   { name: 'Carbonemys', types: [2] },
   { name: 'Chalicotherium', types: [2] },
