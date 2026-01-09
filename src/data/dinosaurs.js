@@ -10,6 +10,7 @@ export const arkDinosaurs = [
   { name: 'Carcharodontosaurus', types: [1] },
   { name: 'Carnotaurus', types: [1] },
   { name: 'Ceratosaure', types: [1, 3] },
+  { name: 'Ceratosaurus', types: [1, 3] },
   { name: 'Compy', types: [1, 5] },
   { name: 'Cryolophosaurus', types: [1] },
   { name: 'Deinonychus', types: [1] },
@@ -55,6 +56,7 @@ export const arkDinosaurs = [
   { name: 'Kentrosaurus', types: [2] },
   { name: 'Lystrosaurus', types: [2] },
   { name: 'Mammouth', types: [2] },
+  { name: 'Deinotherium', types: [2] },
   { name: 'Megaloceros', types: [2] },
   { name: 'Paraceratherium', types: [2] },
   { name: 'Parasaur', types: [2] },
@@ -134,6 +136,8 @@ export const arkDinosaurs = [
   { name: 'Shadowmane', types: [1, 3] },
   { name: 'Shastasaurus', types: [1, 3] },
   { name: 'Tusoteuthis', types: [1, 3] },
+  { name: 'Deinosuchus', types: [1, 3] },
+  { name: 'Maeguana', types: [2, 3] },
   { name: 'Xiphactinus', types: [1, 3] },
 
   // ===== DINOS D'ÉPAULE =====
