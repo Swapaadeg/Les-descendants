@@ -19,6 +19,7 @@ export const arkDinosaurs = [
   { name: 'Giganotosaurus', types: [1] },
   { name: 'Kaprosuchus', types: [1] },
   { name: 'Megalosaurus', types: [1] },
+  { name: 'Megaraptor', types: [1] },
   { name: 'Megatherium', types: [1] },
   { name: 'Microraptor', types: [1, 5] },
   { name: 'Raptor', types: [1] },
@@ -29,6 +30,8 @@ export const arkDinosaurs = [
   { name: 'Therizinosaure', types: [2] },
   { name: 'Thylacoleo', types: [1] },
   { name: 'Troodon', types: [1] },
+
+  { name: 'Gigantoraptor', types: [2] },
   { name: 'Yutyrannus', types: [1] },
 
   // ===== HERBIVORES TERRESTRES =====
@@ -42,6 +45,7 @@ export const arkDinosaurs = [
   { name: 'Chalicotherium', types: [2] },
   { name: 'Cornusaurus', types: [2] },
   { name: 'Diplodocus', types: [2] },
+  { name: 'Dreadnoughtus', types: [2] },
   { name: 'Doedicurus', types: [2] },
   { name: 'Equus', types: [2] },
   { name: 'Yak', types: [2] },
@@ -67,7 +71,7 @@ export const arkDinosaurs = [
   { name: 'Astrocetus', types: [2, 4] },
   { name: 'Astrodelphis', types: [1, 4] },
   { name: 'Cosmo', types: [2, 4] },
-  { name: 'Desmodus', types: [1, 4] },
+  { name: 'Desmodus', types: [1, 4] }, // déjà présent
   { name: 'Dimorphodon', types: [1, 4, 5] },
   { name: 'Gigadesmodus', types: [1, 4] },
   { name: 'Griffin', types: [1, 4] },
@@ -135,6 +139,7 @@ export const arkDinosaurs = [
   // ===== DINOS D'ÉPAULE =====
   { name: 'Bulbdog', types: [2, 5] },
   { name: 'Plumineux', types: [2, 5] },
+  { name: 'Chat', types: [2, 5] },
   { name: 'Gecko Luisant', types: [2, 5] },
   { name: 'Jerboa', types: [2, 5] },
   { name: 'Mesopithecus', types: [2, 5] },
@@ -178,6 +183,10 @@ export const arkDinosaurs = [
   { name: 'Thorny Dragon', types: [2] },
   { name: 'Titanoboa', types: [1] },
   { name: 'Velonasaur', types: [1] },
+  { name: 'Tigris', types: [1] },
+
+  { name: 'Rhyniognatha', types: [1] },
+  { name: 'Leonis', types: [1] },
 
   // ===== FJORDUR FANTASTIC TAMES =====
   { name: 'Hati and Skoll', types: [1] },
