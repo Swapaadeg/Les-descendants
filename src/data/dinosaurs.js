@@ -1,5 +1,6 @@
 // Liste complète des dinosaures ARK
 // Basée sur la liste fournie + variants aberrant, tek, X, R + mods
+// MODIFICATION: Bison remplace Electrophorus
 
 export const arkDinosaurs = [
   // ===== CARNIVORES TERRESTRES =====
@@ -43,6 +44,7 @@ export const arkDinosaurs = [
   { name: 'Diplodocus', types: [2] },
   { name: 'Doedicurus', types: [2] },
   { name: 'Equus', types: [2] },
+  { name: 'Yak', types: [2] },
   { name: 'Gallimimus', types: [2] },
   { name: 'Gigantopithecus', types: [2] },
   { name: 'Iguanodon', types: [2] },
@@ -116,7 +118,7 @@ export const arkDinosaurs = [
   { name: 'Castoroides', types: [2, 3] },
   { name: 'Diplocaulus', types: [2, 3] },
   { name: 'Dunkleosteus', types: [1, 3] },
-  { name: 'Electrophorus', types: [1, 3] },
+  { name: 'Glaucus', types: [1, 3] },
   { name: 'Helicoprion', types: [1, 3] },
   { name: 'Ichthyosaurus', types: [1, 3] },
   { name: 'Karkinos', types: [1, 3] },

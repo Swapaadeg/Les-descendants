@@ -604,7 +604,7 @@ function createTasksForStatChanges($pdo, $dinoId, $userId, $input, $oldStats) {
 
     $tribeId = $oldStats['tribe_id'];
 
-    // Stats de base
+    // Stats de base - Crée une tâche pour chaque modification
     if (isset($input['stats'])) {
         foreach ($input['stats'] as $statKey => $newValue) {
             $oldValue = $oldStats['stat_' . $statKey];
@@ -614,15 +614,8 @@ function createTasksForStatChanges($pdo, $dinoId, $userId, $input, $oldStats) {
         }
     }
 
-    // Stats mutées
-    if (isset($input['mutatedStats'])) {
-        foreach ($input['mutatedStats'] as $statKey => $newValue) {
-            $oldValue = $oldStats['mutated_stat_' . $statKey];
-            if ($oldValue != $newValue) {
-                createTask($pdo, $tribeId, $dinoId, $userId, $statKey, 'mutated', $oldValue, $newValue);
-            }
-        }
-    }
+    // Stats mutées - Pas de tâche créée pour les mutations
+    // (Les mutations ne génèrent pas de tâches dans le système)
 }
 
 /**
