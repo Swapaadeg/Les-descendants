@@ -121,7 +121,9 @@ const TribeCustomization = () => {
         };
         reader.readAsDataURL(file);
       } else {
-        // Pour le logo: ouvrir le modal de recadrage
+        // Pour le logo: effacer l'ancien preview et ouvrir le modal de recadrage
+        setLogoPreview(null);
+        setLogoFile(null);
         const reader = new FileReader();
         reader.onloadend = () => {
           setImageToCrop(reader.result);
