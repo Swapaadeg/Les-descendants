@@ -47,8 +47,8 @@ if (!in_array($mimeType, $allowedMimes)) {
     sendJsonError('Format d\'image non supporté. Utilisez JPG, PNG ou WEBP', 400);
 }
 
-// Valider la taille
-$maxSize = $type === 'banner' ? 5 * 1024 * 1024 : 2 * 1024 * 1024; // 5MB banner, 2MB logo
+// Valider la taille (5MB pour les deux)
+$maxSize = 5 * 1024 * 1024; // 5MB pour banner et logo
 if ($file['size'] > $maxSize) {
     $maxMB = $maxSize / (1024 * 1024);
     sendJsonError("L'image est trop volumineuse. Taille maximum: {$maxMB}MB", 400);

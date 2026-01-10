@@ -112,14 +112,24 @@ const TribeCustomization = () => {
         return;
       }
 
-      // Ouvrir le modal de recadrage
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageToCrop(reader.result);
-        setCropType(type);
-        setShowCropModal(true);
-      };
-      reader.readAsDataURL(file);
+      // Pour la bannière: upload direct sans recadrage
+      if (type === 'banner') {
+        setBannerFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setBannerPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Pour le logo: ouvrir le modal de recadrage
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImageToCrop(reader.result);
+          setCropType(type);
+          setShowCropModal(true);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -384,12 +394,16 @@ const TribeCustomization = () => {
               <h2 className="tribe-customization__section-title">Images</h2>
 
               <div className="image-upload">
-                <label className="image-upload__label">
+                <div className="image-upload__label">
                   <strong>Bannière</strong> (1200x300px)
                   <input
                     type="file"
+                    id="banner-input"
                     accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => handleImageSelect('banner', e)}
+                    onChange={(e) => {
+                      handleImageSelect('banner', e);
+                      e.target.value = ''; // Reset pour pouvoir re-sélectionner le même fichier
+                    }}
                     className="image-upload__input"
                   />
                   {bannerPreview || tribe.banner_url ? (
@@ -399,25 +413,35 @@ const TribeCustomization = () => {
                         alt="Bannière"
                         className="image-upload__preview image-upload__preview--banner"
                       />
-                      <div className="image-upload__button image-upload__button--change">
+                      <div
+                        className="image-upload__button image-upload__button--change"
+                        onClick={() => document.getElementById('banner-input').click()}
+                      >
                         📷 Changer la bannière
                       </div>
                     </div>
                   ) : (
-                    <div className="image-upload__button">
+                    <div
+                      className="image-upload__button"
+                      onClick={() => document.getElementById('banner-input').click()}
+                    >
                       📷 Choisir une bannière
                     </div>
                   )}
-                </label>
+                </div>
               </div>
 
               <div className="image-upload">
-                <label className="image-upload__label">
+                <div className="image-upload__label">
                   <strong>Logo</strong> (300x300px)
                   <input
                     type="file"
+                    id="logo-input"
                     accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => handleImageSelect('logo', e)}
+                    onChange={(e) => {
+                      handleImageSelect('logo', e);
+                      e.target.value = ''; // Reset pour pouvoir re-sélectionner le même fichier
+                    }}
                     className="image-upload__input"
                   />
                   {logoPreview || tribe.logo_url ? (
@@ -427,16 +451,22 @@ const TribeCustomization = () => {
                         alt="Logo"
                         className="image-upload__preview image-upload__preview--logo"
                       />
-                      <div className="image-upload__button image-upload__button--change">
+                      <div
+                        className="image-upload__button image-upload__button--change"
+                        onClick={() => document.getElementById('logo-input').click()}
+                      >
                         🖼️ Changer le logo
                       </div>
                     </div>
                   ) : (
-                    <div className="image-upload__button">
+                    <div
+                      className="image-upload__button"
+                      onClick={() => document.getElementById('logo-input').click()}
+                    >
                       🖼️ Choisir un logo
                     </div>
                   )}
-                </label>
+                </div>
               </div>
             </section>
           </div>
