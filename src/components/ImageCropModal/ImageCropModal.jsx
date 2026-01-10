@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import '../../styles/components/image-crop-modal.scss';
 
-const ImageCropModal = ({ image, onCropComplete, onCancel }) => {
+const ImageCropModal = ({ image, onCropComplete, onCancel, aspect = 4 / 3, title = "Recadrer l'image" }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -33,7 +33,7 @@ const ImageCropModal = ({ image, onCropComplete, onCancel }) => {
       <div className="image-crop-modal__overlay" onClick={onCancel}></div>
       <div className="image-crop-modal__content">
         <div className="image-crop-modal__header">
-          <h3 className="image-crop-modal__title">Recadrer l'image</h3>
+          <h3 className="image-crop-modal__title">{title}</h3>
           <button
             type="button"
             className="image-crop-modal__close"
@@ -48,7 +48,7 @@ const ImageCropModal = ({ image, onCropComplete, onCancel }) => {
             image={image}
             crop={crop}
             zoom={zoom}
-            aspect={4 / 3}
+            aspect={aspect}
             onCropChange={onCropChange}
             onZoomChange={onZoomChange}
             onCropComplete={onCropCompleteCallback}

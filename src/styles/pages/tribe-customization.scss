@@ -339,6 +339,36 @@
       border-color: $neon-cyan;
       color: $neon-cyan;
     }
+
+    &--change {
+      margin-top: $spacing-sm;
+      border-style: solid;
+      background: rgba($neon-cyan, 0.1);
+      border-color: $neon-cyan;
+    }
+  }
+
+  &__preview-container {
+    position: relative;
+  }
+
+  &__preview {
+    width: 100%;
+    height: auto;
+    border-radius: $border-radius-md;
+    border: 2px solid rgba($neon-cyan, 0.3);
+    display: block;
+    object-fit: cover;
+
+    &--banner {
+      aspect-ratio: 4 / 1;
+    }
+
+    &--logo {
+      aspect-ratio: 1 / 1;
+      max-width: 200px;
+      margin: 0 auto;
+    }
   }
 }
 

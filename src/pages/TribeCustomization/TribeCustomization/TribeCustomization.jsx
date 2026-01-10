@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/Header/Header';
 import { useTribe } from '../../../hooks/useTribe';
 import { tribeAPI } from '../../../services/api';
+import ImageCropModal from '../../../components/ImageCropModal/ImageCropModal';
+import { getImageUrl } from '../../../config/api';
 import '../../../styles/pages/tribe-customization.scss';
 
 const THEME_PALETTES = [
@@ -58,6 +60,11 @@ const TribeCustomization = () => {
   const [selectedTitleFont, setSelectedTitleFont] = useState('"Orbitron", sans-serif');
   const [bannerFile, setBannerFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState(null);
+  const [cropType, setCropType] = useState(null); // 'banner' ou 'logo'
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
@@ -93,12 +100,50 @@ const TribeCustomization = () => {
   const handleImageSelect = (type, event) => {
     const file = event.target.files[0];
     if (file) {
-      if (type === 'banner') {
-        setBannerFile(file);
-      } else {
-        setLogoFile(file);
+      // Vérifier le type de fichier
+      if (!file.type.startsWith('image/')) {
+        setError('Veuillez sélectionner une image valide');
+        return;
       }
+
+      // Vérifier la taille (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('L\'image ne doit pas dépasser 5MB');
+        return;
+      }
+
+      // Ouvrir le modal de recadrage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result);
+        setCropType(type);
+        setShowCropModal(true);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleCropComplete = ({ blob, url }) => {
+    // Convertir le blob en fichier
+    const croppedFile = new File([blob], `${cropType}.jpg`, { type: 'image/jpeg' });
+
+    if (cropType === 'banner') {
+      setBannerFile(croppedFile);
+      setBannerPreview(url);
+    } else {
+      setLogoFile(croppedFile);
+      setLogoPreview(url);
+    }
+
+    setShowCropModal(false);
+    setImageToCrop(null);
+    setCropType(null);
+  };
+
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setImageToCrop(null);
+    setCropType(null);
   };
 
   const handleSave = async () => {
@@ -132,6 +177,8 @@ const TribeCustomization = () => {
       setSuccess('Personnalisation sauvegardée avec succès! 🎉');
       setBannerFile(null);
       setLogoFile(null);
+      setBannerPreview(null);
+      setLogoPreview(null);
 
       // Rediriger après 2 secondes
       setTimeout(() => {
@@ -338,31 +385,57 @@ const TribeCustomization = () => {
 
               <div className="image-upload">
                 <label className="image-upload__label">
-                  <strong>Bannière</strong> (1200x300px recommandé)
+                  <strong>Bannière</strong> (1200x300px)
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     onChange={(e) => handleImageSelect('banner', e)}
                     className="image-upload__input"
                   />
-                  <div className="image-upload__button">
-                    📷 {bannerFile ? bannerFile.name : 'Choisir une bannière'}
-                  </div>
+                  {bannerPreview || tribe.banner_url ? (
+                    <div className="image-upload__preview-container">
+                      <img
+                        src={bannerPreview || getImageUrl(tribe.banner_url)}
+                        alt="Bannière"
+                        className="image-upload__preview image-upload__preview--banner"
+                      />
+                      <div className="image-upload__button image-upload__button--change">
+                        📷 Changer la bannière
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="image-upload__button">
+                      📷 Choisir une bannière
+                    </div>
+                  )}
                 </label>
               </div>
 
               <div className="image-upload">
                 <label className="image-upload__label">
-                  <strong>Logo</strong> (300x300px recommandé)
+                  <strong>Logo</strong> (300x300px)
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     onChange={(e) => handleImageSelect('logo', e)}
                     className="image-upload__input"
                   />
-                  <div className="image-upload__button">
-                    🖼️ {logoFile ? logoFile.name : 'Choisir un logo'}
-                  </div>
+                  {logoPreview || tribe.logo_url ? (
+                    <div className="image-upload__preview-container">
+                      <img
+                        src={logoPreview || getImageUrl(tribe.logo_url)}
+                        alt="Logo"
+                        className="image-upload__preview image-upload__preview--logo"
+                      />
+                      <div className="image-upload__button image-upload__button--change">
+                        🖼️ Changer le logo
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="image-upload__button">
+                      🖼️ Choisir un logo
+                    </div>
+                  )}
                 </label>
               </div>
             </section>
@@ -404,6 +477,17 @@ const TribeCustomization = () => {
             {uploading ? '⏳ Sauvegarde...' : '💾 Sauvegarder'}
           </button>
         </div>
+
+        {/* Modal de recadrage */}
+        {showCropModal && imageToCrop && (
+          <ImageCropModal
+            image={imageToCrop}
+            onCropComplete={handleCropComplete}
+            onCancel={handleCropCancel}
+            aspect={cropType === 'banner' ? 4 / 1 : 1 / 1}
+            title={cropType === 'banner' ? 'Recadrer la bannière' : 'Recadrer le logo'}
+          />
+        )}
       </div>
     </div>
   );
