@@ -312,11 +312,13 @@
     color: $text-secondary;
     font-size: $font-size-sm;
     margin-bottom: $spacing-sm;
+    cursor: pointer;
 
     strong {
       color: $text-primary;
       display: block;
       margin-bottom: $spacing-xs;
+      cursor: pointer;
     }
   }
 
@@ -359,6 +361,7 @@
     border: 2px solid rgba($neon-cyan, 0.3);
     display: block;
     object-fit: cover;
+    pointer-events: none; // Permettre au clic de passer au label parent
 
     &--banner {
       aspect-ratio: 4 / 1;

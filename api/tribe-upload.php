@@ -117,22 +117,32 @@ try {
     $sourceWidth = imagesx($sourceImage);
     $sourceHeight = imagesy($sourceImage);
 
-    // Calculer le ratio pour le redimensionnement (cover)
-    $sourceRatio = $sourceWidth / $sourceHeight;
-    $targetRatio = $targetWidth / $targetHeight;
-
-    if ($sourceRatio > $targetRatio) {
-        // Image trop large - crop horizontal
-        $tempHeight = $sourceHeight;
-        $tempWidth = $sourceHeight * $targetRatio;
-        $cropX = ($sourceWidth - $tempWidth) / 2;
-        $cropY = 0;
-    } else {
-        // Image trop haute - crop vertical
-        $tempWidth = $sourceWidth;
-        $tempHeight = $sourceWidth / $targetRatio;
+    // Pour le logo: l'image est déjà recadrée côté client, juste redimensionner
+    // Pour la bannière: appliquer le crop automatique
+    if ($type === 'logo') {
+        // Logo: redimensionner sans crop (l'image est déjà carrée du côté client)
         $cropX = 0;
-        $cropY = ($sourceHeight - $tempHeight) / 2;
+        $cropY = 0;
+        $tempWidth = $sourceWidth;
+        $tempHeight = $sourceHeight;
+    } else {
+        // Bannière: calculer le ratio pour le redimensionnement (cover)
+        $sourceRatio = $sourceWidth / $sourceHeight;
+        $targetRatio = $targetWidth / $targetHeight;
+
+        if ($sourceRatio > $targetRatio) {
+            // Image trop large - crop horizontal
+            $tempHeight = $sourceHeight;
+            $tempWidth = $sourceHeight * $targetRatio;
+            $cropX = ($sourceWidth - $tempWidth) / 2;
+            $cropY = 0;
+        } else {
+            // Image trop haute - crop vertical
+            $tempWidth = $sourceWidth;
+            $tempHeight = $sourceWidth / $targetRatio;
+            $cropX = 0;
+            $cropY = ($sourceHeight - $tempHeight) / 2;
+        }
     }
 
     // Créer l'image de destination
