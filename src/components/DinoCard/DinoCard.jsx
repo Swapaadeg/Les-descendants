@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import dinoTypes from '../../data/types';
 import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } from '../../data/stats';
 import { getImageUrl, DEFAULT_AVATAR_IMAGE } from '../../config/api';
+import ImageCropModal from '../ImageCropModal/ImageCropModal';
 import '../../styles/components/dino-card.scss';
 
 const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], currentUserId }) => {
   const [editingStats, setEditingStats] = useState({});
   const [tempValues, setTempValues] = useState({});
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState(null);
 
   const assignedUserId = dino.assignedUser?.id || null;
 
@@ -29,15 +32,34 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
         alert('Veuillez sélectionner une image valide');
         return;
       }
-      
+
       // Vérifier la taille (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('L\'image ne doit pas dépasser 5MB');
         return;
       }
-      
-      onUpdate(dino.id, { image: file });
+
+      // Ouvrir le modal de recadrage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageToCrop(reader.result);
+        setShowCropModal(true);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleCropComplete = ({ blob, url }) => {
+    // Convertir le blob en fichier
+    const croppedFile = new File([blob], 'cropped-photo.jpg', { type: 'image/jpeg' });
+    onUpdate(dino.id, { image: croppedFile });
+    setShowCropModal(false);
+    setImageToCrop(null);
+  };
+
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setImageToCrop(null);
   };
 
   const startEditing = (statId, currentValue, isMutated = false) => {
@@ -425,6 +447,14 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
           ))}
         </div>
       </div>
+
+      {showCropModal && imageToCrop && (
+        <ImageCropModal
+          image={imageToCrop}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </article>
   );
 };
