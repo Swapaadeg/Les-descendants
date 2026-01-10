@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import arkDinosaurs from '../../data/dinosaurs';
 import dinoTypes from '../../data/types';
 import { baseStats, hasSpecialStat, shouldIgnoreOxygen } from '../../data/stats';
+import ImageCropModal from '../ImageCropModal/ImageCropModal';
 import '../../styles/components/dino-form.scss';
 
 const DinoForm = ({ onAddDino, existingDinos = [] }) => {
@@ -32,6 +33,8 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
 
   const [photoPreview, setPhotoPreview] = useState(null);
   const [speciesSearch, setSpeciesSearch] = useState('');
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState(null);
 
   const selectedDino = arkDinosaurs.find(d => d.name === formData.species);
   const isAquatic = selectedDino && shouldIgnoreOxygen(selectedDino.types, dinoTypes);
@@ -90,14 +93,27 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({ ...prev, photo: file }));
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoPreview(reader.result);
+        setImageToCrop(reader.result);
+        setShowCropModal(true);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCropComplete = ({ blob, url }) => {
+    // Convertir le blob en fichier
+    const croppedFile = new File([blob], 'cropped-photo.jpg', { type: 'image/jpeg' });
+    setFormData(prev => ({ ...prev, photo: croppedFile }));
+    setPhotoPreview(url);
+    setShowCropModal(false);
+    setImageToCrop(null);
+  };
+
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setImageToCrop(null);
   };
 
   const handleSubmit = (e) => {
@@ -356,6 +372,14 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
         <span>✨</span>
         <span>Ajouter le dinosaure</span>
       </button>
+
+      {showCropModal && imageToCrop && (
+        <ImageCropModal
+          image={imageToCrop}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </form>
   );
 };
