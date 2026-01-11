@@ -155,6 +155,7 @@ export const arkDinosaurs = [
 
   // ===== CRÉATURES SPÉCIALES =====
   { name: 'Andrewsarchus', types: [1] },
+  { name: 'Basilisk', types: [1] },
   { name: 'Bloodstalker', types: [1] },
   { name: 'Colossuscorpius', types: [1] },
   { name: 'Daeodon', types: [1] },
