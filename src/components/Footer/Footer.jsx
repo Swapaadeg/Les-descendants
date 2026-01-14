@@ -9,8 +9,8 @@ const Footer = () => {
           Une plateforme communautaire pour les éleveurs d'Arki'Family
         </p>
         <div className="footer__season">
-          <span className="footer__season-icon">❄️</span>
-          Édition Hiver 2025
+          <span className="footer__season-icon">🌸</span>
+          Édition 2026
         </div>
         <div className="footer__links">
           <Link to="/mentions-legales" className="footer__link">

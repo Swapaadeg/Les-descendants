@@ -20,8 +20,8 @@ const Home = () => {
       {/* Banner en arrière-plan */}
       <div className="home__banner">
         <img
-          src="/assets/seasonal/winter/banner-hiver.png"
-          alt="Arki'Family - Hiver"
+          src="/assets/seasonal/spring/banner-printemps.png"
+          alt="Arki'Family - Printemps"
           className="home__banner-image"
         />
         <div className="home__banner-overlay"></div>
@@ -57,7 +57,7 @@ const Home = () => {
         {/* Logo cliquable */}
         <Link to="/" className="home__logo-link">
           <img
-            src="/assets/seasonal/winter/logo-hiver.png"
+            src="/assets/seasonal/spring/logo-printemps.png"
             alt="Arki'Family Logo"
             className="home__logo"
           />

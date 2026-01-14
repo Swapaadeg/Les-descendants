@@ -99,7 +99,7 @@ const TribeSelector = ({ onTribeSelected }) => {
         <div className="tribe-selector__container">
           <div className="tribe-selector__logo-container">
             <img
-              src="/assets/seasonal/winter/logo-hiver.png"
+              src="/assets/seasonal/spring/logo-printemps.png"
               alt="Arki'Family Logo"
               className="tribe-selector__logo"
             />
