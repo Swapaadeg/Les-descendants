@@ -63,13 +63,13 @@ const Header = () => {
     <header className="header">
       <Link to="/" className="header__logo-link">
         <img
-          src="/assets/seasonal/spring/logo-printemps.png"
+          src="/assets/seasonal/printemps/logo-printemps.png"
           alt="Arki'Family"
           className="header__logo"
         />
       </Link>
       <img
-        src="/assets/seasonal/spring/banner-printemps.png"
+        src="/assets/seasonal/printemps/printemps.png"
         alt="Arki-Family Printemps"
         className="header__banner"
       />

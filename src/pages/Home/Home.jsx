@@ -20,7 +20,7 @@ const Home = () => {
       {/* Banner en arrière-plan */}
       <div className="home__banner">
         <img
-          src="/assets/seasonal/spring/banner-printemps.png"
+          src="/assets/seasonal/printemps/printemps.png"
           alt="Arki'Family - Printemps"
           className="home__banner-image"
         />
@@ -57,7 +57,7 @@ const Home = () => {
         {/* Logo cliquable */}
         <Link to="/" className="home__logo-link">
           <img
-            src="/assets/seasonal/spring/logo-printemps.png"
+            src="/assets/seasonal/printemps/logo-printemps.png"
             alt="Arki'Family Logo"
             className="home__logo"
           />

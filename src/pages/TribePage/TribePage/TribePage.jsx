@@ -108,7 +108,7 @@ const TribePage = () => {
   }
 
   const isOwner = tribe.user_role === 'owner';
-  const bannerUrl = tribe.banner_url || '/assets/seasonal/spring/banner-printemps.png';
+  const bannerUrl = tribe.banner_url || '/assets/seasonal/printemps/printemps.png';
 
   const pageStyle = {
     ...tribeStyle,
@@ -122,7 +122,7 @@ const TribePage = () => {
       {/* Logo Arki'Family centré */}
       <Link to="/" className="tribe-page__home-logo-link">
         <img
-          src="/assets/seasonal/spring/logo-printemps.png"
+          src="/assets/seasonal/printemps/logo-printemps.png"
           alt="Arki'Family"
           className="tribe-page__home-logo"
         />
