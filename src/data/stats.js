@@ -10,7 +10,7 @@ export const baseStats = [
 
 // Stats spéciales pour certaines créatures
 export const specialStats = [
-  { id: 'crafting', name: 'Craft', icon: '🔨', color: '#39ff14', creatures: ['Helicoprion'] }
+  { id: 'crafting', name: 'Craft', icon: '🔨', color: '#39ff14', creatures: ['Helicoprion', 'Gacha'] }
 ];
 
 // Vérifier si une créature a une stat spéciale
@@ -41,8 +41,8 @@ export const calculateLevel = (stats, species, isAquatic = false) => {
     total += value;
   });
 
-  // Ajouter la stat crafting pour Helicoprion
-  if (species === 'Helicoprion' && stats.crafting) {
+  // Ajouter la stat crafting pour Helicoprion et Gacha
+  if ((species === 'Helicoprion' || species === 'Gacha') && stats.crafting) {
     total += parseInt(stats.crafting) || 0;
   }
 

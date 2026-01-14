@@ -38,7 +38,7 @@ const DinoForm = ({ onAddDino, existingDinos = [] }) => {
 
   const selectedDino = arkDinosaurs.find(d => d.name === formData.species);
   const isAquatic = selectedDino && shouldIgnoreOxygen(selectedDino.types, dinoTypes);
-  const hascraftingStat = formData.species === 'Helicoprion';
+  const hascraftingStat = formData.species === 'Helicoprion' || formData.species === 'Gacha';
 
   // Vérifier si l'espèce existe déjà
   const isDuplicateSpecies = formData.species && existingDinos.some(d => d.species === formData.species);
