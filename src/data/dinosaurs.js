@@ -145,6 +145,7 @@ export const arkDinosaurs = [
   { name: 'Plumineux', types: [2, 5] },
   { name: 'Chat', types: [2, 5] },
   { name: 'Gecko Luisant', types: [2, 5] },
+  { name: 'Hesperornis', types: [1, 5] },
   { name: 'Jerboa', types: [2, 5] },
   { name: 'Mesopithecus', types: [2, 5] },
   { name: 'Noglin', types: [1, 5] },
