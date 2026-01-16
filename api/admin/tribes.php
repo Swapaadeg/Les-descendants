@@ -93,7 +93,8 @@ function handleGet($pdo, $admin) {
                 u.username,
                 u.email,
                 u.email_verified,
-                COUNT(DISTINCT tm.id) as member_count
+                COUNT(DISTINCT tm.id) as member_count,
+                (SELECT COUNT(*) FROM dinosaurs d WHERE d.tribe_id = t.id) as dino_count
             FROM tribes t
             JOIN users u ON t.owner_id = u.id
             LEFT JOIN tribe_members tm ON t.id = tm.tribe_id AND tm.is_validated = 1
@@ -124,7 +125,8 @@ function handleGet($pdo, $admin) {
                     'email' => $tribe['email'],
                     'email_verified' => (bool)$tribe['email_verified']
                 ],
-                'member_count' => (int)$tribe['member_count']
+                'member_count' => (int)$tribe['member_count'],
+                'dino_count' => (int)$tribe['dino_count']
             ];
         }, $tribes);
 

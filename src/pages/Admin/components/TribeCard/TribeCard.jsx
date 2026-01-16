@@ -41,6 +41,11 @@ const TribeCard = ({ tribe, onApprove, onReject, showActions = true }) => {
         </div>
 
         <div className="tribe-card__info-item">
+          <span className="tribe-card__info-label">Dinosaures :</span>
+          <span className="tribe-card__info-value">🦖 {tribe.dino_count ?? 0}</span>
+        </div>
+
+        <div className="tribe-card__info-item">
           <span className="tribe-card__info-label">Visibilité :</span>
           <span className="tribe-card__info-value">{tribe.is_public ? '🌐 Publique' : '🔒 Privée'}</span>
         </div>
