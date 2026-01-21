@@ -79,11 +79,6 @@ function Dashboard() {
     try {
       await addDinosaur(dinoData);
       setShowForm(false);
-
-      // Scroll vers le bas pour voir le nouveau dino
-      setTimeout(() => {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      }, 100);
     } catch (error) {
       alert('Erreur lors de l\'ajout du dinosaure: ' + error.message);
     }
