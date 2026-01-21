@@ -4,7 +4,7 @@ import { baseStats, shouldIgnoreOxygen, calculateLevel, calculateTotalLevel } fr
 import './DinoCardCompact.scss';
 
 const DinoCardCompact = ({ dino }) => {
-  const isAquatic = shouldIgnoreOxygen(dino.typeIds, dinoTypes);
+  const isAquatic = shouldIgnoreOxygen(dino.typeIds, dino.species);
   const hasPhoto = dino.photoUrl;
   const photoSrc = dino.photoUrl;
 

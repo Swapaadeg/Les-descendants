@@ -19,8 +19,15 @@ export const hasSpecialStat = (creatureName, statId) => {
   return specialStat?.creatures?.includes(creatureName) || false;
 };
 
+// Créatures aquatiques qui ont quand même besoin d'oxygène
+const oxygenRequiredCreatures = ['Spinosaure', 'Aberrant Spinosaure'];
+
 // Vérifier si une créature doit ignorer l'oxygène (aquatiques)
-export const shouldIgnoreOxygen = (typeIds, types) => {
+export const shouldIgnoreOxygen = (typeIds, creatureName = '') => {
+  // Si la créature est dans la liste des exceptions, elle a besoin d'oxygène
+  if (oxygenRequiredCreatures.includes(creatureName)) {
+    return false;
+  }
   // Si le dino est aquatique (id: 3), on ignore l'oxygène
   return typeIds?.includes(3);
 };

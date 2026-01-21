@@ -13,7 +13,7 @@ const DinoCard = ({ dino, onUpdate, onDelete, onToggleFeatured, members = [], cu
 
   const assignedUserId = dino.assignedUser?.id || null;
 
-  const isAquatic = shouldIgnoreOxygen(dino.typeIds, dinoTypes);
+  const isAquatic = shouldIgnoreOxygen(dino.typeIds, dino.species);
   const hasPhoto = dino.photoUrl;
   const photoSrc = getImageUrl(dino.photoUrl);
 
