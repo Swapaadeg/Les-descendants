@@ -146,6 +146,7 @@ export const arkDinosaurs = [
   { name: 'Chat', types: [2, 5] },
   { name: 'Gecko Luisant', types: [2, 5] },
   { name: 'Hesperornis', types: [1, 5] },
+  { name: 'Kairuku', types: [2, 5] },
   { name: 'Jerboa', types: [2, 5] },
   { name: 'Mesopithecus', types: [2, 5] },
   { name: 'Noglin', types: [1, 5] },
@@ -158,7 +159,6 @@ export const arkDinosaurs = [
   { name: 'Andrewsarchus', types: [1] },
   { name: 'Basilisk', types: [1] },
   { name: 'Bloodstalker', types: [1] },
-  { name: 'Colossuscorpius', types: [1] },
   { name: 'Daeodon', types: [1] },
   { name: 'Dimetrodon', types: [1] },
   { name: 'Dinopithecus', types: [1] },
@@ -185,14 +185,10 @@ export const arkDinosaurs = [
   { name: 'Golem', types: [1] },
   { name: 'Solwyn', types: [1] },
   { name: 'Tek Stryder', types: [2] },
-  { name: 'Thorax Spider', types: [1] },
   { name: 'Thorny Dragon', types: [2] },
   { name: 'Titanoboa', types: [1] },
   { name: 'Velonasaur', types: [1] },
-  { name: 'Tigris', types: [1] },
-
   { name: 'Rhyniognatha', types: [1] },
-  { name: 'Leonis', types: [1] },
 
   // ===== FJORDUR FANTASTIC TAMES =====
   { name: 'Hati and Skoll', types: [1] },
