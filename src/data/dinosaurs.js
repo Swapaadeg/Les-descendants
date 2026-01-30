@@ -154,6 +154,7 @@ export const arkDinosaurs = [
   { name: 'Pegomastax', types: [2, 5] },
   { name: 'Runic Halo Lantern Wyvern', types: [1, 4, 5] },
   { name: 'Shinehorn', types: [2, 5] },
+  { name: 'Vautour', types: [1, 5] },
 
   // ===== CRÉATURES SPÉCIALES =====
   { name: 'Andrewsarchus', types: [1] },
