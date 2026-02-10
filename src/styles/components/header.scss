@@ -13,7 +13,6 @@
   );
   border-bottom: 2px solid $neon-cyan;
   @include neon-shadow($neon-cyan, low);
-  overflow: hidden;
 
   &::before {
     content: '';
@@ -83,13 +82,13 @@
 
   &__tasks-btn {
     position: absolute;
-    top: $spacing-md;
+    top: auto;
+    bottom: 0;
     left: $spacing-md;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
     background: linear-gradient(135deg, rgba($neon-cyan, 0.15), rgba($neon-cyan, 0.05));
     border: 2px solid rgba($neon-cyan, 0.4);
     border-radius: 12px;
@@ -153,10 +152,24 @@
     }
   }
 
-  &__admin-link {
+  &__actions {
     position: absolute;
     top: $spacing-md;
-    right: 90px;
+    right: $spacing-md;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+
+    @include max-md {
+      gap: 0.5rem;
+    }
+  }
+
+  &__admin-link {
+    position: relative;
+    flex-shrink: 0;
     z-index: 10;
     display: flex;
     align-items: center;
@@ -189,7 +202,6 @@
     }
 
     @include max-md {
-      right: 70px;
       padding: 0.5rem 0.75rem;
       font-size: 0.85rem;
     }
@@ -238,9 +250,9 @@
   }
 
   &__user-avatar {
-    position: absolute;
-    top: $spacing-md;
-    right: $spacing-md;
+    position: relative;
+    flex-shrink: 0;
+    margin-left: 0.25rem;
     z-index: 10;
     width: 60px;
     height: 60px;
@@ -283,6 +295,38 @@
     color: $neon-cyan;
     text-shadow: 0 0 10px rgba($neon-cyan, 0.8);
   }
+
+  // Burger menu positioning
+  .burger-menu {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    z-index: 1000;
+
+    @include max-md {
+      top: $spacing-sm;
+      right: $spacing-sm;
+    }
+  }
+
+  // Décaler l'avatar quand il y a un burger menu
+  &:has(.burger-menu) {
+    .header__user-avatar {
+    }
+
+    .header__admin-link {
+    }
+  }
+}
+
+.header-nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-md 0;
+  position: relative;
+  z-index: 5;
 }
 
 @keyframes pulse {

@@ -208,6 +208,30 @@ export const authAPI = {
 };
 
 // ===========================
+// SHINY IMAGES
+// ===========================
+
+export const shinyAPI = {
+  /**
+   * Récupérer les images Shiny
+   */
+  getImages: async () => {
+    const response = await api.get('/shiny-images.php');
+    return response.data;
+  },
+
+  /**
+   * Uploader une image Shiny (admin uniquement)
+   */
+  uploadImage: async (type, file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await api.post(`/shiny-upload.php?type=${encodeURIComponent(type)}`, formData);
+    return response.data;
+  }
+};
+
+// ===========================
 // UTILISATEUR / PROFIL
 // ===========================
 

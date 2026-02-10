@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTribe } from '../../hooks/useTribe';
 import Footer from '../../components/Footer/Footer';
+import BurgerMenu from '../../components/BurgerMenu/BurgerMenu';
 import '../../styles/pages/home.scss';
 
 const Home = () => {
@@ -27,29 +28,29 @@ const Home = () => {
         <div className="home__banner-overlay"></div>
       </div>
 
-      {/* Bouton Admin en haut à droite */}
-      {isAuthenticated && user?.is_admin && (
-        <Link to="/admin" className="home__admin-link">
-          <span className="home__admin-icon">⚙️</span>
-          <span className="home__admin-text">Admin</span>
-        </Link>
-      )}
-
-      {/* Avatar utilisateur en haut à droite */}
+      {/* Actions en haut à droite */}
       {isAuthenticated && user && (
-        <Link to="/profile" className="home__user-avatar">
-          {user.photo_profil ? (
-            <img
-              src={user.photo_profil}
-              alt={user.username}
-              className="home__user-avatar-img"
-            />
-          ) : (
-            <div className="home__user-avatar-placeholder">
-              {user.username?.charAt(0).toUpperCase() || '👤'}
-            </div>
+        <div className="home__top-actions">
+          {user?.is_admin && (
+            <Link to="/admin" className="home__admin-link">
+              <span className="home__admin-icon">⚙️</span>
+              <span className="home__admin-text">Admin</span>
+            </Link>
           )}
-        </Link>
+          <Link to="/profile" className="home__user-avatar">
+            {user.photo_profil ? (
+              <img
+                src={user.photo_profil}
+                alt={user.username}
+                className="home__user-avatar-img"
+              />
+            ) : (
+              <div className="home__user-avatar-placeholder">
+                {user.username?.charAt(0).toUpperCase() || '👤'}
+              </div>
+            )}
+          </Link>
+        </div>
       )}
 
       {/* Contenu principal */}
@@ -62,6 +63,11 @@ const Home = () => {
             className="home__logo"
           />
         </Link>
+
+        {/* Menu burger sous le logo */}
+        <div className="home__burger-menu">
+          <BurgerMenu />
+        </div>
 
         {/* Titre principal */}
         <h1 className="home__title">

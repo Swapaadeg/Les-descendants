@@ -5,6 +5,7 @@ import { useTasks } from '../../hooks/useTasks';
 import { usePendingRequests } from '../../hooks/usePendingRequests';
 import { useToast } from '../../contexts/ToastContext';
 import TasksModal from '../TasksModal/TasksModal';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import { DEFAULT_AVATAR_IMAGE } from '../../config/api';
 import '../../styles/components/header.scss';
 
@@ -60,57 +61,66 @@ const Header = () => {
   }, [pendingRequestsCount, showToast]);
 
   return (
-    <header className="header">
-      <Link to="/" className="header__logo-link">
-        <img
-          src="/assets/seasonal/printemps/logo-printemps.png"
-          alt="Arki'Family"
-          className="header__logo"
-        />
-      </Link>
-      <img
-        src="/assets/seasonal/printemps/printemps.png"
-        alt="Arki-Family Printemps"
-        className="header__banner"
-      />
-
-      {user && (
-        <button
-          className="header__tasks-btn"
-          onClick={() => setShowTasksModal(true)}
-          aria-label="Tâches de la tribu"
-        >
-          <span className="header__tasks-icon">📋</span>
-          {pendingCount > 0 && (
-            <span className="header__tasks-badge">{pendingCount}</span>
-          )}
-        </button>
-      )}
-
-      {user?.is_admin && (
-        <Link to="/admin" className="header__admin-link">
-          <span className="header__admin-icon">⚙️</span>
-          <span className="header__admin-text">Admin</span>
-          {pendingRequestsCount > 0 && (
-            <span className="header__admin-badge">{pendingRequestsCount}</span>
-          )}
-        </Link>
-      )}
-      {user && (
-        <Link to="/profile" className="header__user-avatar">
+    <>
+      <header className="header">
+        <Link to="/" className="header__logo-link">
           <img
-            src={user.photo_profil || DEFAULT_AVATAR_IMAGE}
-            alt={user.username}
-            className="header__user-avatar-img"
+            src="/assets/seasonal/printemps/logo-printemps.png"
+            alt="Arki'Family"
+            className="header__logo"
           />
         </Link>
-      )}
+        <img
+          src="/assets/seasonal/printemps/printemps.png"
+          alt="Arki-Family Printemps"
+          className="header__banner"
+        />
+
+        {user && (
+          <button
+            className="header__tasks-btn"
+            onClick={() => setShowTasksModal(true)}
+            aria-label="Tâches de la tribu"
+          >
+            <span className="header__tasks-icon">📋</span>
+            {pendingCount > 0 && (
+              <span className="header__tasks-badge">{pendingCount}</span>
+            )}
+          </button>
+        )}
+
+        {user && (
+          <div className="header__actions">
+            {user?.is_admin && (
+              <Link to="/admin" className="header__admin-link">
+                <span className="header__admin-icon">⚙️</span>
+                <span className="header__admin-text">Admin</span>
+                {pendingRequestsCount > 0 && (
+                  <span className="header__admin-badge">{pendingRequestsCount}</span>
+                )}
+              </Link>
+            )}
+            <Link to="/profile" className="header__user-avatar">
+              <img
+                src={user.photo_profil || DEFAULT_AVATAR_IMAGE}
+                alt={user.username}
+                className="header__user-avatar-img"
+              />
+            </Link>
+          </div>
+        )}
+      </header>
+
+      {/* Barre de navigation avec burger menu */}
+      <nav className="header-nav">
+        <BurgerMenu />
+      </nav>
 
       <TasksModal
         isOpen={showTasksModal}
         onClose={() => setShowTasksModal(false)}
       />
-    </header>
+    </>
   );
 };
 

@@ -54,10 +54,23 @@
   // BOUTON ADMIN
   // ===========================
 
-  &__admin-link {
+  &__top-actions {
     position: absolute;
     top: $spacing-md;
-    right: 90px;
+    right: $spacing-md;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    @include max-md {
+      gap: 0.5rem;
+    }
+  }
+
+  &__admin-link {
+    position: relative;
+    flex-shrink: 0;
     z-index: 10;
     display: flex;
     align-items: center;
@@ -84,13 +97,7 @@
       transform: translateY(0);
     }
 
-    @include md {
-      right: 100px;
-      padding: 0.65rem 1.1rem;
-    }
-
     @include max-md {
-      right: 70px;
       padding: 0.5rem 0.75rem;
       font-size: 0.85rem;
     }
@@ -115,9 +122,8 @@
   // ===========================
 
   &__user-avatar {
-    position: absolute;
-    top: $spacing-md;
-    right: $spacing-md;
+    position: relative;
+    flex-shrink: 0;
     z-index: 10;
     width: 60px;
     height: 60px;
@@ -159,6 +165,15 @@
     font-weight: $font-weight-bold;
     color: $neon-cyan;
     text-shadow: 0 0 10px rgba($neon-cyan, 0.8);
+  }
+
+  // ===========================
+  // MENU BURGER (sous le logo)
+  // ===========================
+
+  &__burger-menu {
+    margin-bottom: $spacing-lg;
+    z-index: 1000;
   }
 
   // ===========================
