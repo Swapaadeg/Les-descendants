@@ -25,6 +25,7 @@ const TutoShiny = () => {
         setImages(nextImages);
       } catch (error) {
         console.error('Erreur chargement images shiny:', error);
+        showToast("Impossible de charger les images (vérifie l'API).", 'error');
       }
     };
 
@@ -263,6 +264,13 @@ const TutoShiny = () => {
       <Header />
       <main className="guide-page__content">
         <div className="guide-page__container">
+          <div className="guide-page__banner">
+            <img
+              src="/assets/banner/shinyasabanner-1920x1080.jpg"
+              alt="Bannière Shiny"
+              className="guide-page__banner-image"
+            />
+          </div>
           <h1 className="guide-page__title">
             <span className="guide-page__icon">✨</span>
             Guide des Shinys

@@ -216,7 +216,7 @@ export const shinyAPI = {
    * Récupérer les images Shiny
    */
   getImages: async () => {
-    const response = await api.get('/shiny-images.php');
+    const response = await api.get('/shiny-images.php', { withCredentials: false });
     return response.data;
   },
 
