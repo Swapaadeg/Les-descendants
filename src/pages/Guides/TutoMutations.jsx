@@ -234,7 +234,8 @@ const TutoMutations = () => {
             </h2>
             <p className="guide-page__section-intro">
               Tu veux un Rex boss fight ? Tu montes <strong>254 points</strong> de mutation dans une seule stat
-              (soit 127 mutations). Mais pas les deux en même temps au début.
+              (soit 127 mutations).  Si tu as une mutation dans HP, une mutation dans Melee, une mutation dans Stamina, etc. tu vas vite être limité.
+              C'est pour ça que tu dois <strong>empiler les mutations dans une seule stat</strong>, si tu vises les dégats et que tu as une mutation en vie : <strong>tu peux tuer le bébé</strong>
             </p>
             <p className="guide-page__section-intro">
               Pourquoi ? Parce que tu veux <strong>contrôler la stat</strong>.
@@ -247,7 +248,7 @@ const TutoMutations = () => {
                 <li>1 mutation → 52</li>
                 <li>2 mutations → 54</li>
                 <li>...</li>
-                <li>20 mutations → +40 points</li>
+                <li>20 mutations → +40 points donc 70 en mélée</li>
                 <li>Etc.</li>
               </ul>
             </div>
