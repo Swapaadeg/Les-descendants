@@ -20,7 +20,7 @@ import TribesManagement from './pages/Admin/TribesManagement';
 import MentionsLegales from './pages/Legal/MentionsLegales';
 import PolitiqueConfidentialite from './pages/Legal/PolitiqueConfidentialite';
 import CGU from './pages/Legal/CGU';
-import { TutoShiny, TutoScanner } from './pages/Guides';
+import { TutoShiny, TutoScanner, TutoMutations } from './pages/Guides';
 import './styles/main.scss';
 
 function App() {
@@ -51,6 +51,7 @@ function App() {
             <Route path="/cgu" element={<CGU />} />
             <Route path="/guides/shiny" element={<TutoShiny />} />
             <Route path="/guides/scanner" element={<TutoScanner />} />
+            <Route path="/guides/mutations" element={<TutoMutations />} />
           </Routes>
         </Router>
       </AuthProvider>

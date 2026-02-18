@@ -126,6 +126,12 @@ const BurgerMenu = () => {
                   Scanner de gènes
                 </Link>
               </li>
+              <li className="burger-menu__subitem">
+                <Link to="/guides/mutations" className="burger-menu__sublink">
+                  <span className="burger-menu__icon">🧬</span>
+                  Mutations
+                </Link>
+              </li>
             </ul>
           </li>
 
